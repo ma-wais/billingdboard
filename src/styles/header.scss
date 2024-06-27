@@ -1,0 +1,83 @@
+.header{
+    padding: 0 15px;
+
+    div{
+        svg{
+            transform: translateY(0px);
+        }
+    }
+    .menubtn{
+        border: 1px solid rgb(207, 207, 207);
+        padding: 4px 5px;
+        font-size: 1.6rem;
+        border-radius: 5px;
+        background-color: #e9e6e6;
+        transform: translateY(5px);
+    }
+}
+
+.sideBar{
+    background-color:  rgb(63, 62, 62);
+    color: #cac8c8;
+    position: sticky;
+    overflow: hidden;
+    width: 200px;
+    height: 122vh;
+    padding: 4px 8px;
+
+    > div{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        p{
+           position: relative;
+           font-weight: 400;
+        }
+               
+        &:hover{
+            color: #e9e6e6;
+        }
+    }
+
+    .profileTab{
+        border-bottom: 1px solid rgb(107, 106, 106);
+    }
+
+    .add{
+        position: absolute;
+        right: 10px;
+        font-size: 12px;
+    }
+
+    nav{
+        background-color: rgb(77, 76, 76);
+        overflow: hidden;
+        height: 0%;
+
+        p{
+            margin-left: 20px;
+            height: 16px;
+            font-weight: 100;
+            position: relative;
+
+            &:hover{
+                color: #e9e6e6;
+            }
+
+            &:after{
+                content: "";
+                position: absolute;
+                height: 32px;
+                width: 10px;
+                border-left: 1px solid #8b8a8a;
+                border-bottom: 1px solid #8b8a8a;
+                left: -14px;
+                top: -20px;
+            }
+
+            &:hover::after{
+                border-color: #a7a6a6;
+            }
+        }
+    }
+}

@@ -1,0 +1,66 @@
+:root{
+  font-size: 14px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+body{
+  padding: 0%;
+  margin: 0%;
+}
+
+svg{
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin: 0 5px;
+  /* transform: translateY(5px); */
+}
+.flex{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.h-auto{
+  height: auto !important;
+  transition: all 0.5s;
+}
+.p5{
+  padding: 0 8px;
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.burger-btn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.main-container {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar-hidden .sideBar {
+  width: 0;
+  padding: 0;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  transition: margin-left 0.3s;
+}
+
+.sidebar-visible .content {
+  margin-left: 0px;
+}
+
+.sidebar-hidden .content {
+  margin-left: -200;
+}
