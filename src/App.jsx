@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
 import Header, { SideBar } from "./components/Header";
 import Shop from "./pages/Shop";
+import "./App.css";
+import './styles/globals.scss'
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -24,6 +25,9 @@ const App = () => {
           <div className="content">
             <Routes>
               <Route path="/" element={<Shop />} />
+              <Route path="/shop" element={<Shop />} />
+              
+
             </Routes>
           </div>
         </div>

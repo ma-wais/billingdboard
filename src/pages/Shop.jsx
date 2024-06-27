@@ -2,9 +2,34 @@ import React from 'react'
 
 const Shop = () => {
   return (
-    <div>
-      <h1>Shop</h1>
-      <h1>Shop</h1>
+    <div className='container'>
+      <div className='cards'>
+        <Card heading='Heading' value='Value' sales='Sales' backgroundColor='red' />
+        <Card heading='Heading' value='Value' sales='Sales' backgroundColor='green' />
+        <Card heading='Heading' value='Value' sales='Sales' backgroundColor='red' />
+        <Card heading='Heading' value='Value' backgroundColor='red' />
+        <Card heading='Heading' value='Value' backgroundColor='red' />
+        <Card heading='Heading' value='Value' backgroundColor='red' />
+        <Card heading='Heading' value='Value' backgroundColor='red' />
+        <Card heading='Heading' value='Value' backgroundColor='red' />
+        <Card heading='Heading' value='Value' backgroundColor='red' />
+
+      </div>
+    </div>
+  )
+}
+
+const Card = ({ heading, value, sales, backgroundColor }) => {
+  return (
+    <div className='card' style={{ backgroundColor: `${backgroundColor}` }} >
+      <h1>{heading}</h1>
+      <h1>{value}</h1>
+      <span>
+      {
+        sales &&
+        <p>Sales: {sales}</p>
+      }
+      </span>
     </div>
   )
 }
