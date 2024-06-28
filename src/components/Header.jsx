@@ -44,7 +44,7 @@ export const SideBar = ({ sidebarVisible }) => {
       <div className="profileTab">
         <CgProfile /> <p>Main Admin</p> <BiChevronDown />
       </div>
-      <div>
+      <div onClick={() => navigate("/")}>
         <BiHomeAlt /> <p>Dashboard</p>
       </div>
       <div onClick={() => setShow(show === "setup" ? "" : "setup")}>
