@@ -5,7 +5,7 @@ const Shop = () => {
     <div className='container'>
       <div className='cards'>
         <Card heading='Heading' value='Value' sales='Sales' backgroundColor='red' />
-        <Card heading='Heading' value='Value' sales='Sales' backgroundColor='green' />
+        <Card heading='Heading' value='Value' sales='Sales' backgroundColor='red' />
         <Card heading='Heading' value='Value' sales='Sales' backgroundColor='red' />
         <Card heading='Heading' value='Value' backgroundColor='red' />
         <Card heading='Heading' value='Value' backgroundColor='red' />

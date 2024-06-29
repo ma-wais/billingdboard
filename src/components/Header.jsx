@@ -21,7 +21,7 @@ const Header = ({ toggleSidebar }) => {
       <div className="header flex">
         <h2>Billing Dashboard</h2>
         <div>
-          <BiLogOut />
+          <BiLogOut className="logout"/>
           <BiMenu className="menubtn" onClick={toggleSidebar} />
         </div>
       </div>

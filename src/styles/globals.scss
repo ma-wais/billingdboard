@@ -45,11 +45,33 @@
     flex-direction: column;
     gap: 10px;
 }
+.pagination{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px 10px;
+
+    .goto{
+        display: inline-block;
+        margin-left: 20px;
+    }
+    input, select{
+        padding: 5px;
+        margin-left: 2px;
+    }
+    button{
+        padding: 5px 10px;
+        border: none;
+        background-color: rgb(236, 236, 236);
+        color: rgb(0, 0, 0);
+    }
+}
 .submit{
     border-top: 1px solid rgb(173, 173, 173);
     padding:10px;
     display: flex;
     justify-content: flex-end;
+    
     button{
         padding: 5px 10px;
         border: none;
