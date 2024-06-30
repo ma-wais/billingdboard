@@ -15,6 +15,22 @@ import FormulaUpdate from "./pages/FormulaUpdate";
 import ItemList from "./pages/ItemList";
 import ItemMapSupplier from "./pages/ItemMapSupplier";
 import UpdateQty from "./pages/UpdateQty";
+import PurchaseAdd from "./pages/PurchaseAdd";
+import PurchaseAdd2 from "./pages/PurchaseLoose";
+import PurchaseList from "./pages/PurchaseList";
+import StockAdjustment from "./pages/StockAdjustment";
+import PurchaseReturn from "./pages/PurchaseReturn";
+import PurchaseReturnList from "./pages/PurchaseReturnList";
+import ItemLedger from "./pages/reports/ItemLegder";
+import ItemReport from "./pages/reports/ItemReport";
+import PurchaseReport from "./pages/reports/PurchaseReport";
+import StockReport from "./pages/reports/StockReport";
+import StockAdjustmentReport from "./pages/reports/StockAdjustmentReport";
+import ExpiryReport from "./pages/reports/ExpiryReport";
+import MinMaxQtyReport from "./pages/reports/MinMaxQtyReport";
+import ProfitReport from "./pages/reports/ProfitReport";
+import Reactselect from "./pages/reactselect";
+
 // import FilterableSelect from "./pages/FilterSelect";
 // import ItemUpdate from "./pages/ItemUpdate";
 
@@ -55,6 +71,21 @@ const App = () => {
               <Route path="/item-map-supplier" element={<ItemMapSupplier />} />
               {/* <Route path="/filter" element={<FilterableSelect />} /> */}
               <Route path="/update-max-qty" element={<UpdateQty />} />
+              <Route path="/purchase-add" element={<PurchaseAdd />} />
+              <Route path="/purchase-loose" element={<PurchaseAdd2 />} />
+              <Route path="/purchase-list" element={<PurchaseList />} />
+              <Route path="/stock-adjustment" element={<StockAdjustment />} />
+              <Route path="/purchase-return" element={<PurchaseReturn />} />
+              <Route path="/purchase-return-list" element={<PurchaseReturnList />} />
+              <Route path="/item-ledger" element={<ItemLedger />} />
+              <Route path="/item-report" element={<ItemReport />} />
+              <Route path="/purchase-report" element={<PurchaseReport />} />
+              <Route path="/stock-report" element={<StockReport />} />
+              <Route path="/stock-adjustment-report" element={<StockAdjustmentReport />} />
+              <Route path="/expiry-report" element={<ExpiryReport />} />
+              <Route path="/minmax-report" element={<MinMaxQtyReport />} />
+              <Route path="/profit-report" element={<ProfitReport />} />
+              <Route path="/reactselect" element={<Reactselect />} />
 
             </Routes>
           </div>

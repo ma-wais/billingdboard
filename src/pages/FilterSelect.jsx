@@ -22,14 +22,12 @@ const FilterableDropdown = () => {
     const input = event.target.value.toLowerCase();
     setFilter(input);
     setIsOpen(true);
-    console.log("Filter changed to:", input);
   };
 
   const handleSelectOption = (option) => {
     setSelectedOption(option);
     setFilter(option);
     setIsOpen(false);
-    console.log("Selected option:", option);
   };
 
   const handleClickOutside = (event) => {
@@ -64,13 +62,8 @@ const FilterableDropdown = () => {
         value={filter}
         onChange={handleFilterChange}
         placeholder="Type to search..."
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        style={{
-          width: '100%',
-          padding: '8px',
-        }}
+        onClick={() => {setIsOpen(true);}}
+        style={{width: '100%',padding: '8px'}}
       />
       {isOpen && (
         <ul style={{

@@ -22,8 +22,8 @@ const Shop = () => {
 const Card = ({ heading, value, sales, backgroundColor }) => {
   return (
     <div className='card' style={{ backgroundColor: `${backgroundColor}` }} >
-      <h2>{heading}</h2>
-      <h1>{value}</h1>
+      <h3>{heading}</h3>
+      <h2>{value}</h2>
       <span>
       {
         sales &&

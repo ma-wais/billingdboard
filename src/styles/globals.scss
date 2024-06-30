@@ -19,10 +19,12 @@
         min-width: 180px;
         min-height: 130px;
     
-        h1{
+        h2{
+            margin-top: 5px;
             height: 20px;
         }
-        h2{
+        h3{
+            margin-top: 5px;
             height: 10px;
         }
     }
@@ -88,5 +90,28 @@
     input{
         width: 50%;
         max-width: 235px;
+    }
+}
+.more-inputs{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #cde0c4;
+    padding: 10px;
+
+    input{
+        padding: 4px 2px;
+        font-size: 13px;
+    }
+}
+.w50{
+    width: 80px;
+}
+.basic-single{
+    max-width: 505px !important;
+    
+    > div{
+        border-radius: 0px !important;
     }
 }
