@@ -32,10 +32,10 @@ import ProfitReport from "./pages/reports/ProfitReport";
 import Reactselect from "./pages/reactselect";
 
 // import FilterableSelect from "./pages/FilterSelect";
-// import ItemUpdate from "./pages/ItemUpdate";
+import ItemUpdate from "./pages/ItemUpdate";
 
 
-const ItemUpdate = lazy(() => import("./pages/ItemUpdate"));
+// const ItemUpdate = lazy(() => import("./pages/ItemUpdate"));
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
