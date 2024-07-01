@@ -1,6 +1,13 @@
 import React from "react";
+import Select from "react-select";
 
 const ItemAdd = () => {
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
+  
   return (
     <div className="box">
       <div className="heading">
@@ -14,22 +21,37 @@ const ItemAdd = () => {
         <div className="row-inputs">
           <input type="text" placeholder="Item Name" />
           <label htmlFor="type">Item Type </label>
-          <select name="gender" id="type">
-            {/* <option value="male">Male</option>
-                    <option value="female">Female</option> */}
-          </select>
+          <Select 
+              className="basic-single"
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              name="color"
+              options={options}
+              placeholder="Company Name"
+            />
         </div>
         <div className="row-inputs">
           <label htmlFor="companyName">Company Name</label>
-          <select name="companyName" id="">
-            <option value="">Active</option>
-            <option value="">Left</option>
-          </select>
+          <Select 
+              className="basic-single"
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              name="color"
+              options={options}
+              placeholder="Company Name"
+            />
           <label htmlFor="status">Unit</label>
-          <select name="status" id="status">
-            <option value="">TAB</option>
-            <option value="">DROP</option>
-          </select>
+          <Select 
+              className="basic-single"
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              name="color"
+              options={options}
+              placeholder="Company Name"
+            />
         </div>
         <div className="row-inputs">
           <input type="text" placeholder="Qty In Pack" />

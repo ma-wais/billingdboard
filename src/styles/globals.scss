@@ -1,10 +1,10 @@
-.cards{
+.cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     gap: 5px;
 
-    .card{
+    .card {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -14,76 +14,86 @@
         min-width: 170px;
         margin-bottom: 10px;
         color: rgb(245, 243, 243);
-    
-        h3{
+
+        h3 {
             height: 10px;
         }
     }
 }
-.box{
+
+.box {
     border: 1px solid rgb(173, 173, 173);
 }
-.heading{
+
+.heading {
     background-color: rgb(243, 243, 243);
     border-bottom: 1px solid rgb(173, 173, 173);
     padding: 0 10px;
 
-    p{
+    p {
         height: 10px;
     }
 }
-.inputs{
+
+.inputs {
     padding: 20px 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-.pagination{
+
+.pagination {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     padding: 20px 10px;
 
-    .goto{
+    .goto {
         display: inline-block;
         margin-left: 20px;
     }
-    input, select{
+
+    input,
+    select {
         padding: 5px;
         margin-left: 2px;
     }
-    button{
+
+    button {
         padding: 5px 10px;
         border: none;
         background-color: rgb(236, 236, 236);
         color: rgb(0, 0, 0);
     }
 }
-.submit{
+
+.submit {
     border-top: 1px solid rgb(173, 173, 173);
-    padding:10px;
+    padding: 10px;
     display: flex;
     justify-content: flex-end;
-    
-    button{
+
+    button {
         padding: 5px 10px;
         border: none;
         background-color: rgb(39, 129, 231);
         color: white;
     }
 }
-.row-inputs{
+
+.row-inputs {
     display: flex;
     align-items: center;
     width: 100%;
     gap: 10px;
 
-    input{
+    input {
         width: 50%;
-        max-width: 235px;
+        max-width: 235px;   
     }
 }
-.more-inputs{
+
+.more-inputs {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -91,18 +101,33 @@
     background: #cde0c4;
     padding: 10px;
 
-    input{
+    input {
         padding: 4px 2px;
         font-size: 13px;
     }
 }
-.w50{
+
+.w50 {
     width: 80px;
 }
-.basic-single{
+
+.basic-single {
     max-width: 505px !important;
-    
-    > div{
+    min-width: 220px;
+
+    >div {
         border-radius: 0px !important;
+    }
+}
+
+.buttons {
+    padding: 10px 0 0 10px;
+    background-color: #eaebf1;
+
+    button {
+        border: 0cap;
+        padding: 5px 10px;
+        border-top: 0px;
+        margin-left: 5px;
     }
 }

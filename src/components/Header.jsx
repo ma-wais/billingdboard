@@ -94,9 +94,9 @@ export const SideBar = ({ sidebarVisible }) => {
         <p onClick={() => navigate("/item-ledger")}>Item Ledger</p>
         <p onClick={() => navigate("/item-report")}>Item Report</p>
         <p onClick={() => navigate("/purchase-report")}>Purchase Report</p>
-        {/* <p onClick={() => navigate("/sale-report")}>Sale Report</p> */}
-        {/* <p onClick={() => navigate("/sale-return-report")}>Sale Return Report</p> */}
-        {/* <p onClick={() => navigate("/stock-report")}>Stock Delete</p> */}
+        <p onClick={() => navigate("/sale-report")}>Sale Report</p>
+        <p onClick={() => navigate("/sale-return-report")}>Sale Return Report</p>
+        {/* <p onClick={() => navigate("/stock-report")}>Stock Report</p> */}
         <p onClick={() => navigate("/stock-report")}>Stock Report</p>
         <p onClick={() => navigate("/stock-adjustment-report")}>Stock Adjustment Report</p>
         <p onClick={() => navigate("/expiry-report")}>Expiry Report</p>

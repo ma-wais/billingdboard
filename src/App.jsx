@@ -1,26 +1,31 @@
-import React, { useState, lazy } from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header, { SideBar } from "./components/Header";
-import Dashboard from "./pages/Dashboard";
 import "./App.css";
 import './styles/globals.scss'
-import Shop from "./pages/Shop";
-import Company from "./pages/Company";
-import Employee from "./pages/Employee";
-import City from "./pages/City";
-import ItemType from "./pages/ItemType";
-import Unit from "./pages/Unit";
-import ItemAdd from "./pages/ItemAdd";
-import FormulaUpdate from "./pages/FormulaUpdate";
-import ItemList from "./pages/ItemList";
-import ItemMapSupplier from "./pages/ItemMapSupplier";
-import UpdateQty from "./pages/UpdateQty";
-import PurchaseAdd from "./pages/PurchaseAdd";
-import PurchaseAdd2 from "./pages/PurchaseLoose";
-import PurchaseList from "./pages/PurchaseList";
-import StockAdjustment from "./pages/StockAdjustment";
-import PurchaseReturn from "./pages/PurchaseReturn";
-import PurchaseReturnList from "./pages/PurchaseReturnList";
+
+import Dashboard from "./pages/dashboard/Dashboard";
+import Shop from "./pages/dashboard/Shop";
+import Company from "./pages/dashboard/Company";
+import Employee from "./pages/dashboard/Employee";
+import City from "./pages/dashboard/City";
+
+import ItemType from "./pages/item/ItemType";
+import Unit from "./pages/item/Unit";
+import ItemAdd from "./pages/item/ItemAdd";
+import FormulaUpdate from "./pages/item/FormulaUpdate";
+import ItemList from "./pages/item/ItemList";
+import ItemMapSupplier from "./pages/item/ItemMapSupplier";
+import UpdateQty from "./pages/item/UpdateQty";
+import StockAdjustment from "./pages/item/StockAdjustment";
+import ItemUpdate from "./pages/item/ItemUpdate";
+
+import PurchaseAdd from "./pages/purchase/PurchaseAdd";
+import PurchaseAdd2 from "./pages/purchase/PurchaseLoose";
+import PurchaseList from "./pages/purchase/PurchaseList";
+import PurchaseReturn from "./pages/purchase/PurchaseReturn";
+import PurchaseReturnList from "./pages/purchase/PurchaseReturnList";
+
 import ItemLedger from "./pages/reports/ItemLegder";
 import ItemReport from "./pages/reports/ItemReport";
 import PurchaseReport from "./pages/reports/PurchaseReport";
@@ -29,13 +34,8 @@ import StockAdjustmentReport from "./pages/reports/StockAdjustmentReport";
 import ExpiryReport from "./pages/reports/ExpiryReport";
 import MinMaxQtyReport from "./pages/reports/MinMaxQtyReport";
 import ProfitReport from "./pages/reports/ProfitReport";
-import Reactselect from "./pages/reactselect";
-
-// import FilterableSelect from "./pages/FilterSelect";
-import ItemUpdate from "./pages/ItemUpdate";
-
-
-// const ItemUpdate = lazy(() => import("./pages/ItemUpdate"));
+import SaleReport from "./pages/reports/SaleReport";
+import SaleReturnReport from "./pages/reports/SaleReturnReport";
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -69,7 +69,6 @@ const App = () => {
               <Route path="/item-formula-update" element={<FormulaUpdate />} />
               <Route path="/item-list" element={<ItemList />} />
               <Route path="/item-map-supplier" element={<ItemMapSupplier />} />
-              {/* <Route path="/filter" element={<FilterableSelect />} /> */}
               <Route path="/update-max-qty" element={<UpdateQty />} />
               <Route path="/purchase-add" element={<PurchaseAdd />} />
               <Route path="/purchase-loose" element={<PurchaseAdd2 />} />
@@ -85,8 +84,8 @@ const App = () => {
               <Route path="/expiry-report" element={<ExpiryReport />} />
               <Route path="/minmax-report" element={<MinMaxQtyReport />} />
               <Route path="/profit-report" element={<ProfitReport />} />
-              <Route path="/reactselect" element={<Reactselect />} />
-
+              <Route path="/sale-report" element={<SaleReport />} />
+              <Route path="/sale-return-report" element={<SaleReturnReport />} />
             </Routes>
           </div>
         </div>
