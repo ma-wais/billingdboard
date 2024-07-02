@@ -10,6 +10,7 @@ const PurchaseAdd = () => {
            <div className='row-inputs'>
                 <label htmlFor="gender"> Supplier: </label>
                 <select name="gender" id="gender">
+                    <option value=""></option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
@@ -20,6 +21,7 @@ const PurchaseAdd = () => {
                 <input type="text" placeholder='Bill #'/>
                 <label htmlFor="status">Payment Mode</label>
                 <select name="status" id="">
+                    <option value=""></option>
                     <option value="">Cash</option>
                     <option value="">Credit</option>
                 </select>

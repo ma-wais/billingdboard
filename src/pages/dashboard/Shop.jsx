@@ -1,24 +1,100 @@
-import React from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { server } from '../../App';
 
 const Shop = () => {
+  const [formData, setFormData] = useState({
+    shopName: '',
+    owner: '',
+    address: '',
+    phoneNumber: '',
+    image: null,
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'image') {
+      setFormData({ ...formData, image: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const data = new FormData();
+    data.append('shopName', formData.shopName);
+    data.append('owner', formData.owner);
+    data.append('address', formData.address);
+    data.append('phoneNumber', formData.phoneNumber);
+    data.append('image', formData.image);
+
+    try {
+      const res = await axios.post(`${server}/shops`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Shop saved:', res.data);
+    } catch (error) {
+      console.error('Error saving shop:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className='box'>
-        <div className='heading'>
-            <p>Shop</p>
-        </div>
-        <div className='inputs'>
-            <input type="text" placeholder='Shop Name' />
-            <input type="text" placeholder='Shop Owner' />
-            <input type="text" placeholder='Shop Address' />
-            <input type="text" placeholder='Shop Phone' />
-            {/* <input type="text" placeholder='Shop Address' /> */}
-            <input type="file" accept='image/*' id='image' />
-        </div>
+      <div className='heading'>
+        <p>Shop</p>
+      </div>
+      <form className='inputs' onSubmit={handleSubmit}>
+        <input
+          type='text'
+          name='shopName'
+          placeholder='Shop Name'
+          value={formData.shopName}
+          onChange={handleChange}
+        />
+        <input
+          type='text'
+          name='owner'
+          placeholder='Shop Owner'
+          value={formData.owner}
+          onChange={handleChange}
+        />
+        <input
+          type='text'
+          name='address'
+          placeholder='Shop Address'
+          value={formData.address}
+          onChange={handleChange}
+        />
+        <input
+          type='text'
+          name='phoneNumber'
+          placeholder='Shop Phone'
+          value={formData.phoneNumber}
+          onChange={handleChange}
+        />
+        <input
+          type='file'
+          accept='image/*'
+          name='image'
+          onChange={handleChange}
+        />
         <div className='submit'>
-            <button>Save</button>
+          <button type='submit' disabled={isLoading}>
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
         </div>
+      </form>
     </div>
-  )
-}
+  );
+};
 
-export default Shop
+export default Shop;

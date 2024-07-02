@@ -53,7 +53,7 @@ export const SideBar = ({ sidebarVisible }) => {
       <nav className={show === "setup" ? "p5 h-auto" : ""}>
         <p onClick={() => navigate("/shop")}>Shop</p>
         <p onClick={() => navigate("/company")}>Company</p>
-        <p onClick={() => navigate("/employ")}>Employ</p>
+        <p onClick={() => navigate("/employ")}>Employee</p>
         <p onClick={() => navigate("/city")}>City</p>
       </nav>
       <div onClick={() => setShow(show === "item" ? "" : "item")}>
@@ -68,7 +68,7 @@ export const SideBar = ({ sidebarVisible }) => {
         <p onClick={() => navigate("/item-list")}>Item List</p>
         <p onClick={() => navigate("/item-map-supplier")}>Item Map Supplier</p>
         <p onClick={() => navigate("/update-max-qty")}>Update Max Qty</p>
-        <p onClick={() => navigate("/item-formula")}>Item Formula</p>
+        <p onClick={() => navigate("/formula")}>Formula</p>
       </nav>
       <div onClick={() => setShow(show === "purchase" ? "" : "purchase")}>
         <BiCart /> <p>Purchase Related</p> <CgAddR className="add" />
@@ -107,14 +107,14 @@ export const SideBar = ({ sidebarVisible }) => {
         <RiFilePaperFill /> <p>Accounts</p> <CgAddR className="add" />
       </div>
       <nav className={show === "account" ? "p5 h-auto" : ""}>
-        <p>Add Account</p>
-        <p>Cash Payment Voucher</p>
-        <p>Cash Payment List</p>
-        <p>Cash Receipt Voucher</p>
-        <p>Cash Receipt List</p>
-        <p>Account Balances</p>
-        <p>Account Ledger</p>
-        <p>Cash Report</p>
+        <p onClick={() => navigate("/add-account")}>Add Account</p>
+        <p onClick={() => navigate("/cash-voucher")}>Cash Payment Voucher</p>
+        <p onClick={() => navigate("/cash-voucher-list")}>Cash Payment List</p>
+        <p onClick={() => navigate("/cash-receipt-voucher")}>Cash Receipt Voucher</p>
+        <p onClick={() => navigate("/cash-receipt-voucher-list")}>Cash Receipt List</p>
+        <p onClick={() => navigate("/account-balances")}>Account Balances</p>
+        <p onClick={() => navigate("/account-ledger")}>Account Ledger</p>
+        <p onClick={() => navigate("/cash-report")}>Cash Report</p>
       </nav>
       <div onClick={() => navigate("/cash-summary")}>
         <FaBoxes /> <p>Cash Summary</p>

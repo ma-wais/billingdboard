@@ -1,54 +1,47 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { server } from "../../App";
 
 const ItemType = () => {
   const [show, setShow] = useState("menu");
-  const data = useMemo(
-    () => [
-      {
-        company: "001",
-        name: "A MAL",
-        shortName: "AMAL",
-        phone: "1234567890",
-        email: "bWj7M@example.com",
-        city: "Lahore",
-        status: "Active",
-      },
-      // Add more data as needed
-    ],
-    []
-  );
+  const [data, setData] = useState([]);
+  const [formData, setFormData] = useState({
+    itemTypeName: "",
+    itemTypeShortName: "",
+    itemTypeActive: "",
+    itemTypeRemarks: "",
+  });
+
+  useEffect(() => {
+    axios
+      .get(`${server}/item-types`)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the item types!", error);
+      });
+  }, []);
 
   const columns = useMemo(
     () => [
       {
-        Header: "Company Code",
-        accessor: "company",
+        Header: "Item Type Name",
+        accessor: "itemTypeName",
       },
       {
-        Header: "Company Name",
-        accessor: "name",
+        Header: "Item Type Short Name",
+        accessor: "itemTypeShortName",
       },
       {
-        Header: "Short Name",
-        accessor: "shortName",
+        Header: "Item Type Active",
+        accessor: "itemTypeActive",
       },
       {
-        Header: "Phone",
-        accessor: "phone",
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-      },
-      {
-        Header: "City",
-        accessor: "city",
-      },
-      {
-        Header: "Status",
-        accessor: "status",
+        Header: "Item Type Remarks",
+        accessor: "itemTypeRemarks",
       },
       {
         Header: "Action",
@@ -82,21 +75,45 @@ const ItemType = () => {
     usePagination
   );
 
+  const handleSave = () => {
+    axios
+      .post(`${server}/item-types`, formData)
+      .then((response) => {
+        setData([...data, response.data]);
+        setFormData({
+          itemTypeName: "",
+          itemTypeShortName: "",
+          itemTypeActive: "",
+          itemTypeRemarks: "",
+        });
+        setShow("list");
+      })
+      .catch((error) => {
+        console.error("There was an error saving the item type!", error);
+      });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   return (
-    <div className='box'>
-        <div className='heading'>
-            <p>Add ItemType</p>
-        </div>
-        <div className="buttons">
+    <div className="box">
+      <div className="heading">
+        <p>Add Item Type</p>
+      </div>
+      <div className="buttons">
         <button
           style={{
             borderLeft: show === "menu" ? `5px solid blue` : "none",
             background: show === "menu" ? "#fffbf8" : "none",
             fontWeight: show === "menu" ? "600" : "normal",
           }}
-          onClick={() => {
-            setShow("menu");
-          }}
+          onClick={() => setShow("menu")}
         >
           Add New
         </button>
@@ -106,33 +123,55 @@ const ItemType = () => {
             background: show === "list" ? "#fffbf8" : "none",
             fontWeight: show === "list" ? "600" : "normal",
           }}
-          onClick={() => {
-            setShow("list");
-          }}
+          onClick={() => setShow("list")}
         >
           List
         </button>
       </div>
 
       {show === "menu" ? (
-       <>
-       <div className='inputs'>
-            <input type="text" placeholder='Shop Name' />
-            <input type="text" placeholder='Shop Owner' />
-            <div className='row-inputs'>
-                <label htmlFor="typeActive">Item Type Active</label>
-                <select name="typeActive" id="">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
+        <>
+          <div className="inputs">
+            <input
+              type="text"
+              name="itemTypeName"
+              placeholder="Item Type Name"
+              value={formData.itemTypeName}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="itemTypeShortName"
+              placeholder="Item Type Short Name"
+              value={formData.itemTypeShortName}
+              onChange={handleChange}
+            />
+            <div className="row-inputs">
+              <label htmlFor="itemTypeActive">Item Type Active</label>
+              <select
+                name="itemTypeActive"
+                id="itemTypeActive"
+                value={formData.itemTypeActive}
+                onChange={handleChange}
+              >
+                <option value="">Select</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
             </div>
-            <input type="text" placeholder='Shop Phone' />
-        </div>
-        <div className='submit'>
-            <button>Save</button>
-        </div>
-       </>
-    ) : (
+            <textarea
+              name="itemTypeRemarks"
+              id="remarks"
+              placeholder="Remarks"
+              value={formData.itemTypeRemarks}
+              onChange={handleChange}
+            ></textarea>
+          </div>
+          <div className="submit">
+            <button onClick={handleSave}>Save</button>
+          </div>
+        </>
+      ) : (
         <div>
           <div className="table-responsive">
             <table
@@ -184,7 +223,9 @@ const ItemType = () => {
                 type="number"
                 defaultValue={pageIndex + 1}
                 onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  const page = e.target.value
+                    ? Number(e.target.value) - 1
+                    : 0;
                   gotoPage(page);
                 }}
                 style={{ width: "100px" }}
@@ -192,9 +233,7 @@ const ItemType = () => {
             </span>{" "}
             <select
               value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value));
-              }}
+              onChange={(e) => setPageSize(Number(e.target.value))}
             >
               {[10, 20, 30, 40, 50].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
@@ -206,7 +245,7 @@ const ItemType = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ItemType
+export default ItemType;

@@ -4,36 +4,39 @@ import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 
-const City = () => {
+const Formula = () => {
   const [show, setShow] = useState("menu");
   const [data, setData] = useState([]);
-  const [cityName, setCityName] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    composition: "",
+  });
 
   useEffect(() => {
-    axios.get(`${server}/cities`)
-      .then(response => {
+    axios
+      .get(`${server}/formula`)
+      .then((response) => {
         setData(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("There was an error fetching the cities!", error);
       });
   }, []);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   const columns = useMemo(
     () => [
       {
-        Header: "City name",
+        Header: "Formula name",
         accessor: "name",
       },
       {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
-      },
-      {
-        Header: "Delete",
-        accessor: "delete",
-        Cell: () => <button className="btn btn-primary">Delete</button>,
+        Header: "Composition",
+        accessor: "composition",
       },
     ],
     []
@@ -48,11 +51,9 @@ const City = () => {
     canPreviousPage,
     canNextPage,
     pageOptions,
-    gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,
@@ -63,21 +64,25 @@ const City = () => {
   );
 
   const handleSave = () => {
-    axios.post(`${server}/cities`, { name: cityName })
-      .then(response => {
+    axios
+      .post(`${server}/formula`, {
+        name: formData.name,
+        composition: formData.composition,
+      })
+      .then((response) => {
         setData([...data, response.data]);
-        setCityName("");
+        setFormData("");
         setShow("list");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("There was an error saving the city!", error);
       });
   };
 
   return (
-    <div className='box'>
-      <div className='heading'>
-        <p>Add City</p>
+    <div className="box">
+      <div className="heading">
+        <p>Add Formula</p>
       </div>
       <div className="buttons">
         <button
@@ -104,18 +109,29 @@ const City = () => {
 
       {show === "menu" ? (
         <>
-          <div className='inputs'>
+          <form className="inputs" onSubmit={(e) => e.preventDefault()}>
             <input
               type="text"
-              placeholder='City Name'
+              placeholder="Formula Name"
+              name="name"
               style={{ maxWidth: "300px" }}
-              value={cityName}
-              onChange={(e) => setCityName(e.target.value)}
+              value={formData.name}
+              onChange={handleChange}
             />
-          </div>
-          <div className='submit'>
-            <button onClick={handleSave}>Save</button>
-          </div>
+            <input
+              type="text"
+              placeholder="Composition"
+              name="composition"
+              style={{ maxWidth: "300px" }}
+              value={formData.composition}
+              onChange={handleChange}
+            />
+            <div className="submit">
+              <button type="button" onClick={handleSave}>
+                Save
+              </button>
+            </div>
+          </form>
         </>
       ) : (
         <div>
@@ -162,29 +178,6 @@ const City = () => {
                 {pageIndex + 1} of {pageOptions.length}
               </strong>{" "}
             </span>
-            <span className="goto">
-              Go to page:{" "}
-              <input
-                className="table-input"
-                type="number"
-                defaultValue={pageIndex + 1}
-                onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                  gotoPage(page);
-                }}
-                style={{ width: "100px" }}
-              />
-            </span>{" "}
-            <select
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-            >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
       )}
@@ -192,4 +185,4 @@ const City = () => {
   );
 };
 
-export default City;
+export default Formula;

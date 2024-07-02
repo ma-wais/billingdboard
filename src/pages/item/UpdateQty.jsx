@@ -1,38 +1,44 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import { server } from "../../App";
 
 const UpdateQty = () => {
-  const data = useMemo(
-    () => [
-      {
-        name: "A MAL",
-        company: "EFROZE CHEMICAL IND(PTV)LIT",
-        unit: "INJ",
-        reorderLevel: 20,
-      },
-      // Add more data as needed
-    ],
-    []
-  );
+  const [data, setOriginalData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await axios.get(`${server}/items`);
+        const itemsArray = Array.isArray(result.data) ? result.data : [];
+        setOriginalData(itemsArray);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setOriginalData([]);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns = useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: "itemName",
       },
       {
         Header: "Company",
-        accessor: "company",
+        accessor: "companyName",
       },
       {
         Header: "Unit",
         accessor: "unit",
       },
       {
-        Header: "Reorder Level",
-        accessor: "reorderLevel",
+        Header: "Supplier",
+        accessor: "supplier",
       },
       {
         Header: "Action",
@@ -42,6 +48,7 @@ const UpdateQty = () => {
     ],
     []
   );
+
 
   const {
     getTableProps,
@@ -68,7 +75,7 @@ const UpdateQty = () => {
 
   return (
     <div className="box">
-      <div className="heading">Item Map Supplier Add</div>
+      <div className="heading">Update Quantity</div>
       <div className="table-responsive">
         <table
           {...getTableProps()}

@@ -36,6 +36,9 @@ import MinMaxQtyReport from "./pages/reports/MinMaxQtyReport";
 import ProfitReport from "./pages/reports/ProfitReport";
 import SaleReport from "./pages/reports/SaleReport";
 import SaleReturnReport from "./pages/reports/SaleReturnReport";
+import Formula from "./pages/item/Formula";
+
+export const server = 'http://localhost:4000/api/v1';
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -62,6 +65,7 @@ const App = () => {
               <Route path="/company" element={<Company />} />
               <Route path="/employ" element={<Employee />} />
               <Route path="/city" element={<City />} />
+
               <Route path="/item-type" element={<ItemType />} />
               <Route path="/unit" element={<Unit />} />
               <Route path="/item" element={<ItemAdd />} />
@@ -70,12 +74,15 @@ const App = () => {
               <Route path="/item-list" element={<ItemList />} />
               <Route path="/item-map-supplier" element={<ItemMapSupplier />} />
               <Route path="/update-max-qty" element={<UpdateQty />} />
+              <Route path="/formula" element={<Formula />} />
+
               <Route path="/purchase-add" element={<PurchaseAdd />} />
               <Route path="/purchase-loose" element={<PurchaseAdd2 />} />
               <Route path="/purchase-list" element={<PurchaseList />} />
               <Route path="/stock-adjustment" element={<StockAdjustment />} />
               <Route path="/purchase-return" element={<PurchaseReturn />} />
               <Route path="/purchase-return-list" element={<PurchaseReturnList />} />
+
               <Route path="/item-ledger" element={<ItemLedger />} />
               <Route path="/item-report" element={<ItemReport />} />
               <Route path="/purchase-report" element={<PurchaseReport />} />

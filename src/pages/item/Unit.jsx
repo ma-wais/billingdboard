@@ -1,54 +1,60 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import { server } from "../../App";
 
 const Unit = () => {
   const [show, setShow] = useState("menu");
-  const data = useMemo(
-    () => [
-      {
-        company: "001",
-        name: "A MAL",
-        shortName: "AMAL",
-        phone: "1234567890",
-        email: "bWj7M@example.com",
-        city: "Lahore",
-        status: "Active",
-      },
-      // Add more data as needed
-    ],
-    []
-  );
+  const [units, setUnits] = useState([]);
+  const [newUnit, setNewUnit] = useState({
+    unitName: "",
+    unitStatus: "active",
+    remarks: ""
+  });
+
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        const response = await axios.get(`${server}/units`);
+        setUnits(response.data);
+      } catch (error) {
+        console.error("Error fetching units:", error);
+      }
+    };
+
+    fetchUnits();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewUnit({ ...newUnit, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${server}/units`, newUnit);
+      setUnits([...units, response.data]);
+      setShow("list");
+    } catch (error) {
+      console.error("Error creating unit:", error);
+    }
+  };
 
   const columns = useMemo(
     () => [
       {
-        Header: "Company Code",
-        accessor: "company",
-      },
-      {
-        Header: "Company Name",
-        accessor: "name",
-      },
-      {
-        Header: "Short Name",
-        accessor: "shortName",
-      },
-      {
-        Header: "Phone",
-        accessor: "phone",
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-      },
-      {
-        Header: "City",
-        accessor: "city",
+        Header: "Unit Name",
+        accessor: "unitName",
       },
       {
         Header: "Status",
-        accessor: "status",
+        accessor: "unitStatus",
+      },
+      {
+        Header: "Remarks",
+        accessor: "remarks",
       },
       {
         Header: "Action",
@@ -76,7 +82,7 @@ const Unit = () => {
   } = useTable(
     {
       columns,
-      data,
+      data: units,
       initialState: { pageIndex: 0 },
     },
     usePagination
@@ -116,22 +122,39 @@ const Unit = () => {
 
       {show === "menu" ? (
         <>
-          <div className="inputs">
-            <input type="text" placeholder="Unit Name" />
-            <div className="row-inputs">
-              <label htmlFor="typeActive">Unit Status</label>
-              <select name="typeActive" id="">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
+          <form onSubmit={handleSubmit}>
+            <div className="inputs">
+              <input
+                type="text"
+                placeholder="Unit Name"
+                name="unitName"
+                value={newUnit.unitName}
+                onChange={handleInputChange}
+                required
+              />
+              <div className="row-inputs">
+                <label htmlFor="unitStatus">Unit Status</label>
+                <select
+                  name="unitStatus"
+                  value={newUnit.unitStatus}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <textarea
+                name="remarks"
+                placeholder="Remarks"
+                value={newUnit.remarks}
+                onChange={handleInputChange}
+              ></textarea>
             </div>
-            <textarea name="remarks" id="">
-              Remarks
-            </textarea>
-          </div>
-          <div className="submit">
-            <button>Save</button>
-          </div>
+            <div className="submit">
+              <button type="submit">Save</button>
+            </div>
+          </form>
         </>
       ) : (
         <div>

@@ -1,34 +1,52 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { server } from "../../App";
 
 const Company = () => {
   const [show, setShow] = useState("menu");
-  const data = useMemo(
-    () => [
-      {
-        company: "001",
-        name: "A MAL",
-        shortName: "AMAL",
-        phone: "1234567890",
-        email: "bWj7M@example.com",
-        city: "Lahore",
-        status: "Active",
-      },
-      // Add more data as needed
-    ],
-    []
-  );
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    companyName: '',
+    shortName: '',
+    code: '',
+    phoneNumber: '',
+    email: '',
+    address: '',
+    city: '',
+    status: '',
+    remarks: ''
+  });
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`${server}/companies`);
+        setCompanies(res.data);
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  const data = useMemo(() => companies, [companies]);
 
   const columns = useMemo(
     () => [
       {
         Header: "Company Code",
-        accessor: "company",
+        accessor: "code",
       },
       {
         Header: "Company Name",
-        accessor: "name",
+        accessor: "companyName",
       },
       {
         Header: "Short Name",
@@ -36,7 +54,7 @@ const Company = () => {
       },
       {
         Header: "Phone",
-        accessor: "phone",
+        accessor: "phoneNumber",
       },
       {
         Header: "Email",
@@ -44,7 +62,7 @@ const Company = () => {
       },
       {
         Header: "City",
-        accessor: "city",
+        accessor: "address",
       },
       {
         Header: "Status",
@@ -82,6 +100,26 @@ const Company = () => {
     usePagination
   );
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      const res = await axios.post(`${server}/companies`, formData);
+      setCompanies([...companies, res.data]);
+      setShow("list");
+    } catch (error) {
+      console.error('Error saving company:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="box">
       <div className="heading">
@@ -94,9 +132,7 @@ const Company = () => {
             background: show === "menu" ? "#fffbf8" : "none",
             fontWeight: show === "menu" ? "600" : "normal",
           }}
-          onClick={() => {
-            setShow("menu");
-          }}
+          onClick={() => setShow("menu")}
         >
           Add New
         </button>
@@ -106,9 +142,7 @@ const Company = () => {
             background: show === "list" ? "#fffbf8" : "none",
             fontWeight: show === "list" ? "600" : "normal",
           }}
-          onClick={() => {
-            setShow("list");
-          }}
+          onClick={() => setShow("list")}
         >
           List
         </button>
@@ -116,48 +150,84 @@ const Company = () => {
 
       {show === "menu" ? (
         <>
-          <div className="inputs">
-            <input type="text" placeholder="Company Name" />
+          <form className="inputs" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="companyName"
+              placeholder="Company Name"
+              value={formData.companyName}
+              onChange={handleChange}
+            />
             <div className="row-inputs">
-              <input type="text" placeholder="Short Name" />
-              <input type="text" placeholder="Code" />
+              <input
+                type="text"
+                name="shortName"
+                placeholder="Short Name"
+                value={formData.shortName}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="code"
+                placeholder="Code"
+                value={formData.code}
+                onChange={handleChange}
+              />
             </div>
             <div className="row-inputs">
-              <input type="text" placeholder="Phone #" />
-              <input type="email" placeholder="Email" />
+              <input
+                type="text"
+                name="phoneNumber"
+                placeholder="Phone #"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
             <div className="row-inputs">
               <textarea
                 style={{ width: "40%" }}
                 type="text"
+                name="address"
                 placeholder="Address"
+                value={formData.address}
+                onChange={handleChange}
               />
-              <select name="" id="">
-                <option value="Gujrat">Gujrat</option>
+              <select name="city" value={formData.city} onChange={handleChange}>
+                <option value=""></option>
                 <option value="Punjab">Punjab</option>
                 <option value="Sindh">Sindh</option>
                 <option value="KPK">KPK</option>
               </select>
             </div>
-            <select name="" id="">
-              <option value="Gujrat">Gujrat</option>
-              <option value="Punjab">Punjab</option>
-              <option value="Sindh">Sindh</option>
-              <option value="KPK">KPK</option>
+            <select name="status" value={formData.status} onChange={handleChange}>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
             </select>
-            <textarea type="text" placeholder="Remarks" />
-          </div>
-          <div className="submit">
-            <button>Save</button>
-          </div>
+            <textarea
+              type="text"
+              name="remarks"
+              placeholder="Remarks"
+              value={formData.remarks}
+              onChange={handleChange}
+            />
+            <div className="submit">
+              <button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Save"}
+              </button>
+            </div>
+          </form>
         </>
       ) : (
         <div>
           <div className="table-responsive">
-            <table
-              {...getTableProps()}
-              className="table table-striped table-bordered"
-            >
+            <table {...getTableProps()} className="table table-striped table-bordered">
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>

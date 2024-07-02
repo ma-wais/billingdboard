@@ -1,62 +1,140 @@
-import React, { useMemo } from 'react';
-import { useTable, useFilters, usePagination} from 'react-table';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTable, useFilters, usePagination } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import { server } from '../../App';
 
-const ItemTable = () => {
-  const data = useMemo(
-    () => [
-      {
-        name: 'A MAL',
-        itemType: 'Item Type',
-        company: 'EFROZE CHEMICAL IND(PTV)LIT',
-        unit: 'INJ',
-        qtyInPack: 20,
-        retailPrice: 200,
-        minQty: 0,
-        maxQty: 0,
-        status: 'Active',
-      },
-      {
-        name: 'A MAL',
-        itemType: 'Item Type',
-        company: 'EFROZE CHEMICAL IND(PTV)LIT',
-        unit: 'INJ',
-        qtyInPack: 20,
-        retailPrice: 200,
-        minQty: 0,
-        maxQty: 0,
-        status: 'Active',
-      },
-      // Add more data as needed
-    ],
-    []
+const EditableCell = ({
+  value: initialValue,
+  row: { index },
+  column: { id },
+  updateMyData,
+}) => {
+  const [value, setValue] = useState(initialValue);
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const onBlur = () => {
+    updateMyData(index, id, value);
+  };
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  return <input value={value} onChange={onChange} onBlur={onBlur} className="form-control" />;
+};
+
+const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
+  const count = preFilteredRows.length;
+
+  return (
+    <input
+      value={filterValue || ''}
+      onChange={(e) => setFilter(e.target.value || undefined)}
+      placeholder={`Search ${count} records...`}
+      className="form-control"
+    />
   );
+};
+const ItemTable = () => {
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await axios.get(`${server}/items`);
+        const itemsArray = Array.isArray(result.data) ? result.data : [];
+        setData(itemsArray);
+        setOriginalData(itemsArray);
+        // console.log("Data fetched:", itemsArray);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setData([]);
+        setOriginalData([]);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const updateMyData = useCallback((rowIndex, columnId, value) => {
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          };
+        }
+        return row;
+      })
+    );
+  }, []);
+
+  const saveChanges = useCallback(async (rowIndex) => {
+    const item = data[rowIndex];
+    const originalItem = originalData[rowIndex];
+    const updates = {};
+
+    Object.keys(item).forEach((key) => {
+      if (item[key] !== originalItem[key]) {
+        updates[key] = item[key];
+      }
+    });
+
+    if (Object.keys(updates).length > 0) {
+      try {
+        await axios.put(`${server}/items/${item._id}`, updates);
+        setOriginalData(data);
+        alert('Item updated successfully');
+      } catch (error) {
+        console.error('Error updating item:', error);
+        alert('Error updating item');
+      }
+    } else {
+      alert('No changes to save');
+    }
+  }, [data, originalData]);
 
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
-        accessor: 'name',
-        Filter: ColumnFilter,
-      },
-      {
-        Header: 'Item Type',
-        accessor: 'itemType',
+        accessor: 'itemName',
         Filter: ColumnFilter,
       },
       {
         Header: 'Company',
-        accessor: 'company',
+        accessor: 'companyName',
         Filter: ColumnFilter,
       },
+      // {
+      //   Header: 'Stock',
+      //   accessor: 'stock',
+      //   Filter: ColumnFilter,
+      // },
       {
         Header: 'Unit',
         accessor: 'unit',
         Filter: ColumnFilter,
       },
+      // {
+      //   Header: 'Stock Type',
+      //   accessor: 'stockType',
+      //   Filter: ColumnFilter,
+      // },
+      {
+        Header: 'Rack',
+        accessor: 'itemRackNumber',
+        Filter: ColumnFilter,
+      },
       {
         Header: 'Qty in pack',
-        accessor: 'qtyInPack',
+        accessor: 'quantityInPack',
         Filter: ColumnFilter,
       },
       {
@@ -65,36 +143,22 @@ const ItemTable = () => {
         Filter: ColumnFilter,
       },
       {
-        Header: 'Min Qty',
-        accessor: 'minQty',
-        Filter: ColumnFilter,
-      },
-      {
-        Header: 'Max Qty',
-        accessor: 'maxQty',
-        Filter: ColumnFilter,
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        Filter: ColumnFilter,
-      },
-      {
         Header: 'Action',
         accessor: 'action',
-        Cell: () => <button className="btn btn-primary">Edit</button>,
+        Cell: ({ row }) => (
+          <button className="btn btn-primary" onClick={() => saveChanges(row.index)}>
+            Save
+          </button>
+        ),
         disableFilters: true,
       },
     ],
-    []
+    [saveChanges]
   );
 
-  const defaultColumn = useMemo(
-    () => ({
-      Filter: ColumnFilter,
-    }),
-    []
-  );
+  const defaultColumn = useMemo(() => ({
+    Cell: EditableCell,
+  }), []);
 
   const {
     getTableProps,
@@ -105,21 +169,19 @@ const ItemTable = () => {
     canPreviousPage,
     canNextPage,
     pageOptions,
-    // pageCount,
-    gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,
       data,
       defaultColumn,
+      updateMyData,
       initialState: { pageIndex: 0 },
     },
     useFilters,
-    usePagination,
+    usePagination
   );
 
   return (
@@ -130,9 +192,9 @@ const ItemTable = () => {
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                  <th style={{fontSize: "12px", fontWeight: 500 }} {...column.getHeaderProps()}>
+                  <th {...column.getHeaderProps()}>
                     {column.render('Header')}
-                    <div style={{width: "80px", marginTop: "8px"}}>{column.canFilter ? column.render('Filter') : null}</div>
+                    <div style={{width: '80px'}}>{column.canFilter ? column.render('Filter') : null}</div>
                   </th>
                 ))}
               </tr>
@@ -153,64 +215,20 @@ const ItemTable = () => {
         </table>
       </div>
       <div className="pagination">
-        {/* <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '} */}
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
           {'<'}
         </button>{' '}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
           {'>'}
         </button>{' '}
-        {/* <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '} */}
         <span>
           Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>{' '}
         </span>
-        <span className='goto'>
-           Go to page:{' '}
-          <input
-            className='table-input'
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
-        <select
-          value={pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
       </div>
     </>
-  );
-};
-
-const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
-  const count = preFilteredRows.length;
-
-  return (
-    <input
-      value={filterValue || ''}
-      onChange={e => setFilter(e.target.value || undefined)}
-      placeholder={`${id}`}
-      className="form-control"
-    />
   );
 };
 
