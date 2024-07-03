@@ -19,6 +19,7 @@ import ItemMapSupplier from "./pages/item/ItemMapSupplier";
 import UpdateQty from "./pages/item/UpdateQty";
 import StockAdjustment from "./pages/item/StockAdjustment";
 import ItemUpdate from "./pages/item/ItemUpdate";
+import Formula from "./pages/item/Formula";
 
 import PurchaseAdd from "./pages/purchase/PurchaseAdd";
 import PurchaseAdd2 from "./pages/purchase/PurchaseLoose";
@@ -36,7 +37,6 @@ import MinMaxQtyReport from "./pages/reports/MinMaxQtyReport";
 import ProfitReport from "./pages/reports/ProfitReport";
 import SaleReport from "./pages/reports/SaleReport";
 import SaleReturnReport from "./pages/reports/SaleReturnReport";
-import Formula from "./pages/item/Formula";
 
 export const server = 'http://localhost:4000/api/v1';
 
