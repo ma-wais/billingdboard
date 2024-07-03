@@ -1,29 +1,103 @@
-import React, { useMemo } from "react";
-import { useTable, useFilters, usePagination } from "react-table";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTable, useFilters, usePagination } from 'react-table';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import { server } from '../../App';
 
-const StockAdjustment = () => {
-  const data = useMemo(
-    () => [
-      {
-        itemName: "A MAL",
-        currentStock: "Item Type",
-        physicalStockQty: "EFROZE CHEMICAL IND(PTV)LIT",
-      },
-    //   {
-    //     name: "A MAL",
-    //     itemType: "Item Type",
-    //     company: "EFROZE CHEMICAL IND(PTV)LIT",
-    //     unit: "INJ",
-    //     qtyInPack: 20,
-    //     retailPrice: 200,
-    //     minQty: 0,
-    //     maxQty: 0,
-    //     status: "Active",
-    //   },
-    ],
-    []
+const EditableCell = ({
+  value: initialValue,
+  row: { index },
+  column: { id },
+  updateMyData,
+}) => {
+  const [value, setValue] = useState(initialValue);
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const onBlur = () => {
+    updateMyData(index, id, value);
+  };
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  return <input value={value} onChange={onChange} onBlur={onBlur} className="form-control" />;
+};
+
+const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
+  const count = preFilteredRows.length;
+
+  return (
+    <input
+      value={filterValue || ''}
+      onChange={(e) => setFilter(e.target.value || undefined)}
+      placeholder={`Search ${count} records...`}
+      className="form-control"
+    />
   );
+};
+const ItemTable = () => {
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await axios.get(`${server}/items`);
+        const itemsArray = Array.isArray(result.data) ? result.data : [];
+        setData(itemsArray);
+        setOriginalData(itemsArray);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setData([]);
+        setOriginalData([]);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const updateMyData = useCallback((rowIndex, columnId, value) => {
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          };
+        }
+        return row;
+      })
+    );
+  }, []);
+
+  const saveChanges = useCallback(async (rowIndex) => {
+    const item = data[rowIndex];
+    const originalItem = originalData[rowIndex];
+    const updates = {};
+
+    Object.keys(item).forEach((key) => {
+      if (item[key] !== originalItem[key]) {
+        updates[key] = item[key];
+      }
+    });
+
+    if (Object.keys(updates).length > 0) {
+      try {
+        await axios.put(`${server}/items/${item._id}`, updates);
+        setOriginalData(data);
+        alert('Item updated successfully');
+      } catch (error) {
+        console.error('Error updating item:', error);
+        alert('Error updating item');
+      }
+    } else {
+      alert('No changes to save');
+    }
+  }, [data, originalData]);
 
   const columns = useMemo(
     () => [
@@ -34,35 +108,30 @@ const StockAdjustment = () => {
       },
       {
         Header: "Current Stock",
-        accessor: "currentStock",
+        accessor: "stock",
         Filter: ColumnFilter,
       },
       {
         Header: "Physical Stock Qty",
-        accessor: "physicalStockQty",
+        accessor: "physicalStock",
         Filter: ColumnFilter,
       },
-    //   {
-    //     Header: "Status",
-    //     accessor: "status",
-    //     Filter: ColumnFilter,
-    //   },
       {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
+        Header: 'Action',
+        accessor: 'action',
+        Cell: ({ row }) => (
+          <button className="btn btn-primary" onClick={() => saveChanges(row.index)}>
+            Save
+          </button>
+        ),
         disableFilters: true,
       },
     ],
     []
   );
-
-  const defaultColumn = useMemo(
-    () => ({
-      Filter: ColumnFilter,
-    }),
-    []
-  );
+  const defaultColumn = useMemo(() => ({
+    Cell: EditableCell,
+  }), []);
 
   const {
     getTableProps,
@@ -73,17 +142,15 @@ const StockAdjustment = () => {
     canPreviousPage,
     canNextPage,
     pageOptions,
-    // pageCount,
-    gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
   } = useTable(
     {
       columns,
       data,
       defaultColumn,
+      updateMyData,
       initialState: { pageIndex: 0 },
     },
     useFilters,
@@ -91,41 +158,28 @@ const StockAdjustment = () => {
   );
 
   return (
-    <div className="box">
-      <div className="heading">
-        <p>Purchase List</p>
-      </div>
-      <div className="more-inputs">
-        <label htmlFor="account">Supplier Name</label>
-        <select name="account" id="account"></select>
-        <button style={{background: "#739e73", color: "white", marginLeft: "auto", marginRight: "10px"}}>Add To Table</button>
-        </div>
+    <>
       <div className="table-responsive">
-        <table
-          {...getTableProps()}
-          className="table table-striped table-bordered"
-        >
+        <table {...getTableProps()} className="table table-striped table-bordered">
           <thead>
-            {headerGroups.map((headerGroup) => (
+            {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    style={{ fontSize: "12px"}}
-                    {...column.getHeaderProps()}
-                  >
-                    <tr>{column.render("Header")}</tr>
+                {headerGroup.headers.map(column => (
+                  <th {...column.getHeaderProps()}>
+                    {column.render('Header')}
+                    <div style={{width: '80px'}}>{column.canFilter ? column.render('Filter') : null}</div>
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row) => {
+            {page.map(row => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  {row.cells.map(cell => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   ))}
                 </tr>
               );
@@ -135,60 +189,22 @@ const StockAdjustment = () => {
       </div>
       <div className="pagination">
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
+          {'<'}
+        </button>{' '}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
+          {'>'}
+        </button>{' '}
         <span>
-          Page{" "}
+          Page{' '}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
+          </strong>{' '}
         </span>
-        <span className="goto">
-          Go to page:{" "}
-          <input
-            className="table-input"
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
       </div>
-    </div>
+    </>
   );
 };
 
-const ColumnFilter = ({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) => {
-  const count = preFilteredRows.length;
 
-  return (
-    <input
-      value={filterValue || ""}
-      onChange={(e) => setFilter(e.target.value || undefined)}
-      placeholder={`${id}`}
-      className="form-control"
-    />
-  );
-};
 
-export default StockAdjustment;
+export default ItemTable;

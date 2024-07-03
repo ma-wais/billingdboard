@@ -50,7 +50,6 @@ const ItemTable = () => {
         const itemsArray = Array.isArray(result.data) ? result.data : [];
         setData(itemsArray);
         setOriginalData(itemsArray);
-        // console.log("Data fetched:", itemsArray);
       } catch (error) {
         console.error("Error fetching data:", error);
         setData([]);

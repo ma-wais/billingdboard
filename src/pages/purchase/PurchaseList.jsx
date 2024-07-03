@@ -1,89 +1,67 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useFilters, usePagination } from "react-table";
+import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { server } from "../../App";
 
 const PurchaseList = () => {
-  const data = useMemo(
-    () => [
-      {
-        companyName: "A MAL",
-        billNo: "Item Type",
-        purchaseDate: "EFROZE CHEMICAL IND(PTV)LIT",
-        totalAmount: "INJ",
-        discount: 20,
-        tac: 200,
-        netPrice: 0,
-        noOfItems: 0,
-        // Action: "Active",
-      },
-    //   {
-    //     name: "A MAL",
-    //     itemType: "Item Type",
-    //     company: "EFROZE CHEMICAL IND(PTV)LIT",
-    //     unit: "INJ",
-    //     qtyInPack: 20,
-    //     retailPrice: 200,
-    //     minQty: 0,
-    //     maxQty: 0,
-    //     status: "Active",
-    //   },
-      // Add more data as needed
-    ],
-    []
-  );
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${server}/purchase`);
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching purchase data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns = useMemo(
     () => [
       {
-        Header: "Company Name",
-        accessor: "companyName",
+        Header: "Supplier",
+        accessor: "supplier",
         Filter: ColumnFilter,
       },
       {
         Header: "Bill No",
-        accessor: "billNo",
+        accessor: "billNumber",
         Filter: ColumnFilter,
       },
       {
         Header: "Purchase Date",
-        accessor: "purchaseDate",
+        accessor: "dateOfPurchase",
+        Filter: ColumnFilter,
+        Cell: ({ value }) => new Date(value).toLocaleDateString(),
+      },
+      {
+        Header: "Total Items",
+        accessor: "totalItems",
         Filter: ColumnFilter,
       },
       {
-        Header: "Total Amount",
-        accessor: "totalAmount",
+        Header: "Bill Amount",
+        accessor: "billAmount",
         Filter: ColumnFilter,
       },
       {
         Header: "Discount",
-        accessor: "discount",
+        accessor: "discountAmount",
         Filter: ColumnFilter,
       },
       {
-        Header: "TAX",
-        accessor: "tac",
+        Header: "Advance Tax",
+        accessor: "advanceTaxAmount",
         Filter: ColumnFilter,
       },
       {
-        Header: "Net Price",
-        accessor: "netPrice",
+        Header: "Net Amount",
+        accessor: "netAmount",
         Filter: ColumnFilter,
-      },
-      {
-        Header: "No. of Items",
-        accessor: "noOfItems",
-        Filter: ColumnFilter,
-      },
-    //   {
-    //     Header: "Status",
-    //     accessor: "status",
-    //     Filter: ColumnFilter,
-    //   },
-      {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
-        disableFilters: true,
       },
     ],
     []
@@ -104,13 +82,8 @@ const PurchaseList = () => {
     prepareRow,
     canPreviousPage,
     canNextPage,
-    pageOptions,
-    // pageCount,
-    gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -127,34 +100,32 @@ const PurchaseList = () => {
       <div className="heading">
         <p>Purchase List</p>
       </div>
-      <div className="more-inputs">
-        <label htmlFor="account"> Account   </label>
-        <select name="account" id="account">Account</select>
+      {/* <div className="more-inputs">
+        <label htmlFor="account"> Account </label>
+        <select name="account" id="account">
+          <option value="sample">Sample Account</option>
+        </select>
         <label htmlFor="from">From Date</label>
-        <input type="date" id="from"/>
+        <input type="date" id="from" />
         <label htmlFor="to">To Date</label>
-        <input type="date" id="to"/>
-        <button style={{background: "#739e73", color: "white", marginLeft: "auto", marginRight: "10px"}}>Add To Table</button>
-        </div>
-      <div className="table-responsive">
-        <table
-          {...getTableProps()}
-          className="table table-striped table-bordered"
+        <input type="date" id="to" />
+        <button
+          style={{ background: "#739e73", color: "white", marginLeft: "auto", marginRight: "10px" }}
         >
+          Search
+        </button>
+      </div> */}
+      <div className="table-responsive">
+        <table {...getTableProps()} className="table table-striped table-bordered">
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th
-                    style={{ fontSize: "12px"}}
-                    {...column.getHeaderProps()}
-                  >
-                    <tr>
-                      <div style={{ width: "80px", marginBottom: "8px"}}>
-                        {column.canFilter ? column.render("Filter") : null}
-                      </div>
-                    </tr>
-                    <tr>{column.render("Header")}</tr>
+                  <th style={{ fontSize: "12px" }} {...column.getHeaderProps()}>
+                    <div style={{ width: "80px", marginBottom: "8px" }}>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                    <div>{column.render("Header")}</div>
                   </th>
                 ))}
               </tr>
@@ -176,50 +147,17 @@ const PurchaseList = () => {
       </div>
       <div className="pagination">
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
+          {"Prev"}
         </button>{" "}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
+          {"Next"}
         </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span className="goto">
-          Go to page:{" "}
-          <input
-            className="table-input"
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );
 };
 
-const ColumnFilter = ({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) => {
+const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
   const count = preFilteredRows.length;
 
   return (
