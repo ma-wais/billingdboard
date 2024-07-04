@@ -8,19 +8,19 @@ const PurchaseAdd = () => {
   const [purchases, setPurchases] = useState([]);
   const [currentPurchase, setCurrentPurchase] = useState({
     item: "",
-    quantity: "",
-    bonusQuantity: "",
-    rate: "",
-    total: "",
-    quantityInPack: "",
-    retail: "",
-    pricePercentage: "",
-    discountPercentage: "",
-    discountAmount: "",
-    priceAfterDiscount: "",
-    taxPercentage: "",
-    taxAmount: "",
-    netAmount: "",
+    quantity: 0,
+    bonusQuantity: 0,
+    rate: 0,
+    total: 0,
+    quantityInPack: 0,
+    retail: 0,
+    pricePercentage: 100,
+    discountPercentage: 0,
+    discountAmount: 0,
+    priceAfterDiscount: 0,
+    taxPercentage: 0,
+    taxAmount: 0,
+    netAmount: 0,
     batchNumber: "",
     expiryDate: "",
     remarks: "",
@@ -44,6 +44,7 @@ const PurchaseAdd = () => {
           ...item,
         }));
         setOptions(items);
+        console.log(items);
       })
       .catch((error) => {
         console.error("Error fetching items:", error);
@@ -51,20 +52,91 @@ const PurchaseAdd = () => {
   }, []);
 
   const handleSelectChange = (selectedOption) => {
-    setCurrentPurchase({
-      ...currentPurchase,
-      item: selectedOption.label,
-      quantityInPack: selectedOption.quantityInPack,
-      retail: selectedOption.retailPrice,
-      pricePercentage: selectedOption.margin,
-    });
+    if (selectedOption) {
+      setCurrentPurchase((prevPurchase) => ({
+        ...prevPurchase,
+        item: selectedOption.label,
+        quantityInPack: selectedOption.quantityInPack || "",
+        retail: selectedOption.retailPrice || "",
+        pricePercentage: 100,
+      }));
+    } else {
+      setCurrentPurchase({
+        item: "",
+        quantity: 0,
+        bonusQuantity: 0,
+        rate: 0,
+        total: 0,
+        quantityInPack: 0,
+        retail: 0,
+        pricePercentage: 100,
+        discountPercentage: 0,
+        discountAmount: 0,
+        priceAfterDiscount: 0,
+        taxPercentage: 0,
+        taxAmount: 0,
+        netAmount: 0,
+        batchNumber: "",
+        expiryDate: "",
+        remarks: "",
+      });
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCurrentPurchase({ ...currentPurchase, [name]: value });
-  };
+    let updatedPurchase = { ...currentPurchase, [name]: value };
 
+    const quantity = parseFloat(updatedPurchase.quantity) || 0;
+    const rate = parseFloat(updatedPurchase.rate) || 0;
+    const retail = parseFloat(updatedPurchase.retail) || 0;
+    const discountPercentage = parseFloat(updatedPurchase.discountPercentage) || 0;
+    const discountAmount = parseFloat(updatedPurchase.discountAmount) || 0;
+    const taxPercentage = parseFloat(updatedPurchase.taxPercentage) || 0;
+    let total = parseFloat(updatedPurchase.total) || 0;
+
+    switch (name) {
+      case "quantity":
+        total = (quantity * rate).toFixed(2);
+        updatedPurchase.total = total;
+        break;
+      case "rate":
+        total = (quantity * rate).toFixed(2);
+        updatedPurchase.total = total;
+       if(retail > 0){
+         updatedPurchase.pricePercentage = (( rate / retail) * 100).toFixed(2);
+       }
+        break;
+      case "retail":
+        if (rate > 0) {
+          updatedPurchase.pricePercentage = (( rate / retail) * 100).toFixed(2);
+        }
+        break;
+      case "discountPercentage":
+        updatedPurchase.discountAmount = ((total * (discountPercentage / 100))).toFixed(2);
+        break;
+      case "discountAmount":
+        updatedPurchase.discountPercentage = ((discountAmount / total) * 100).toFixed(2);
+        break;
+      case "taxPercentage":
+        const totalAfterDiscount = total - discountAmount;
+        updatedPurchase.taxAmount = (totalAfterDiscount * (taxPercentage / 100)).toFixed(2);
+        break;
+      case "taxAmount":
+        updatedPurchase.taxPercentage = ((parseFloat(updatedPurchase.taxAmount) / total) * 100).toFixed(2);
+        break;
+      default:
+        break;
+    }
+
+    const totalAfterDiscount = total - discountAmount;
+
+    const taxAmount = parseFloat(updatedPurchase.taxAmount) || 0;
+    updatedPurchase.netAmount = (totalAfterDiscount + taxAmount).toFixed(2);
+    updatedPurchase.priceAfterDiscount = totalAfterDiscount.toFixed(2);
+    setCurrentPurchase(updatedPurchase);
+  };
+  
   const addToTable = () => {
     const newPurchases = [...purchases, currentPurchase];
     setPurchases(newPurchases);
@@ -193,13 +265,16 @@ const PurchaseAdd = () => {
               placeholder="Item"
               onChange={handleSelectChange}
             />
+            <label htmlFor="quantity"> Quantity:</label>
             <input
               className="w50"
               type="number"
               name="quantity"
               placeholder="Quantity"
+              value={currentPurchase.quantity}
               onChange={handleInputChange}
             />
+            <label htmlFor="bonusQuantity"> Bonus Qty:</label>
             <input
               className="w50"
               type="number"
@@ -207,19 +282,24 @@ const PurchaseAdd = () => {
               placeholder="Bonus Qty"
               onChange={handleInputChange}
             />
+            <label htmlFor="rate"> Rate:</label>
             <input
               type="number"
               name="rate"
               placeholder="Rate (Purchase Price)"
+              value={currentPurchase.rate}
               onChange={handleInputChange}
             />
+            <label htmlFor="total"> Total</label>
             <input
               className="w50"
               type="number"
               name="total"
               placeholder="Total"
+              value={currentPurchase.total}
               onChange={handleInputChange}
             />
+            <label htmlFor="quantityInPack"> QtyInPack:</label>
             <input
               className="w50"
               type="number"
@@ -228,59 +308,75 @@ const PurchaseAdd = () => {
               value={currentPurchase.quantityInPack}
               readOnly
             />
+            <label htmlFor="retail"> Retail:</label>
             <input
               className="w50"
               type="number"
               name="retail"
               placeholder="Retail"
               value={currentPurchase.retail}
-              readOnly
+              onChange={handleInputChange}
             />
+            <label htmlFor="pricePercentage"> Price %:</label>
             <input
               className="w50"
               type="number"
               name="pricePercentage"
               placeholder="Price %"
+              defaultValue={100}
               value={currentPurchase.pricePercentage}
               readOnly
             />
-            <input
+            <label htmlFor="discountPercentage"> Discount %:</label>
+             <input
               type="number"
               name="discountPercentage"
               placeholder="Discount %"
+              value={currentPurchase.discountPercentage}
               onChange={handleInputChange}
+              readOnly
             />
+            <label htmlFor="discountAmount"> Discount Amount:</label>
             <input
               type="number"
               name="discountAmount"
               placeholder="Discount Amount"
+              value={currentPurchase.discountAmount}
               onChange={handleInputChange}
             />
+            <label htmlFor="priceAfterDiscount"> Price After Discount:</label>
             <input
               type="number"
               name="priceAfterDiscount"
               placeholder="Price after Discount"
+              value={currentPurchase.priceAfterDiscount}
               onChange={handleInputChange}
             />
+            <label htmlFor="taxPercentage"> Tax %:</label>
             <input
               className="w50"
               type="number"
               name="taxPercentage"
               placeholder="Tax %"
+              value={currentPurchase.taxPercentage}
               onChange={handleInputChange}
             />
+            <label htmlFor="taxAmount"> Tax Amount:</label>
             <input
               className="w50"
               type="number"
               name="taxAmount"
               placeholder="Tax Amount"
+              value={currentPurchase.taxAmount}
               onChange={handleInputChange}
             />
-         <input
+            <label htmlFor="netAmount"> Net Amount:</label>
+            <input
               type="number"
               name="netAmount"
               placeholder="Net Amount"
-              onChange={handleInputChange}
+              value={currentPurchase.netAmount}
+              readOnly
             />
             <input
               type="number"

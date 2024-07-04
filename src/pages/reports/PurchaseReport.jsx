@@ -83,8 +83,7 @@ const PurchaseReport = () => {
       <div className="submit">
         <button onClick={handleSubmit}>Search</button>
       </div>
-      <div className="table">
-        <table>
+        <table className="table">
           <thead>
             <tr>
               {/* <th>Sr#</th> */}
@@ -128,7 +127,6 @@ const PurchaseReport = () => {
             ))}
           </tbody>
         </table>
-      </div>
     </div>
   );
 };

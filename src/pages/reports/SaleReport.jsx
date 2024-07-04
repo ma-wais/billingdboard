@@ -39,13 +39,6 @@ const SaleReport = () => {
     });
   };
 
-  const handleItemChange = (selectedOption) => {
-    setFormData({
-      ...formData,
-      itemId: selectedOption ? selectedOption.value : null,
-    });
-  };
-
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
@@ -57,10 +50,16 @@ const SaleReport = () => {
       }).toString();
 
       const response = await axios.get(`${server}/purchase/sales?${queryParams}`);
-      setData(response.data);
+      console.log('API Response:', response.data);  // For debugging
+      if (response.data && Array.isArray(response.data.sales)) {
+        setData(response.data.sales);
+      } else {
+        throw new Error('Unexpected data structure');
+      }
     } catch (err) {
       setError('An error occurred while fetching data');
       console.error('Error fetching data:', err);
+      setData([]);
     } finally {
       setLoading(false);
     }
@@ -68,11 +67,11 @@ const SaleReport = () => {
 
   const flattenSaleData = (sales) => {
     return sales.flatMap(sale => 
-      sale.items.map(item => ({
+      Array.isArray(sale.items) ? sale.items.map(item => ({
         ...item,
         invoiceRef: sale.invoiceRef,
         date: sale.date
-      }))
+      })) : []
     );
   };
 
@@ -92,20 +91,6 @@ const SaleReport = () => {
           <label>To Date</label>
           <input type="date" name="toDate" value={formData.toDate} onChange={handleChange} />
         </div>
-        
-        {/* <div className="row-inputs select">
-          <label>Item: </label>
-          <Select
-            className="basic-single"
-            isLoading={false}
-            isClearable={true}
-            isSearchable={true}
-            name="item"
-            options={itemOptions}
-            placeholder="Item"
-            onChange={handleItemChange}
-          />
-        </div> */}
       </div>
       <div className='submit'>
         <button type="button" onClick={handleSearch} disabled={loading}>
@@ -120,24 +105,32 @@ const SaleReport = () => {
             <th>Item Name</th>
             <th>Unit</th>
             <th>Qty</th>
+            <th>Sale Price</th>
             <th>Total Amt</th>
             <th>Disc. Price</th>
             <th>Net Price</th>
           </tr>
         </thead>
         <tbody>
-          {flattenedData.map((item, index) => (
+        {flattenedData.length > 0 ? (
+          flattenedData.map((item, index) => (
             <tr key={index}>
               <td>{new Date(item.date).toLocaleDateString()}</td>
               <td>{item.invoiceRef}</td>
               <td>{item.name}</td>
               <td>{item.unit}</td>
               <td>{item.quantity}</td>
-              <td>{item.value}</td>
-              <td>{item.discountAmount}</td>
-              <td>{(item.value - item.discountAmount)}</td>
+              <td>{item.salePrice?.toFixed(2) || '0.00'}</td>
+              <td>{item.value?.toFixed(2) || '0.00'}</td>
+              <td>{item.discountAmount?.toFixed(2) || '0.00'}</td>
+              <td>{((item.value || 0) - (item.discountAmount || 0)).toFixed(2)}</td>
             </tr>
-          ))}
+          ))
+        ) : (
+          <tr>
+            <td colSpan="9">No data available</td>
+          </tr>
+        )}
         </tbody>
       </table>
       {error && <p className="error-message">{error}</p>}
