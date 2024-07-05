@@ -37,9 +37,7 @@ const Employee = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-useEffect(() => {
-  console.log(formData)
-} , [formData])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
@@ -68,7 +66,11 @@ useEffect(() => {
       { Header: "City", accessor: "city" },
       { Header: "Address", accessor: "address" },
       { Header: "Status", accessor: "status" },
-      { Header: "Action", accessor: "action", Cell: () => <button className="btn btn-primary">Edit</button> },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: () => <button className="btn btn-primary">Edit</button>,
+      },
     ],
     []
   );
@@ -99,13 +101,21 @@ useEffect(() => {
       </div>
       <div className="buttons">
         <button
-          style={{ borderLeft: show === "menu" ? `5px solid blue` : "none", background: show === "menu" ? "#fffbf8" : "none", fontWeight: show === "menu" ? "600" : "normal" }}
+          style={{
+            borderLeft: show === "menu" ? `5px solid blue` : "none",
+            background: show === "menu" ? "#fffbf8" : "none",
+            fontWeight: show === "menu" ? "600" : "normal",
+          }}
           onClick={() => setShow("menu")}
         >
           Add New
         </button>
         <button
-          style={{ borderLeft: show === "list" ? `5px solid blue` : "none", background: show === "list" ? "#fffbf8" : "none", fontWeight: show === "list" ? "600" : "normal" }}
+          style={{
+            borderLeft: show === "list" ? `5px solid blue` : "none",
+            background: show === "list" ? "#fffbf8" : "none",
+            fontWeight: show === "list" ? "600" : "normal",
+          }}
           onClick={() => setShow("list")}
         >
           List
@@ -115,10 +125,25 @@ useEffect(() => {
       {show === "menu" ? (
         <form onSubmit={handleSubmit}>
           <div className="inputs">
-            <input type="text" placeholder="Employee code (Password)" name="employeeCode" onChange={handleChange} />
+            <input
+              type="text"
+              placeholder="Employee code (Password)"
+              name="employeeCode"
+              onChange={handleChange}
+            />
             <div className="row-inputs">
-              <input type="text" placeholder="Name" name="employeeName" onChange={handleChange} />
-              <input type="text" placeholder="Father Name" name="fatherName" onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="Name"
+                name="employeeName"
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                placeholder="Father Name"
+                name="fatherName"
+                onChange={handleChange}
+              />
             </div>
             <div className="row-inputs">
               <label htmlFor="gender"> Gender: </label>
@@ -128,10 +153,21 @@ useEffect(() => {
                 <option value="female">Female</option>
               </select>
               <label htmlFor="dob"> Date of Birth: </label>
-              <input style={{ width: "195px" }} type="date" name="dateOfBirth" id="dob" onChange={handleChange} />
+              <input
+                style={{ width: "195px" }}
+                type="date"
+                name="dateOfBirth"
+                id="dob"
+                onChange={handleChange}
+              />
             </div>
             <div className="row-inputs">
-              <input type="text" placeholder="CNIC" name="cnic" onChange={handleChange} />
+              <input
+                type="text"
+                placeholder="CNIC"
+                name="cnic"
+                onChange={handleChange}
+              />
               <label htmlFor="status">Status</label>
               <select name="status" id="status" onChange={handleChange}>
                 <option value="">Select</option>
@@ -140,7 +176,13 @@ useEffect(() => {
               </select>
             </div>
             <div className="row-inputs">
-              <textarea style={{ width: "40%" }} type="text" placeholder="Address" name="address" onChange={handleChange} />
+              <textarea
+                style={{ width: "40%" }}
+                type="text"
+                placeholder="Address"
+                name="address"
+                onChange={handleChange}
+              />
               <select name="city" id="city" onChange={handleChange}>
                 <option>Select</option>
                 <option value="Punjab">Punjab</option>
@@ -150,8 +192,18 @@ useEffect(() => {
                 <option value="KPK">KPK</option>
               </select>
             </div>
-            <textarea type="text" placeholder="Remarks" name="remarks" onChange={handleChange} />
-            <input type="file" accept="image/*" name="image" onChange={handleChange} />
+            <textarea
+              type="text"
+              placeholder="Remarks"
+              name="remarks"
+              onChange={handleChange}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              name="image"
+              onChange={handleChange}
+            />
           </div>
           <div className="submit">
             <button type="submit">Save</button>
@@ -160,12 +212,17 @@ useEffect(() => {
       ) : (
         <div>
           <div className="table-responsive">
-            <table {...getTableProps()} className="table table-striped table-bordered">
+            <table
+              {...getTableProps()}
+              className="table table-striped table-bordered"
+            >
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                      <th {...column.getHeaderProps()}>
+                        {column.render("Header")}
+                      </th>
                     ))}
                   </tr>
                 ))}

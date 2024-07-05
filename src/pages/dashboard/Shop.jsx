@@ -39,7 +39,14 @@ const Shop = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Shop saved:', res.data);
+
+      setFormData({
+        shopName: '',
+        owner: '',
+        address: '',
+        phoneNumber: '',
+        image: null,
+      });
     } catch (error) {
       console.error('Error saving shop:', error);
     } finally {
