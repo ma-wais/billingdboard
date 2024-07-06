@@ -33,7 +33,25 @@ const PurchaseAdd = () => {
     advanceTaxAmount: 0,
     netAmount: 0,
   });
+  const [accounts, setAccounts] = useState([]);
+  const [account, setAccount] = useState(0);  
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accountsResult = await axios.get(`${server}/accounts`);
+        const items = accountsResult.data.map((item) => ({
+          value: item.accountName,
+          label: item.accountName,
+        }));
+        setAccounts(items);
+        console.log("Accounts fetched:", items);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     axios
       .get(`${server}/items`)
@@ -220,11 +238,23 @@ const PurchaseAdd = () => {
       <form onSubmit={handleSubmit}>
         <div className="inputs">
           <div className="row-inputs">
-            <label htmlFor="supplier">Supplier:</label>
-            <select name="supplier" id="supplier">
-              <option value=""></option>
-              <option value="Sample Supplier">Sample Supplier</option>
-            </select>
+          <Select
+              className="basic-single"
+              isLoading={false}
+              isClearable={true}
+              isSearchable={true}
+              name="account"
+              options={accounts}
+              placeholder="Account"
+              onChange={(e) => {
+                if (e) {
+                  setAccount(e.value);
+                } else {
+                  setAccount("");
+                  console.log("Cleared");
+                }
+              }}
+            />
             <label htmlFor="dateOfPurchase">Date of Purchase:</label>
             <input
               style={{ width: "195px" }}

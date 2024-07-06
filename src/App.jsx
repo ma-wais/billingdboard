@@ -37,8 +37,17 @@ import MinMaxQtyReport from "./pages/reports/MinMaxQtyReport";
 import ProfitReport from "./pages/reports/ProfitReport";
 import SaleReport from "./pages/reports/SaleReport";
 import SaleReturnReport from "./pages/reports/SaleReturnReport";
+import Account from "./pages/accounts/Account";
+import PaymentVoucher from "./pages/accounts/PaymentVoucher";
+import ReceiptVoucher from "./pages/accounts/ReceiptVoucher";
+import PaymentList from "./pages/accounts/PaymentList";
+import ReceiptList from "./pages/accounts/ReceiptList";
+import Balances from "./pages/accounts/Balances";
+import AccountLedger from "./pages/accounts/AccountLedger";
+import CashReport from "./pages/accounts/CashReport";
 
-export const server = 'https://billing-api-1.onrender.com/api/v1';
+// export const server = 'https://billing-api-1.onrender.com/api/v1';
+export const server = 'http://localhost:4000/api/v1';
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -93,6 +102,15 @@ const App = () => {
               <Route path="/profit-report" element={<ProfitReport />} />
               <Route path="/sale-report" element={<SaleReport />} />
               <Route path="/sale-return-report" element={<SaleReturnReport />} />
+
+              <Route path="/add-account" element={<Account />} />
+              <Route path="/voucher" element={<PaymentVoucher />} />
+              <Route path="/voucher-list" element={<PaymentList />} />
+              <Route path="/receipt-voucher" element={<ReceiptVoucher />} />
+              <Route path="/receipt-voucher-list" element={<ReceiptList />} />
+              <Route path="/account-balances" element={<Balances />} />
+              <Route path="/account-ledger" element={<AccountLedger />} />
+              <Route path="/cash-report" element={<CashReport />} />
             </Routes>
           </div>
         </div>

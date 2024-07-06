@@ -16,13 +16,16 @@ const StockReport = () => {
   const [items, setItems] = useState([]);
   const [company, setCompany] = useState("");
   const [data, setData] = useState([]);
-
+  const [accounts, setAccounts] = useState([]);
+  const [account, setAccount] = useState([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [itemTypesRes, companiesRes] = await Promise.all([
+        const [itemTypesRes, companiesRes, accountsRes] = await Promise.all([
           axios.get(`${server}/items`),
           axios.get(`${server}/companies`),
+          axios.get(`${server}/accounts`),
         ]);
 
         setItems(
@@ -35,6 +38,12 @@ const StockReport = () => {
           companiesRes.data.map((company) => ({
             value: company.companyName,
             label: company.companyName,
+          }))
+        );
+        setAccounts(
+          accountsRes.data.map((account) => ({
+            value: account.accountName,
+            label: account.accountName,
           }))
         );
       } catch (error) {
@@ -82,6 +91,24 @@ const StockReport = () => {
               console.log(e.value);
             } else {
               setCompany("");
+              console.log("Cleared");
+            }
+          }}
+        />
+        <Select
+          className="basic-single"
+          isLoading={false}
+          isClearable={true}
+          isSearchable={true}
+          name="account"
+          options={accounts}
+          placeholder="Account"
+          onChange={(e) => {
+            if (e) {
+              setAccount(e.value);
+              console.log(e.value);
+            } else {
+              setAccount("");
               console.log("Cleared");
             }
           }}

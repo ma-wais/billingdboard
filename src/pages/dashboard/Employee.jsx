@@ -177,7 +177,7 @@ const Employee = () => {
             </div>
             <div className="row-inputs">
               <textarea
-                style={{ width: "40%" }}
+                style={{ width: "40%", height: '33px' }}
                 type="text"
                 placeholder="Address"
                 name="address"

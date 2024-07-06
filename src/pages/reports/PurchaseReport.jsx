@@ -1,20 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import { server } from "../../App";
-
-const options = [
-  { value: "supplier1", label: "Supplier 1" },
-  { value: "supplier2", label: "Supplier 2" },
-  { value: "supplier3", label: "Supplier 3" },
-];
 
 const PurchaseReport = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [supplier, setSupplier] = useState("");
   const [data, setData] = useState([]);
+  const [accounts, setAccounts] = useState([]);
 
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const accountsResult = await axios.get(`${server}/accounts`);
+        const items = accountsResult.data.map((item) => ({
+          value: item._id,
+          label: item.accountName,
+        }));
+        setAccounts(items);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+    fetchAccounts();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -75,7 +85,7 @@ const PurchaseReport = () => {
           isClearable={true}
           isSearchable={true}
           name="supplier"
-          options={options}
+          options={accounts}
           placeholder="Supplier"
           onChange={(e) => setSupplier(e ? e.value : "")}
         />

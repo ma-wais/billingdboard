@@ -108,10 +108,10 @@ export const SideBar = ({ sidebarVisible }) => {
       </div>
       <nav className={show === "account" ? "p5 h-auto" : ""}>
         <p onClick={() => navigate("/add-account")}>Add Account</p>
-        <p onClick={() => navigate("/cash-voucher")}>Cash Payment Voucher</p>
-        <p onClick={() => navigate("/cash-voucher-list")}>Cash Payment List</p>
-        <p onClick={() => navigate("/cash-receipt-voucher")}>Cash Receipt Voucher</p>
-        <p onClick={() => navigate("/cash-receipt-voucher-list")}>Cash Receipt List</p>
+        <p onClick={() => navigate("/voucher")}>Cash Payment Voucher</p>
+        <p onClick={() => navigate("/voucher-list")}>Cash Payment List</p>
+        <p onClick={() => navigate("/receipt-voucher")}>Cash Receipt Voucher</p>
+        <p onClick={() => navigate("/receipt-voucher-list")}>Cash Receipt List</p>
         <p onClick={() => navigate("/account-balances")}>Account Balances</p>
         <p onClick={() => navigate("/account-ledger")}>Account Ledger</p>
         <p onClick={() => navigate("/cash-report")}>Cash Report</p>
