@@ -3,10 +3,13 @@ import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
+import Select from "react-select";
 
 const Employee = () => {
   const [show, setShow] = useState("menu");
   const [employees, setEmployees] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     employeeCode: "",
     employeeName: "",
@@ -29,6 +32,17 @@ const Employee = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    axios.get(`${server}/cities`).then((response) => {
+      const items = response.data.map((item) => ({
+        value: item.name,
+        label: item.name,
+        ...item,
+      }));
+      setCities(items);
+    });
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
@@ -46,14 +60,17 @@ const Employee = () => {
     }
 
     try {
+      setLoading(true);
       await axios.post(`${server}/employees`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setShow("list");
       const result = await axios.get(`${server}/employees`);
       setEmployees(result.data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -66,11 +83,11 @@ const Employee = () => {
       { Header: "City", accessor: "city" },
       { Header: "Address", accessor: "address" },
       { Header: "Status", accessor: "status" },
-      {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
-      },
+      // {
+      //   Header: "Action",
+      //   accessor: "action",
+      //   Cell: () => <button className="btn btn-primary">Edit</button>,
+      // },
     ],
     []
   );
@@ -177,20 +194,22 @@ const Employee = () => {
             </div>
             <div className="row-inputs">
               <textarea
-                style={{ width: "40%", height: '33px' }}
+                style={{ width: "40%", height: "33px" }}
                 type="text"
                 placeholder="Address"
                 name="address"
                 onChange={handleChange}
               />
-              <select name="city" id="city" onChange={handleChange}>
-                <option>Select</option>
-                <option value="Punjab">Punjab</option>
-                <option value="Gujrat">Gujrat</option>
-                <option value="Punjab">Punjab</option>
-                <option value="Sindh">Sindh</option>
-                <option value="KPK">KPK</option>
-              </select>
+              <Select
+                name="city"
+                isSearchable={true}
+                // isClearable= {true}
+                className="basic-single"
+                options={cities}
+                onChange={(e) => {
+                  setFormData({ ...formData, city: e.value });
+                }}
+              />
             </div>
             <textarea
               type="text"
@@ -206,7 +225,7 @@ const Employee = () => {
             />
           </div>
           <div className="submit">
-            <button type="submit">Save</button>
+            <button type="submit">{loading ? "Saving..." : "Save"}</button>
           </div>
         </form>
       ) : (

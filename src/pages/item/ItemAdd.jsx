@@ -62,10 +62,6 @@ const ItemAdd = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -106,7 +102,6 @@ const ItemAdd = () => {
           },
         }
       );
-      console.log("Item created:", response.data);
       setFormData({
         itemCode: "",
         itemBarCode: "",

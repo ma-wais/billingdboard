@@ -24,7 +24,6 @@ const ItemMapSupplier = () => {
           label: item.accountName,
         }));
         setAccounts(items);
-        console.log("Accounts fetched:", items);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

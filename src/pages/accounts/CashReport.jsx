@@ -42,8 +42,11 @@ const CashReport = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.account === "" || formData.account === null || formData.from === "" || formData.to === "") {
+      alert("Please select all options");
+      return;
+    }
     setIsLoading(true);
-
     try {
       const res = await axios.get(`${server}/accounts/cashreport`, {
         params: {

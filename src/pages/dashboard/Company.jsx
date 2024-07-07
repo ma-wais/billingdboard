@@ -68,11 +68,11 @@ const Company = () => {
         Header: "Status",
         accessor: "status",
       },
-      {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
-      },
+      // {
+      //   Header: "Action",
+      //   accessor: "action",
+      //   Cell: () => <button className="btn btn-primary">Edit</button>,
+      // },
     ],
     []
   );

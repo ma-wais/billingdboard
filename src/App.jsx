@@ -50,7 +50,7 @@ export const server = 'https://billing-api-1.onrender.com/api/v1';
 // export const server = 'http://localhost:4000/api/v1';
 
 const App = () => {
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(window.innerWidth > 1000);
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);

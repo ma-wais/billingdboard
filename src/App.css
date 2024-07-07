@@ -83,3 +83,13 @@ textarea{
 .sidebar-hidden .content {
   margin-left: -200;
 }
+
+@media screen and (max-width: 875px) {
+  .card{
+    width: 45% !important;
+  }
+  .sideBar{
+    position: fixed;
+    z-index: 10;
+  }
+}

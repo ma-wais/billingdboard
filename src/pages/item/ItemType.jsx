@@ -43,11 +43,11 @@ const ItemType = () => {
         Header: "Item Type Remarks",
         accessor: "itemTypeRemarks",
       },
-      {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
-      },
+      // {
+      //   Header: "Action",
+      //   accessor: "action",
+      //   Cell: () => <button className="btn btn-primary">Edit</button>,
+      // },
     ],
     []
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import axios from "axios";
 import { server } from "../../App";
+import { CgClose } from "react-icons/cg";
 
 const PurchaseAdd = () => {
   const [options, setOptions] = useState([]);
@@ -34,7 +35,11 @@ const PurchaseAdd = () => {
     netAmount: 0,
   });
   const [accounts, setAccounts] = useState([]);
-  const [account, setAccount] = useState(0);  
+  const [account, setAccount] = useState(0);
+  const [dateOfPurchase, setDateOfPurchase] = useState(new Date());
+  const [billNumber, setBillNumber] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
+  const [remarks, setRemarks] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +50,6 @@ const PurchaseAdd = () => {
           label: item.accountName,
         }));
         setAccounts(items);
-        console.log("Accounts fetched:", items);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -62,7 +66,6 @@ const PurchaseAdd = () => {
           ...item,
         }));
         setOptions(items);
-        console.log(items);
       })
       .catch((error) => {
         console.error("Error fetching items:", error);
@@ -108,7 +111,8 @@ const PurchaseAdd = () => {
     const quantity = parseFloat(updatedPurchase.quantity) || 0;
     const rate = parseFloat(updatedPurchase.rate) || 0;
     const retail = parseFloat(updatedPurchase.retail) || 0;
-    const discountPercentage = parseFloat(updatedPurchase.discountPercentage) || 0;
+    const discountPercentage =
+      parseFloat(updatedPurchase.discountPercentage) || 0;
     const discountAmount = parseFloat(updatedPurchase.discountAmount) || 0;
     const taxPercentage = parseFloat(updatedPurchase.taxPercentage) || 0;
     let total = parseFloat(updatedPurchase.total) || 0;
@@ -121,27 +125,39 @@ const PurchaseAdd = () => {
       case "rate":
         total = (quantity * rate).toFixed(2);
         updatedPurchase.total = total;
-       if(retail > 0){
-         updatedPurchase.pricePercentage = (( rate / retail) * 100).toFixed(2);
-       }
+        if (retail > 0) {
+          updatedPurchase.pricePercentage = ((rate / retail) * 100).toFixed(2);
+        }
         break;
       case "retail":
         if (rate > 0) {
-          updatedPurchase.pricePercentage = (( rate / retail) * 100).toFixed(2);
+          updatedPurchase.pricePercentage = ((rate / retail) * 100).toFixed(2);
         }
         break;
       case "discountPercentage":
-        updatedPurchase.discountAmount = ((total * (discountPercentage / 100))).toFixed(2);
+        updatedPurchase.discountAmount = (
+          total *
+          (discountPercentage / 100)
+        ).toFixed(2);
         break;
       case "discountAmount":
-        updatedPurchase.discountPercentage = ((discountAmount / total) * 100).toFixed(2);
+        updatedPurchase.discountPercentage = (
+          (discountAmount / total) *
+          100
+        ).toFixed(2);
         break;
       case "taxPercentage":
         const totalAfterDiscount = total - discountAmount;
-        updatedPurchase.taxAmount = (totalAfterDiscount * (taxPercentage / 100)).toFixed(2);
+        updatedPurchase.taxAmount = (
+          totalAfterDiscount *
+          (taxPercentage / 100)
+        ).toFixed(2);
         break;
       case "taxAmount":
-        updatedPurchase.taxPercentage = ((parseFloat(updatedPurchase.taxAmount) / total) * 100).toFixed(2);
+        updatedPurchase.taxPercentage = (
+          (parseFloat(updatedPurchase.taxAmount) / total) *
+          100
+        ).toFixed(2);
         break;
       default:
         break;
@@ -154,7 +170,7 @@ const PurchaseAdd = () => {
     updatedPurchase.priceAfterDiscount = totalAfterDiscount.toFixed(2);
     setCurrentPurchase(updatedPurchase);
   };
-  
+
   const addToTable = () => {
     const newPurchases = [...purchases, currentPurchase];
     setPurchases(newPurchases);
@@ -180,6 +196,14 @@ const PurchaseAdd = () => {
     });
   };
 
+  const removeFromTable = (indexToRemove) => {
+    const newPurchases = purchases.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setPurchases(newPurchases);
+    calculateSummary(newPurchases);
+  };
+  
   const calculateSummary = (purchases) => {
     const totalItems = purchases.length;
     const billAmount = purchases.reduce(
@@ -210,24 +234,22 @@ const PurchaseAdd = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      supplier: "Sample Supplier", // Change as per your input fields
-      dateOfPurchase: new Date(),
-      billNumber: "12345",
-      paymentMode: "Cash",
+      supplier: account,
+      dateOfPurchase: dateOfPurchase,
+      billNumber: billNumber,
+      paymentMode: paymentMode,
+      remarks: remarks,
       purchases,
       ...summary,
     };
 
     axios
       .post(`${server}/purchase/return`, payload)
-      .then((response) => {
-        console.log("Purchase added:", response.data);
-        // Reset form or show success message
-      })
       .catch((error) => {
         console.error("Error adding purchase:", error);
-        // Show error message
       });
+      setPurchases([]);
+      alert("Purchase added successfully");
   };
 
   return (
@@ -238,7 +260,7 @@ const PurchaseAdd = () => {
       <form onSubmit={handleSubmit}>
         <div className="inputs">
           <div className="row-inputs">
-          <Select
+            <Select
               className="basic-single"
               isLoading={false}
               isClearable={true}
@@ -261,27 +283,21 @@ const PurchaseAdd = () => {
               type="date"
               name="dateOfPurchase"
               id="dateOfPurchase"
+              onChange={(e) => {
+                setDateOfPurchase(e.target.value);
+              }}
             />
           </div>
           <div className="row-inputs">
-            <input
-              type="text"
-              name="billNumber"
-              placeholder="Bill #"
-              onChange={handleInputChange}
-            />
+            <input type="text" name="billNumber" placeholder="Bill #" onChange={(e) => setBillNumber(e.target.value)} />
             <label htmlFor="paymentMode">Payment Mode:</label>
-            <select name="paymentMode" id="paymentMode">
+            <select name="paymentMode" id="paymentMode" onChange={(e) => setPaymentMode(e.target.value)}>
               <option value=""></option>
               <option value="Cash">Cash</option>
               <option value="Credit">Credit</option>
             </select>
           </div>
-          <textarea
-            name="remarks"
-            placeholder="Remarks"
-            onChange={handleInputChange}
-          />
+          <textarea name="remarks" placeholder="Remarks" onChange={(e) => setRemarks(e.target.value)} />
         </div>
         <div className="inputs more">
           <div className="more-inputs">
@@ -358,7 +374,7 @@ const PurchaseAdd = () => {
               readOnly
             />
             <label htmlFor="discountPercentage"> Discount %:</label>
-             <input
+            <input
               type="number"
               name="discountPercentage"
               placeholder="Discount %"
@@ -443,48 +459,58 @@ const PurchaseAdd = () => {
             </button>
           </div>
         </div>
-        <div className="inputs more"  style={{ minWidth: "700px", overflowX: "scroll" }}>
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Qty</th>
-              <th>Bonus</th>
-              <th>P.P</th>
-              <th>Price %</th>
-              <th>Dis.%</th>
-              <th>Disc.Amount</th>
-              <th>Pr.After.Disc</th>
-              <th>Tax%</th>
-              <th>Tax Amt</th>
-              <th>Net</th>
-              <th>Retail</th>
-              <th>Batch</th>
-              <th>Expiry</th>
-            </tr>
-          </thead>
-          <tbody>
-            {purchases.map((purchase, index) => (
-              <tr key={index}>
-                <td>{purchase.item}</td>
-                <td>{purchase.quantity}</td>
-                <td>{purchase.bonusQuantity}</td>
-                <td>{purchase.total}</td>
-                <td>{purchase.pricePercentage}</td>
-                <td>{purchase.discountPercentage}</td>
-                <td>{purchase.discountAmount}</td>
-                <td>{purchase.priceAfterDiscount}</td>
-                <td>{purchase.taxPercentage}</td>
-                <td>{purchase.taxAmount}</td>
-                <td>{purchase.netAmount}</td>
-                <td>{purchase.retail}</td>
-                <td>{purchase.batchNumber}</td>
-                <td>{purchase.expiryDate}</td>
+        <div
+          className="inputs more"
+          style={{ minWidth: "700px", overflowX: "scroll" }}
+        >
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Bonus</th>
+                <th>P.P</th>
+                <th>Price %</th>
+                <th>Dis.%</th>
+                <th>Disc.Amount</th>
+                <th>Pr.After.Disc</th>
+                <th>Tax%</th>
+                <th>Tax Amt</th>
+                <th>Net</th>
+                <th>Retail</th>
+                <th>Batch</th>
+                <th>Expiry</th>
+                <td style={{ width: "3%" }}>Action</td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {purchases.map((purchase, index) => (
+                <tr key={index}>
+                  <td>{purchase.item}</td>
+                  <td>{purchase.quantity}</td>
+                  <td>{purchase.bonusQuantity}</td>
+                  <td>{purchase.total}</td>
+                  <td>{purchase.pricePercentage}</td>
+                  <td>{purchase.discountPercentage}</td>
+                  <td>{purchase.discountAmount}</td>
+                  <td>{purchase.priceAfterDiscount}</td>
+                  <td>{purchase.taxPercentage}</td>
+                  <td>{purchase.taxAmount}</td>
+                  <td>{purchase.netAmount}</td>
+                  <td>{purchase.retail}</td>
+                  <td>{purchase.batchNumber}</td>
+                  <td>{purchase.expiryDate}</td>
+                  <td
+                    style={{ textAlign: "center", cursor: "pointer" }}
+                    onClick={() => removeFromTable(index)}
+                  >
+                    <CgClose color="red" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <div className="submit">
           <button type="submit">Save</button>
         </div>

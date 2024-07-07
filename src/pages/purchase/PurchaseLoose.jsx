@@ -34,7 +34,6 @@ const PurchaseAdd2 = () => {
           label: item.accountName,
         }));
         setAccounts(items);
-        console.log("Accounts fetched:", items);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -80,6 +79,12 @@ const PurchaseAdd2 = () => {
       discountAmount: "",
       netAmount: "",
     });
+  };
+  const removeFromTable = (indexToRemove) => {
+    const newPurchases = looseItems.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setLooseItems(newPurchases);
   };
 
   const handleSubmit = async (event) => {
