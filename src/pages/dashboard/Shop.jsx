@@ -3,6 +3,7 @@ import axios from 'axios';
 import { server } from '../../App';
 
 const Shop = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     shopName: '',
     owner: '',
@@ -10,8 +11,6 @@ const Shop = () => {
     phoneNumber: '',
     image: null,
   });
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;

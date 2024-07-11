@@ -3,22 +3,35 @@ import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
+import Select from "react-select";
 
 const Company = () => {
   const [show, setShow] = useState("menu");
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    companyName: '',
-    shortName: '',
-    code: '',
-    phoneNumber: '',
-    email: '',
-    address: '',
-    city: '',
-    status: '',
-    remarks: ''
+    companyName: "",
+    shortName: "",
+    code: "",
+    phoneNumber: "",
+    email: "",
+    address: "",
+    city: "",
+    status: "Active",
+    remarks: "",
   });
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${server}/cities`).then((response) => {
+      const items = response.data.map((item) => ({
+        value: item.name,
+        label: item.name,
+        ...item,
+      }));
+      setCities(items);
+    });
+  }, []);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -27,7 +40,7 @@ const Company = () => {
         const res = await axios.get(`${server}/companies`);
         setCompanies(res.data);
       } catch (error) {
-        console.error('Error fetching companies:', error);
+        console.error("Error fetching companies:", error);
       } finally {
         setLoading(false);
       }
@@ -114,7 +127,7 @@ const Company = () => {
       setCompanies([...companies, res.data]);
       setShow("list");
     } catch (error) {
-      console.error('Error saving company:', error);
+      console.error("Error saving company:", error);
     } finally {
       setLoading(false);
     }
@@ -199,14 +212,19 @@ const Company = () => {
                 value={formData.address}
                 onChange={handleChange}
               />
-              <select name="city" value={formData.city} onChange={handleChange}>
-                <option value=""></option>
-                <option value="Punjab">Punjab</option>
-                <option value="Sindh">Sindh</option>
-                <option value="KPK">KPK</option>
-              </select>
+              <Select
+                className="basic-single"
+                placeholder="City"
+                options={cities}
+                value={formData.city}
+                onChange={(value) => setFormData({ ...formData, city: value })}
+              />
             </div>
-            <select name="status" value={formData.status} onChange={handleChange}>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            >
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
@@ -227,7 +245,10 @@ const Company = () => {
       ) : (
         <div>
           <div className="table-responsive">
-            <table {...getTableProps()} className="table table-striped table-bordered">
+            <table
+              {...getTableProps()}
+              className="table table-striped table-bordered"
+            >
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
