@@ -13,15 +13,32 @@ import { BsMenuButtonWide } from "react-icons/bs";
 import { RiFilePaperFill } from "react-icons/ri";
 import { FaBoxes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { server } from "../App";
 
-const Header = ({ toggleSidebar }) => {
 
+const Header = ({ toggleSidebar, setUser }) => {
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      await axios.post(`${server}/users/logout`, {}, { withCredentials: true });
+      
+      localStorage.removeItem("token");
+      
+      setUser(null);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+  
   return (
     <>
       <div className="header flex">
         <h2>Billing Dashboard</h2>
         <div>
-          <BiLogOut className="logout"/>
+          <BiLogOut className="logout" onClick={logout}/>
           <BiMenu className="menubtn" onClick={toggleSidebar} />
         </div>
       </div>
@@ -29,11 +46,23 @@ const Header = ({ toggleSidebar }) => {
   );
 };
 
-export const SideBar = ({ sidebarVisible }) => {
+export const SideBar = ({ setUser }) => {
   const [show, setShow] = useState("");
   const navigate = useNavigate();
-//   const [sideShow, setSideShow] = useState(true);
 
+  const logout = async () => {
+    try {
+      await axios.post(`${server}/users/logout`, {}, { withCredentials: true });
+      
+      localStorage.removeItem("token");
+      
+      setUser(null);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+  
   return (
     <div
       className="sideBar"
@@ -119,7 +148,7 @@ export const SideBar = ({ sidebarVisible }) => {
       <div onClick={() => navigate("/cash-summary")}>
         <FaBoxes /> <p>Cash Summary</p>
       </div>
-      <div>
+      <div onClick={() => logout()}>
         <BiLogOut /> <p>Logout</p>
       </div>
     </div>

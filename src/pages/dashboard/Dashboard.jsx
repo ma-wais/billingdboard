@@ -10,7 +10,6 @@ const Shop = () => {
       try {
         const response = await axios.get(`${server}/dashboard`);
         setDashboardData(response.data);
-        console.log(response.data); 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }

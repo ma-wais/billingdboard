@@ -142,6 +142,16 @@
         margin-left: 5px;
     }
 }
+
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+    margin: auto;
+
+}
+
 .inputs th{
     font-weight: 500;
     letter-spacing: -1px;
