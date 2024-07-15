@@ -9,7 +9,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  
+
   const { email, password } = formData;
 
   const onChange = (e) =>
@@ -18,10 +18,14 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${server}/users/login`, {
-        email: formData.email,
-        password: formData.password,
-      }, { withCredentials: true });
+      const response = await axios.post(
+        `${server}/users/login`,
+        {
+          emailOrUsername: formData.email,
+          password: formData.password,
+        },
+        { withCredentials: true }
+      );
       console.log(response);
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
@@ -33,12 +37,11 @@ const Login = () => {
   return (
     <form className="form" onSubmit={onSubmit}>
       <input
-        type="email"
+        type="name"
         name="email"
-        placeholder="Email"
+        placeholder="Email or Username"
         value={email}
         onChange={onChange}
-        required
       />
       <input
         type={"password"}

@@ -52,8 +52,8 @@ import Register from "./pages/user/Register";
 import "./styles/globals.scss";
 import Protected from "./components/Protected";
 
-export const server = "https://billing-api-1.onrender.com/api/v1";
-// export const server = "http://localhost:4000/api/v1";
+// export const server = "https://billing-api-1.onrender.com/api/v1";
+export const server = "http://localhost:4000/api/v1";
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(
@@ -145,7 +145,7 @@ const App = () => {
               </Route>
 
               <Route path="/login" token={token} element={<Login />} />
-              <Route path="/register" token={token} element={<Register />} />
+              <Route path="/register"element={<Register />} />
             </Routes>
           </div>
         </div>

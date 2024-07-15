@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { server } from "../../App";
 import { useNavigate } from "react-router-dom";
 
-const Register = ({token}) => {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -30,7 +30,7 @@ const Register = ({token}) => {
         }, { withCredentials: true });
         console.log(response);
         localStorage.setItem("token", response.data.token);
-        navigate("/login");
+        navigate("/");
       } catch (error) {
         console.error("Registration failed", error);
       }
