@@ -3,21 +3,35 @@ import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const City = () => {
   const [show, setShow] = useState("menu");
   const [data, setData] = useState([]);
   const [cityName, setCityName] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${server}/cities`)
-      .then(response => {
+    axios
+      .get(`${server}/cities`)
+      .then((response) => {
         setData(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("There was an error fetching the cities!", error);
       });
   }, []);
+
+  const handleDelete = (id) => {
+    axios
+      .delete(`${server}/cities/${id}`)
+      .then((response) => {
+        setData(data.filter((item) => item._id !== id));
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the city!", error);
+      });
+  };
 
   const columns = useMemo(
     () => [
@@ -26,17 +40,24 @@ const City = () => {
         accessor: "name",
       },
       {
-        Header: "Action",
-        accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
+        Header: "Edit",
+        accessor: "edit",
+        Cell: ({ row }) => (
+          <button
+            onClick={() => navigate(`/city/${row.original._id}`)}
+            className="btn btn-primary"
+          >
+            Edit
+          </button>
+        ),
       },
-      // {
-      //   Header: "Delete",
-      //   accessor: "delete",
-      //   Cell: () => <button className="btn btn-primary">Delete</button>,
-      // },
+      {
+        Header: "Delete",
+        accessor: "delete",
+        Cell: ({ row }) => <button onClick={() => handleDelete(row.original._id)} className="btn btn-primary">Delete</button>,
+      },
     ],
-    []
+    [navigate]
   );
 
   const {
@@ -63,20 +84,21 @@ const City = () => {
   );
 
   const handleSave = () => {
-    axios.post(`${server}/cities`, { name: cityName })
-      .then(response => {
+    axios
+      .post(`${server}/cities`, { name: cityName })
+      .then((response) => {
         setData([...data, response.data]);
         setCityName("");
         setShow("list");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("There was an error saving the city!", error);
       });
   };
 
   return (
-    <div className='box'>
-      <div className='heading'>
+    <div className="box">
+      <div className="heading">
         <p>Add City</p>
       </div>
       <div className="buttons">
@@ -104,16 +126,16 @@ const City = () => {
 
       {show === "menu" ? (
         <>
-          <div className='inputs'>
+          <div className="inputs">
             <input
               type="text"
-              placeholder='City Name'
+              placeholder="City Name"
               style={{ maxWidth: "300px" }}
               value={cityName}
               onChange={(e) => setCityName(e.target.value)}
             />
           </div>
-          <div className='submit'>
+          <div className="submit">
             <button onClick={handleSave}>Save</button>
           </div>
         </>

@@ -38,6 +38,14 @@
 
     .profileTab{
         border-bottom: 1px solid rgb(107, 106, 106);
+        display: flex;
+        align-items: center;
+    
+        img{
+            height: 30px;
+            width: 30px;
+            margin: 0 10px;
+        }
     }
 
     .add{

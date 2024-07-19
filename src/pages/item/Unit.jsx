@@ -3,6 +3,7 @@ import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { server } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const Unit = () => {
   const [show, setShow] = useState("menu");
@@ -10,9 +11,11 @@ const Unit = () => {
   const [newUnit, setNewUnit] = useState({
     unitName: "",
     unitStatus: "active",
-    remarks: ""
+    remarks: "",
   });
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const fetchUnits = async () => {
       try {
@@ -59,10 +62,17 @@ const Unit = () => {
       {
         Header: "Action",
         accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
+        Cell: ({ row }) => (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/unit/${row.original._id}`)}
+          >
+            Edit
+          </button>
+        ),
       },
     ],
-    []
+    [navigate]
   );
 
   const {

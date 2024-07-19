@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { server } from '../../App';
 
 const Shop = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    shopName: '',
-    owner: '',
-    address: '',
-    phoneNumber: '',
-    image: null,
+    shopName: localStorage.getItem('shopName') || '',
+    owner: localStorage.getItem('owner') || '',
+    address: localStorage.getItem('address') || '',
+    phoneNumber: localStorage.getItem('phoneNumber') || '',
+    image: localStorage.getItem('image') || '',
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'image') {
-      setFormData({ ...formData, image: files[0] });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, image: reader.result });
+        localStorage.setItem('image', reader.result);
+      };
+      reader.readAsDataURL(files[0]);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -23,34 +25,37 @@ const Shop = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    const data = new FormData();
-    data.append('shopName', formData.shopName);
-    data.append('owner', formData.owner);
-    data.append('address', formData.address);
-    data.append('phoneNumber', formData.phoneNumber);
-    data.append('image', formData.image);
-
-    try {
-      const res = await axios.post(`${server}/shops`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setFormData({
-        shopName: '',
-        owner: '',
-        address: '',
-        phoneNumber: '',
-        image: null,
-      });
-    } catch (error) {
-      console.error('Error saving shop:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    
+    localStorage.setItem('shopName', formData.shopName);
+    localStorage.setItem('owner', formData.owner);
+    localStorage.setItem('address', formData.address);
+    localStorage.setItem('phoneNumber', formData.phoneNumber);
+    
+    // setIsLoading(true);
+    // const data = new FormData();
+    // data.append('shopName', formData.shopName);
+    // data.append('owner', formData.owner);
+    // data.append('address', formData.address);
+    // data.append('phoneNumber', formData.phoneNumber);
+    // data.append('image', formData.image);
+    // try {
+    //   const res = await axios.post(`${server}/shops`, data, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //   });
+      // setFormData({
+      //   shopName: '',
+      //   owner: '',
+      //   address: '',
+      //   phoneNumber: '',
+      //   image: null,
+      // });
+      //   setIsLoading(false);
+    // } catch (error) {
+    //   console.error('Error saving shop:', error);
+    //   setIsLoading(false);
+    // } 
   };
 
   return (
@@ -94,8 +99,8 @@ const Shop = () => {
           onChange={handleChange}
         />
         <div className='submit'>
-          <button type='submit' disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Save'}
+          <button type='submit'>
+            Save
           </button>
         </div>
       </form>

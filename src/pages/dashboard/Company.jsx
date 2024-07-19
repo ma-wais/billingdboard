@@ -4,6 +4,7 @@ import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 const Company = () => {
   const [show, setShow] = useState("menu");
@@ -21,32 +22,33 @@ const Company = () => {
     remarks: "",
   });
   const [cities, setCities] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${server}/cities`).then((response) => {
-      const items = response.data.map((item) => ({
-        value: item.name,
-        label: item.name,
-        ...item,
-      }));
-      setCities(items);
-    });
-  }, []);
-
-  useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${server}/companies`);
-        setCompanies(res.data);
+        const [citiesResponse, companiesResponse] = await Promise.all([
+          axios.get(`${server}/cities`),
+          axios.get(`${server}/companies`),
+        ]);
+
+        const formattedCities = citiesResponse.data.map((item) => ({
+          value: item.name,
+          label: item.name,
+          ...item,
+        }));
+
+        setCities(formattedCities);
+        setCompanies(companiesResponse.data);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching companies:", error);
-      } finally {
+        console.error("Error fetching data:", error);
         setLoading(false);
       }
     };
 
-    fetchCompanies();
+    fetchData();
   }, []);
 
   const data = useMemo(() => companies, [companies]);
@@ -81,13 +83,20 @@ const Company = () => {
         Header: "Status",
         accessor: "status",
       },
-      // {
-      //   Header: "Action",
-      //   accessor: "action",
-      //   Cell: () => <button className="btn btn-primary">Edit</button>,
-      // },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: ({ row }) => (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/company/${row.original._id}`)}
+          >
+            Edit
+          </button>
+        ),
+      },
     ],
-    []
+    [navigate]
   );
 
   const {

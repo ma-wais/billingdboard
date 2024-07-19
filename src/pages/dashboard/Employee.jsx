@@ -4,6 +4,7 @@ import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
   const [show, setShow] = useState("menu");
@@ -23,6 +24,8 @@ const Employee = () => {
     remarks: "",
     image: null,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,13 +86,20 @@ const Employee = () => {
       { Header: "City", accessor: "city" },
       { Header: "Address", accessor: "address" },
       { Header: "Status", accessor: "status" },
-      // {
-      //   Header: "Action",
-      //   accessor: "action",
-      //   Cell: () => <button className="btn btn-primary">Edit</button>,
-      // },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: ({ row }) => (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/employee/${row.original._id}`)}
+          >
+            Edit
+          </button>
+        ),
+      },
     ],
-    []
+    [navigate]
   );
 
   const {

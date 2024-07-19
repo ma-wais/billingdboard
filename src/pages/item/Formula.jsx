@@ -3,6 +3,7 @@ import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const Formula = () => {
   const [show, setShow] = useState("menu");
@@ -11,6 +12,8 @@ const Formula = () => {
     name: "",
     composition: "",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -38,8 +41,20 @@ const Formula = () => {
         Header: "Composition",
         accessor: "composition",
       },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: ({ row }) => (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/formula/${row.original._id}`)}
+          >
+            Edit
+          </button>
+        ),
+      },
     ],
-    []
+    [navigate]
   );
 
   const {

@@ -12,12 +12,12 @@ import { CiSettings } from "react-icons/ci";
 import { BsMenuButtonWide } from "react-icons/bs";
 import { RiFilePaperFill } from "react-icons/ri";
 import { FaBoxes } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../App";
 
 
-const Header = ({ toggleSidebar, setUser }) => {
+const Header = ({token, setToken, toggleSidebar, setUser }) => {
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -25,7 +25,7 @@ const Header = ({ toggleSidebar, setUser }) => {
       await axios.post(`${server}/users/logout`, {}, { withCredentials: true });
       
       localStorage.removeItem("token");
-      
+      setToken(null);
       setUser(null);
       navigate("/login");
     } catch (error) {
@@ -37,19 +37,24 @@ const Header = ({ toggleSidebar, setUser }) => {
     <>
       <div className="header flex">
         <h2>Billing Dashboard</h2>
-        <div>
+        {token !== null && <div>
           <BiLogOut className="logout" onClick={logout}/>
           <BiMenu className="menubtn" onClick={toggleSidebar} />
         </div>
+        }
       </div>
     </>
   );
 };
 
 export const SideBar = ({ setUser }) => {
+  const location = useLocation();
   const [show, setShow] = useState("");
   const navigate = useNavigate();
 
+  if(location.pathname === "/login") {
+    return null;
+  }
   const logout = async () => {
     try {
       await axios.post(`${server}/users/logout`, {}, { withCredentials: true });
@@ -71,7 +76,10 @@ export const SideBar = ({ setUser }) => {
       }}
     >
       <div className="profileTab">
-        <CgProfile /> <p>Main Admin</p> <BiChevronDown />
+        <div>
+          <img src={localStorage.getItem("image")} alt="shop" />
+        </div> 
+        <p>Main Admin</p> <BiChevronDown />
       </div>
       <div onClick={() => navigate("/")}>
         <BiHomeAlt /> <p>Dashboard</p>

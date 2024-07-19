@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { server } from "../../App";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({setToken, setUser }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -26,8 +26,11 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-      console.log(response);
-      localStorage.setItem("token", response.data.token);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      setToken(token);
+      setUser(response.data.user);
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Registration failed", error);

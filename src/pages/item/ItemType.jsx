@@ -3,6 +3,7 @@ import axios from "axios";
 import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const ItemType = () => {
   const [show, setShow] = useState("menu");
@@ -13,6 +14,8 @@ const ItemType = () => {
     itemTypeActive: "",
     itemTypeRemarks: "",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -43,13 +46,20 @@ const ItemType = () => {
         Header: "Item Type Remarks",
         accessor: "itemTypeRemarks",
       },
-      // {
-      //   Header: "Action",
-      //   accessor: "action",
-      //   Cell: () => <button className="btn btn-primary">Edit</button>,
-      // },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: ({ row }) => (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/item-type/${row.original._id}`)}
+          >
+            Edit
+          </button>
+        ),
+      },
     ],
-    []
+    [navigate]
   );
 
   const {
@@ -223,9 +233,7 @@ const ItemType = () => {
                 type="number"
                 defaultValue={pageIndex + 1}
                 onChange={(e) => {
-                  const page = e.target.value
-                    ? Number(e.target.value) - 1
-                    : 0;
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
                   gotoPage(page);
                 }}
                 style={{ width: "100px" }}

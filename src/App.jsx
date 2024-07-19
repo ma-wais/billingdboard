@@ -60,8 +60,13 @@ const App = () => {
     window.innerWidth > 1000
   );
   const [user, setUser] = useState();
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -89,7 +94,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="app-container">
-        <Header setUser={setUser} toggleSidebar={toggleSidebar} />
+        <Header token={token} setToken={setToken} setUser={setUser} toggleSidebar={toggleSidebar} />
         <div
           className={`main-container ${
             sidebarVisible ? "sidebar-visible" : "sidebar-hidden"
@@ -144,7 +149,7 @@ const App = () => {
                 <Route path="/cash-report" element={<CashReport />} />
               </Route>
 
-              <Route path="/login" token={token} element={<Login />} />
+              <Route path="/login" element={<Login setToken={setToken} setUser={setUser} />} />
               <Route path="/register"element={<Register />} />
             </Routes>
           </div>
