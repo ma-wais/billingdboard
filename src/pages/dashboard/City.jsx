@@ -30,11 +30,11 @@ const City = () => {
         accessor: "action",
         Cell: () => <button className="btn btn-primary">Edit</button>,
       },
-      {
-        Header: "Delete",
-        accessor: "delete",
-        Cell: () => <button className="btn btn-primary">Delete</button>,
-      },
+      // {
+      //   Header: "Delete",
+      //   accessor: "delete",
+      //   Cell: () => <button className="btn btn-primary">Delete</button>,
+      // },
     ],
     []
   );
@@ -162,7 +162,7 @@ const City = () => {
                 {pageIndex + 1} of {pageOptions.length}
               </strong>{" "}
             </span>
-            <span className="goto">
+            {/* <span className="goto">
               Go to page:{" "}
               <input
                 className="table-input"
@@ -174,7 +174,7 @@ const City = () => {
                 }}
                 style={{ width: "100px" }}
               />
-            </span>{" "}
+            </span>{" "} */}
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
