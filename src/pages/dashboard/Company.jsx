@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, useSortBy } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 
 const Company = () => {
   const [show, setShow] = useState("menu");
@@ -64,8 +65,9 @@ const Company = () => {
         accessor: "companyName",
       },
       {
-        Header: "Short Name",
+        Header: "Short.Name",
         accessor: "shortName",
+        width: 100,
       },
       {
         Header: "Phone",
@@ -78,14 +80,17 @@ const Company = () => {
       {
         Header: "City",
         accessor: "address",
+        width: 100,
       },
       {
         Header: "Status",
         accessor: "status",
+        width: 80,
       },
       {
         Header: "Action",
         accessor: "action",
+        width: 80,
         Cell: ({ row }) => (
           <button
             className="btn btn-primary"
@@ -119,7 +124,8 @@ const Company = () => {
       data,
       initialState: { pageIndex: 0 },
     },
-    usePagination
+    useSortBy,
+    usePagination,
   );
 
   const handleChange = (e) => {
@@ -261,12 +267,19 @@ const Company = () => {
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
+                  {headerGroup.headers.map(column => (
+                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      <span>{column.render('Header')}</span>
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? <AiOutlineSortAscending />
+                            : <AiOutlineSortDescending />
+                          : ''}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
@@ -275,7 +288,10 @@ const Company = () => {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                        <td {...cell.getCellProps()}
+                        style={{ maxWidth: `${cell.column.width}px` }}
+
+                        >{cell.render("Cell")} </td>
                       ))}
                     </tr>
                   );

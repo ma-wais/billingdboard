@@ -77,7 +77,7 @@ export const SideBar = ({ setUser }) => {
     >
       <div className="profileTab">
         <div>
-          <img src={localStorage.getItem("image")} alt="shop" />
+          <img src={localStorage.getItem("image") || <CgProfile />} alt="shop" />
         </div> 
         <p>Main Admin</p> <BiChevronDown />
       </div>

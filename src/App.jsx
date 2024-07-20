@@ -51,9 +51,12 @@ import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
 import "./styles/globals.scss";
 import Protected from "./components/Protected";
+import EmployeeEdit from "./pages/dashboard/EmployeeEdit";
+import CompanyEdit from "./pages/dashboard/CompanyEdit";
+import CityEdit from "./pages/dashboard/CityEdit";
 
-export const server = "https://billing-api-1.onrender.com/api/v1";
-// export const server = "http://localhost:4000/api/v1";
+// export const server = "https://billing-api-1.onrender.com/api/v1";
+export const server = "http://localhost:4000/api/v1";
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(
@@ -108,8 +111,11 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/company" element={<Company />} />
+                <Route path="/company/:id" element={<CompanyEdit />} />
                 <Route path="/employ" element={<Employee />} />
+                <Route path="/employee/:id" element={<EmployeeEdit />} />
                 <Route path="/city" element={<City />} />
+                <Route path="/city/:id" element={<CityEdit />} />
 
                 <Route path="/item-type" element={<ItemType />} />
                 <Route path="/unit" element={<Unit />} />
