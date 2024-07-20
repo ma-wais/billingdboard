@@ -59,8 +59,8 @@ import CityEdit from "./pages/dashboard/CityEdit";
 import UnitUpdate from "./pages/item/UnitUpdate";
 import OriginalFormula from "./pages/item/OriginalFormulaUpdate";
 
-// export const server = "https://billing-api-1.onrender.com/api/v1";
-export const server = "http://localhost:4000/api/v1";
+export const server = "https://billing-api-1.onrender.com/api/v1";
+// export const server = "http://localhost:4000/api/v1";
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(
