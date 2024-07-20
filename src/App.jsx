@@ -9,17 +9,17 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Employee from "./pages/dashboard/Employee";
 import Shop from "./pages/dashboard/Shop";
 
-import Formula from "./pages/item/Formula";
-import FormulaUpdate from "./pages/item/FormulaUpdate";
+import ItemType from "./pages/item/ItemType";
+import Unit from "./pages/item/Unit";
 import ItemAdd from "./pages/item/ItemAdd";
+import ItemUpdate from "./pages/item/ItemUpdate";
+import FormulaUpdate from "./pages/item/FormulaUpdate";
 import ItemList from "./pages/item/ItemList";
 import ItemMapSupplier from "./pages/item/ItemMapSupplier";
-import ItemType from "./pages/item/ItemType";
-import ItemUpdate from "./pages/item/ItemUpdate";
-import StockAdjustment from "./pages/item/StockAdjustment";
-import Unit from "./pages/item/Unit";
 import UpdateQty from "./pages/item/UpdateQty";
+import Formula from "./pages/item/Formula";
 
+import StockAdjustment from "./pages/item/StockAdjustment";
 import PurchaseAdd from "./pages/purchase/PurchaseAdd";
 import PurchaseList from "./pages/purchase/PurchaseList";
 import PurchaseAdd2 from "./pages/purchase/PurchaseLoose";
@@ -51,9 +51,13 @@ import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
 import "./styles/globals.scss";
 import Protected from "./components/Protected";
+
 import EmployeeEdit from "./pages/dashboard/EmployeeEdit";
 import CompanyEdit from "./pages/dashboard/CompanyEdit";
 import CityEdit from "./pages/dashboard/CityEdit";
+// import ItemTypeUpdate from "./pages/item/ItemTypeUpdate";
+import UnitUpdate from "./pages/item/UnitUpdate";
+import OriginalFormula from "./pages/item/OriginalFormulaUpdate";
 
 // export const server = "https://billing-api-1.onrender.com/api/v1";
 export const server = "http://localhost:4000/api/v1";
@@ -118,7 +122,9 @@ const App = () => {
                 <Route path="/city/:id" element={<CityEdit />} />
 
                 <Route path="/item-type" element={<ItemType />} />
+                {/* <Route path="/item-type/:id" element={<ItemTypeUpdate />} /> */}
                 <Route path="/unit" element={<Unit />} />
+                <Route path="/unit/:id" element={<UnitUpdate />} />
                 <Route path="/item" element={<ItemAdd />} />
                 <Route path="/item-update" element={<ItemUpdate />} />
                 <Route path="/item-formula-update" element={<FormulaUpdate />} />
@@ -126,6 +132,7 @@ const App = () => {
                 <Route path="/item-map-supplier" element={<ItemMapSupplier />} />
                 <Route path="/update-max-qty" element={<UpdateQty />} />
                 <Route path="/formula" element={<Formula />} />
+                <Route path="/formula/:id" element={<OriginalFormula />} />
 
                 <Route path="/purchase-add" element={<PurchaseAdd />} />
                 <Route path="/purchase-loose" element={<PurchaseAdd2 />} />
