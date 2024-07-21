@@ -111,11 +111,11 @@ const ItemTable = () => {
         accessor: 'companyName',
         Filter: ColumnFilter,
       },
-      // {
-      //   Header: 'Stock',
-      //   accessor: 'stock',
-      //   Filter: ColumnFilter,
-      // },
+      {
+        Header: 'Stock',
+        accessor: 'stock',
+        Filter: ColumnFilter,
+      },
       {
         Header: 'Unit',
         accessor: 'unit',

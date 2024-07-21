@@ -15,7 +15,7 @@ const PurchaseReport = () => {
       try {
         const accountsResult = await axios.get(`${server}/accounts`);
         const items = accountsResult.data.map((item) => ({
-          value: item._id,
+          value: item.accountName,
           label: item.accountName,
         }));
         setAccounts(items);
@@ -25,6 +25,7 @@ const PurchaseReport = () => {
     };
     fetchAccounts();
   }, []);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 

@@ -18,7 +18,7 @@ const Employee = () => {
     cnic: "",
     gender: "",
     dateOfBirth: "",
-    status: "",
+    status: "Active",
     address: "",
     city: "",
     remarks: "",
@@ -197,7 +197,6 @@ const Employee = () => {
               />
               <label htmlFor="status">Status</label>
               <select name="status" id="status" onChange={handleChange}>
-                <option value="">Select</option>
                 <option value="Active">Active</option>
                 <option value="Left">Left</option>
               </select>

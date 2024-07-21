@@ -58,6 +58,7 @@ import CityEdit from "./pages/dashboard/CityEdit";
 // import ItemTypeUpdate from "./pages/item/ItemTypeUpdate";
 import UnitUpdate from "./pages/item/UnitUpdate";
 import OriginalFormula from "./pages/item/OriginalFormulaUpdate";
+import EditAccount from "./pages/accounts/AccountEdit";
 
 export const server = "https://billing-api-1.onrender.com/api/v1";
 // export const server = "http://localhost:4000/api/v1";
@@ -153,6 +154,7 @@ const App = () => {
                 <Route path="/sale-return-report" element={<SaleReturnReport />} />
 
                 <Route path="/add-account" element={<Account />} />
+                <Route path="/account/:id" element={<EditAccount />} />
                 <Route path="/voucher" element={<PaymentVoucher />} />
                 <Route path="/voucher-list" element={<PaymentList />} />
                 <Route path="/receipt-voucher" element={<ReceiptVoucher />} />

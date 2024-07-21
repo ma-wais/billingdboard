@@ -4,12 +4,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { server } from "../../App";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const List = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [formData, setFormData] = useState({
-    account: "",
+    account: null,
     from: "",
     to: "",
     type: "CashPayment",
@@ -21,7 +23,10 @@ const List = () => {
   };
 
   const handleAccountChange = (selectedOption) => {
-    setFormData({ ...formData, account: selectedOption ? selectedOption.value : "" });
+    setFormData({
+      ...formData,
+      account: selectedOption ? selectedOption.value : "",
+    });
   };
 
   useEffect(() => {
@@ -29,7 +34,7 @@ const List = () => {
       try {
         const accountsResult = await axios.get(`${server}/accounts`);
         const items = accountsResult.data.map((item) => ({
-          value: item._id,
+          value: item.accountName,
           label: item.accountName,
         }));
         setAccounts(items);
@@ -89,13 +94,32 @@ const List = () => {
       {
         Header: "Action",
         accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
+        Cell: ({ row }) => (
+          <div>
+            <button
+              onClick={() => navigate(`/voucher/${row.original._id}`)}
+              className="btn btn-primary"
+            >
+              Edit
+            </button>{" "}
+            <button className="btn btn-primary" onClick={() => handleDelete(row.original._id)}>Delete</button>
+          </div>
+        ),
+
         disableFilters: true,
       },
     ],
     []
   );
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${server}/accounts/cashvoucher/${id}`);
+      fetchCashVouchers();
+    } catch (error) {
+      console.error("Error deleting cash voucher:", error);
+    }
+  };
   const defaultColumn = useMemo(
     () => ({
       Filter: ColumnFilter,
@@ -129,10 +153,10 @@ const List = () => {
   );
 
   return (
-    <>
+    <div className="box">
       <div className="inputs">
         <div className="row-inputs">
-          <Select 
+          <Select
             className="basic-single"
             name="account"
             placeholder="Account"
@@ -140,7 +164,9 @@ const List = () => {
             isClearable={true}
             options={accounts}
             onChange={handleAccountChange}
-            value={accounts.find(account => account.value === formData.account)}
+            value={accounts.find(
+              (account) => account.value === formData.account
+            )}
           />
         </div>
         <div className="row-inputs">
@@ -161,7 +187,10 @@ const List = () => {
             onChange={handleChange}
           />
         </div>
-        <button className="btn btn-primary" onClick={fetchCashVouchers}> Search</button>
+        <button className="btn btn-primary" onClick={fetchCashVouchers}>
+          {" "}
+          Search
+        </button>
       </div>
       <div className="table-responsive">
         <table
@@ -237,7 +266,7 @@ const List = () => {
           ))}
         </select>
       </div>
-    </>
+    </div>
   );
 };
 

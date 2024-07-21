@@ -66,15 +66,15 @@ const StockAdjustmentReport = () => {
           <tbody>
             {data.map((adjustment, index) => (
               <tr key={adjustment._id}>
-                <td>{new Date(adjustment.adjustedAt).toLocaleDateString()}</td>
-                <td>{adjustment.adjustmentType}</td>
-                <td>{adjustment.itemId?.itemName}</td>
-                <td>{adjustment.itemId?.unit}</td>
+                <td>{new Date(adjustment.date).toLocaleDateString()}</td>
+                <td>{adjustment.type}</td>
+                <td>{adjustment.item?.itemName}</td>
+                <td>{adjustment.item?.unit}</td>
                 <td>{adjustment.narration || "N/A"}</td>
-                <td>{adjustment.adjustmentType === "increase" ? adjustment.adjustment : 0}</td>
-                <td>{adjustment.adjustmentType === "decrease" ? adjustment.adjustment : 0}</td>
-                <td>{adjustment.adjustmentType === "increase" ? (adjustment.adjustment * adjustment.itemId?.retailPrice).toFixed(2) : 0}</td>
-                <td>{adjustment.adjustmentType === "decrease" ? (adjustment.adjustment * adjustment.itemId?.retailPrice).toFixed(2) : 0}</td>
+                <td>{adjustment.qtyIn}</td>
+                <td>{adjustment.qtyOut}</td>
+                <td>{adjustment.item?.retailPrice * adjustment.qtyIn}</td>
+                <td>{adjustment.item?.retailPrice * adjustment.qtyOut}</td>
               </tr>
             ))}
           </tbody>

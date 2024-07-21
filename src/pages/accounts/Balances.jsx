@@ -16,6 +16,7 @@ const Balances = () => {
     try {
       const response = await axios.get(`${server}/accounts/balances?showReceivable=${showReceivable}&showPayable=${showPayable}&showExpenses=${showExpenses}&showTrading=${showTrading}`);
       setBalances(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching balances:', error);
     } finally {

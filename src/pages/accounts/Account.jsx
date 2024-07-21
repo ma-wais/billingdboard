@@ -4,8 +4,10 @@ import { useTable, usePagination } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 const Account = () => {
+  const navigate = useNavigate();
   const [show, setShow] = useState("menu");
   const [cities, setCities] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -13,6 +15,7 @@ const Account = () => {
     accountType: "",
     accountCode: "",
     accountName: "",
+    phoneNumber: "",
     email: "",
     status: "",
     city: "",
@@ -29,7 +32,12 @@ const Account = () => {
           axios.get(`${server}/cities`),
           axios.get(`${server}/accounts`)
         ]);
-        setCities(citiesResult.data);
+        const items = citiesResult.data.map((item) => ({
+          value: item.name,
+          label: item.name,
+          ...item,
+        }));
+        setCities(items);
         setAccounts(accountsResult.data);
         console.log("Data fetched:", accountsResult.data);
       } catch (error) {
@@ -56,6 +64,7 @@ const Account = () => {
         email: "",
         status: "",
         city: "",
+        phone: "",
         address: "",
         remarks: "",
         openingDebit: 0,
@@ -92,13 +101,13 @@ const Account = () => {
       },
       {
         Header: "City",
-        accessor: "city.name", // Assuming city is populated and has a 'name' field
+        accessor: "city.name",
         Filter: ColumnFilter,
       },
       { 
         Header: "Action",
         accessor: "action",
-        Cell: ({ row }) => <button className="btn btn-primary" onClick={() => alert(row.original._id)}>Edit</button>,
+        Cell: ({ row }) => <button className="btn btn-primary" onClick={() => navigate(`/account/${row.original._id}`)}>Edit</button>,
       }
     ],
     []
