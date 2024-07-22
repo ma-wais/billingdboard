@@ -87,6 +87,7 @@ const Formula = () => {
       .then((response) => {
         setData([...data, response.data]);
         setFormData("");
+        alert("Formula created successfully!");
         setShow("list");
       })
       .catch((error) => {

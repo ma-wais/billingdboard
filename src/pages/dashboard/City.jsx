@@ -89,6 +89,7 @@ const City = () => {
       .then((response) => {
         setData([...data, response.data]);
         setCityName("");
+        alert("City created successfully!");
         setShow("list");
       })
       .catch((error) => {

@@ -145,6 +145,7 @@ const Company = () => {
       console.error("Error saving company:", error);
     } finally {
       setLoading(false);
+      alert("Company created successfully!");
     }
   };
 

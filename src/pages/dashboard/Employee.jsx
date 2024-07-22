@@ -71,6 +71,7 @@ const Employee = () => {
       const result = await axios.get(`${server}/employees`);
       setEmployees(result.data);
       setLoading(false);
+      alert("Employee created successfully");
     } catch (error) {
       console.error(error);
       setLoading(false);

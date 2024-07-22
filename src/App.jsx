@@ -59,6 +59,9 @@ import CityEdit from "./pages/dashboard/CityEdit";
 import UnitUpdate from "./pages/item/UnitUpdate";
 import OriginalFormula from "./pages/item/OriginalFormulaUpdate";
 import EditAccount from "./pages/accounts/AccountEdit";
+import CashVoucherEdit from "./pages/accounts/CashVoucherEdit";
+import ReceiptVoucherEdit from "./pages/accounts/RecieptVoucherEdit";
+import CashSummary from "./pages/CashSummary";
 
 export const server = "https://billing-api-1.onrender.com/api/v1";
 // export const server = "http://localhost:4000/api/v1";
@@ -68,6 +71,7 @@ const App = () => {
     window.innerWidth > 1000
   );
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
@@ -78,13 +82,16 @@ const App = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(`${server}/users/user`, {
           withCredentials: true
         });
         setUser(res.data);
-        console.log(res);
+        console.log(res.data);
+        setLoading(false);
       } catch (err) {
         console.log(err);
+        setLoading(false);
       }
     };
     if (token) {
@@ -95,6 +102,9 @@ const App = () => {
     }
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };
@@ -156,12 +166,17 @@ const App = () => {
                 <Route path="/add-account" element={<Account />} />
                 <Route path="/account/:id" element={<EditAccount />} />
                 <Route path="/voucher" element={<PaymentVoucher />} />
+                <Route path="/voucher/:id" element={<CashVoucherEdit />} />
                 <Route path="/voucher-list" element={<PaymentList />} />
                 <Route path="/receipt-voucher" element={<ReceiptVoucher />} />
+                <Route path="/receipt-voucher/:id" element={<ReceiptVoucherEdit />} />
                 <Route path="/receipt-voucher-list" element={<ReceiptList />} />
                 <Route path="/account-balances" element={<Balances />} />
                 <Route path="/account-ledger" element={<AccountLedger />} />
                 <Route path="/cash-report" element={<CashReport />} />
+
+                <Route path="/cash-summary" element={<CashSummary />} />
+
               </Route>
 
               <Route path="/login" element={<Login setToken={setToken} setUser={setUser} />} />

@@ -105,7 +105,6 @@ const PurchaseAdd2 = () => {
 
       await axios.post(`${server}/purchase/loose`, purchaseData);
       alert("Purchase saved successfully");
-      // Reset form after successful submission
       setLooseItems([]);
       setPurchaseDetails({
         supplier: "",
@@ -114,6 +113,7 @@ const PurchaseAdd2 = () => {
         paymentMode: "Cash",
         remarks: "",
       });
+      alert("Purchase saved successfully");
     } catch (error) {
       console.error("Error saving purchase:", error);
       alert("Error saving purchase. Please try again.");

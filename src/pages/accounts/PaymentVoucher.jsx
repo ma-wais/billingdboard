@@ -68,7 +68,7 @@ const PaymentVoucher = () => {
         account: "",
         amount: "",
         description: "",
-        type: "CashPayment", // Reset to default
+        type: "CashPayment",
       });
       alert("Cash voucher created successfully!");
     } catch (error) {

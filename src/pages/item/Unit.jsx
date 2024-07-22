@@ -39,6 +39,7 @@ const Unit = () => {
     try {
       const response = await axios.post(`${server}/units`, newUnit);
       setUnits([...units, response.data]);
+      alert("Unit created successfully");
       setShow("list");
     } catch (error) {
       console.error("Error creating unit:", error);

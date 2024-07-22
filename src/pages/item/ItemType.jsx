@@ -96,6 +96,7 @@ const ItemType = () => {
           itemTypeActive: "",
           itemTypeRemarks: "",
         });
+        alert("Item type created successfully!");
         setShow("list");
       })
       .catch((error) => {

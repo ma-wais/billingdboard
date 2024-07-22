@@ -31,6 +31,7 @@ const Shop = () => {
     localStorage.setItem('address', formData.address);
     localStorage.setItem('phoneNumber', formData.phoneNumber);
     
+    alert('Shop created successfully!');
     // setIsLoading(true);
     // const data = new FormData();
     // data.append('shopName', formData.shopName);

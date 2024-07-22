@@ -70,7 +70,7 @@ const ReceiptVoucher = () => {
         description: "",
         type: "CashPayment", // Reset to default
       });
-      alert("Cash voucher created successfully!");
+      alert("Receipt voucher created successfully!");
     } catch (error) {
       console.error("Error creating cash voucher:", error);
       alert("Error creating cash voucher. Please try again.");

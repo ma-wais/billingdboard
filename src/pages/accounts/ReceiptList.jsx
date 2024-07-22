@@ -4,8 +4,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { server } from "../../App";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ReceiptList = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [formData, setFormData] = useState({
@@ -21,7 +23,10 @@ const ReceiptList = () => {
   };
 
   const handleAccountChange = (selectedOption) => {
-    setFormData({ ...formData, account: selectedOption ? selectedOption.value : "" });
+    setFormData({
+      ...formData,
+      account: selectedOption ? selectedOption.value : "",
+    });
   };
 
   useEffect(() => {
@@ -89,12 +94,37 @@ const ReceiptList = () => {
       {
         Header: "Action",
         accessor: "action",
-        Cell: () => <button className="btn btn-primary">Edit</button>,
+        Cell: ({ row }) => (
+          <div>
+            <button
+              onClick={() => navigate(`/receipt-voucher/${row.original._id}`)}
+              className="btn btn-primary"
+            >
+              Edit
+            </button>{" "}
+            <button
+              className="btn btn-primary"
+              onClick={() => handleDelete(row.original._id)}
+            >
+              Delete
+            </button>
+          </div>
+        ),
+
         disableFilters: true,
       },
     ],
     []
   );
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${server}/accounts/cashvoucher/${id}`);
+      fetchCashVouchers();
+    } catch (error) {
+      console.error("Error deleting cash voucher:", error);
+    }
+  };
 
   const defaultColumn = useMemo(
     () => ({
@@ -132,7 +162,7 @@ const ReceiptList = () => {
     <>
       <div className="inputs">
         <div className="row-inputs">
-          <Select 
+          <Select
             className="basic-single"
             name="account"
             placeholder="Account"
@@ -140,7 +170,9 @@ const ReceiptList = () => {
             isClearable={true}
             options={accounts}
             onChange={handleAccountChange}
-            value={accounts.find(account => account.value === formData.account)}
+            value={accounts.find(
+              (account) => account.value === formData.account
+            )}
           />
         </div>
         <div className="row-inputs">
@@ -161,7 +193,10 @@ const ReceiptList = () => {
             onChange={handleChange}
           />
         </div>
-        <button className="btn btn-primary" onClick={fetchCashVouchers}> Search</button>
+        <button className="btn btn-primary" onClick={fetchCashVouchers}>
+          {" "}
+          Search
+        </button>
       </div>
       <div className="table-responsive">
         <table
