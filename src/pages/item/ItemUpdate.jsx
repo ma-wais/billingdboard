@@ -184,7 +184,10 @@ const ItemTable = () => {
   );
 
   return (
-    <>
+    <div className='box'>
+      <div className='heading'>
+        <p>Update Items</p>
+      </div>
       <div className="table-responsive">
         <table {...getTableProps()} className="table table-striped table-bordered">
           <thead>
@@ -227,7 +230,7 @@ const ItemTable = () => {
           </strong>{' '}
         </span>
       </div>
-    </>
+    </div>
   );
 };
 

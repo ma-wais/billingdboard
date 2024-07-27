@@ -20,6 +20,10 @@ import { server } from "../App";
 const Header = ({token, setToken, toggleSidebar, setUser }) => {
   const navigate = useNavigate();
 
+  if(location.pathname.includes('sales')) {
+    return null;
+  }
+
   const logout = async () => {
     try {
       await axios.post(`${server}/users/logout`, {}, { withCredentials: true });
@@ -52,7 +56,7 @@ export const SideBar = ({ setUser }) => {
   const [show, setShow] = useState("");
   const navigate = useNavigate();
 
-  if(location.pathname === "/login") {
+  if(location.pathname === "/login" || location.pathname.includes('sales')) {
     return null;
   }
   const logout = async () => {

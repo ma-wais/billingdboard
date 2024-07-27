@@ -1,0 +1,111 @@
+.item-form {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  > .basic-single{
+    width: 20%;
+    max-width: 250px;
+    transform: translateY(5px);
+  }
+
+  >div{
+    max-width: 130px;
+    label{
+      margin-top: 10px;
+    }
+  }
+}
+
+button {
+  margin: 10px 0 0 10px;
+}
+
+.item-form input {
+  padding: 5px 3px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  margin: 10px 0 0 10px;
+  width: 70px;
+}
+
+.list-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #ffffff;
+
+  .list {
+    width: 65%;
+    min-height: 400px;
+  }
+}
+
+.billing-form {
+  width: 30%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-group input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: right;
+}
+
+.form-actions button {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px;
+
+  input {
+    padding: 5px;
+    outline: none;
+    border-radius: 5px;
+    width: 180px;
+    border: 1px solid #ccc;
+  }
+
+  select {
+    padding: 5px;
+    outline: none;
+    border-radius: 5px;
+  }
+}
+
+.remarks {
+  padding: 10px;
+
+  #remarks {
+    width: 95%;
+    height: 100px;
+  }
+}

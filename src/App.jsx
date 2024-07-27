@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import axios from "axios";
 
 import Header, { SideBar } from "./components/Header";
 
@@ -45,23 +46,32 @@ import SaleReturnReport from "./pages/reports/SaleReturnReport";
 import StockAdjustmentReport from "./pages/reports/StockAdjustmentReport";
 import StockReport from "./pages/reports/StockReport";
 
-import axios from "axios";
-import "./App.css";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
-import "./styles/globals.scss";
 import Protected from "./components/Protected";
+import CashSummary from "./pages/CashSummary";
+import "./App.css";
+import "./styles/globals.scss";
 
 import EmployeeEdit from "./pages/dashboard/EmployeeEdit";
 import CompanyEdit from "./pages/dashboard/CompanyEdit";
 import CityEdit from "./pages/dashboard/CityEdit";
-// import ItemTypeUpdate from "./pages/item/ItemTypeUpdate";
 import UnitUpdate from "./pages/item/UnitUpdate";
 import OriginalFormula from "./pages/item/OriginalFormulaUpdate";
 import EditAccount from "./pages/accounts/AccountEdit";
 import CashVoucherEdit from "./pages/accounts/CashVoucherEdit";
 import ReceiptVoucherEdit from "./pages/accounts/RecieptVoucherEdit";
-import CashSummary from "./pages/CashSummary";
+// import ItemTypeUpdate from "./pages/item/ItemTypeUpdate";
+
+import Home from './pages2/Home.jsx'
+import List from './pages2/List.jsx'
+import Return from './pages2/Return.jsx'
+import ReturnList from './pages2/ReturnList.jsx'
+import Stock from './pages2/Stock.jsx'
+import Reprint from './pages2/Reprint.jsx'
+import Change from './pages2/Change.jsx'
+import EmpLogin from './pages2/EmpLogin.jsx'
+import EmpProtected from "./components/EmpProtected.jsx";
 
 export const server = "https://billing-api-1.onrender.com/api/v1";
 // export const server = "http://localhost:4000/api/v1";
@@ -73,6 +83,9 @@ const App = () => {
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token2, setToken2] = useState(localStorage.getItem("token2"));
+
+  console.log(token2);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -87,7 +100,7 @@ const App = () => {
           withCredentials: true
         });
         setUser(res.data);
-        console.log(res.data);
+        // console.log(res.data);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -176,8 +189,18 @@ const App = () => {
                 <Route path="/cash-report" element={<CashReport />} />
 
                 <Route path="/cash-summary" element={<CashSummary />} />
-
               </Route>
+
+              <Route element={<EmpProtected classnam="body" />} >
+                <Route path='/sales' element={<Home />} />
+                <Route path='/sales/list' element={<List />} />
+                <Route path='/sales/return' element={<Return />} />
+                <Route path='/sales/returnlist' element={<ReturnList />} />
+                <Route path='/sales/stock' element={<Stock />} />
+                <Route path='/sales/reprint' element={<Reprint />} />
+                <Route path='/sales/change' element={<Change />} />
+              </Route>
+              <Route path='/sales/login' element={<EmpLogin />} />
 
               <Route path="/login" element={<Login setToken={setToken} setUser={setUser} />} />
               <Route path="/register"element={<Register />} />

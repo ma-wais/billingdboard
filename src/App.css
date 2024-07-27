@@ -71,7 +71,7 @@ textarea{
 
 .content {
   flex: 1;
-  padding: 20px;
+  /* padding: 20px; */
   overflow-y: auto;
   transition: margin-left 0.3s;
 }
