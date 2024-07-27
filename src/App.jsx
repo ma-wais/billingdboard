@@ -84,7 +84,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [token2, setToken2] = useState(localStorage.getItem("token2"));
-
+  
   console.log(token2);
 
   useEffect(() => {
@@ -198,11 +198,11 @@ const App = () => {
                 <Route path='/sales/returnlist' element={<ReturnList />} />
                 <Route path='/sales/stock' element={<Stock />} />
                 <Route path='/sales/reprint' element={<Reprint />} />
-                <Route path='/sales/change' element={<Change />} />
+                <Route path='/sales/change' element={<Change id={token2}/>} />
               </Route>
-              <Route path='/sales/login' element={<EmpLogin />} />
 
-              <Route path="/login" element={<Login setToken={setToken} setUser={setUser} />} />
+              <Route path="/login" element={<Login setToken={setToken} token={token} setUser={setUser} />} />
+              <Route path='/sales/login' element={<EmpLogin setToken2={setToken2} token={token2}/>} />
               <Route path="/register"element={<Register />} />
             </Routes>
           </div>

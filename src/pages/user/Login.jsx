@@ -1,15 +1,21 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { server } from "../../App";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({setToken, setUser }) => {
+const Login = ({setToken, setUser, token }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
+  
   const { email, password } = formData;
 
   const onChange = (e) =>

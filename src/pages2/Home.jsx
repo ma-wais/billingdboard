@@ -279,35 +279,35 @@ const Home = () => {
       </div>
       <div className="info">
         <div>
-          <h4>Total Items:</h4>{" "}
+          <h6>Total Items:</h6>{" "}
           <input className="w40" type="text" value={itemList.length} readOnly />
         </div>
         <div>
-          <h4>Customer: </h4>
+          <h6>Customer: </h6>
           <input
             type="text"
-            value={customerName}
+            // value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
           />
         </div>
         <div>
-          <h4>Customer Phone </h4>
+          <h6>Customer Phone </h6>
           <input
             type="text"
-            value={customerPhone}
+            // value={customerPhone}
             onChange={(e) => setCustomerPhone(e.target.value)}
           />
         </div>
         <div>
-          <h4>Doctor Name </h4>
+          <h6>Doctor Name </h6>
           <input
             type="text"
-            value={doctorName}
+            // value={doctorName}
             onChange={(e) => setDoctorName(e.target.value)}
           />
         </div>
         <div>
-          <h4>User:(F7)</h4>
+          <h6>User:(F7)</h6>
           <select
             name="user"
             value={user}

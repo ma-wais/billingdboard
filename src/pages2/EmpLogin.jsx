@@ -1,15 +1,21 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { server } from "../App";
 import { useNavigate } from "react-router-dom";
 
-const EmpLogin = () => {
+const EmpLogin = ({ setToken2, token }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     password: "",
   });
 
+  useEffect(() => {
+    if (token) {
+      navigate("/sales");
+    }
+  }, [token, navigate]);
+  
   const { name, password } = formData;
 
   const onChange = (e) =>
@@ -29,8 +35,7 @@ const EmpLogin = () => {
       console.log(response.data);
       const token = response.data.employee._id;
       localStorage.setItem("token2", token);
-      // setToken(token);
-      // setUser(response.data.user);
+      setToken2(token);
 
       navigate("/sales");
     } catch (error) {

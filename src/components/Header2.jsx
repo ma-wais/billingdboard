@@ -5,6 +5,7 @@ import { server } from '../App'
 import axios from 'axios'
 
 const Header = () => {
+  const shop = localStorage.getItem('shopName')
 
   const logoutHandler = () => {
     axios.post(`${server}/employees/logout`, {}, { withCredentials: true })
@@ -18,7 +19,7 @@ const Header = () => {
   }
   return (
     <div className='header'>
-      <h1>Heal Pharmacy (Sales)</h1>
+      <h1>{shop}</h1>
       <div>
         <Link to='/sales'>Sales</Link>
         <Link to='/sales/list'>List</Link>
