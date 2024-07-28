@@ -270,7 +270,7 @@ const Home = () => {
               <button type="button" onClick={() => alert("Save & Print")}>
                 Save & Print (F12)
               </button>
-              <button type="button" onClick={() => alert("Save")}>
+              <button type="button" onClick={saveSale}>
                 Save (F9)
               </button>
             </div>
