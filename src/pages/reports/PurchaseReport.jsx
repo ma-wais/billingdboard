@@ -28,14 +28,17 @@ const PurchaseReport = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!from || !to) {
+      alert("Please select dates for report generation.");
+      return;
+    }
     try {
       const response = await axios.get(
         `${server}/purchase?startDate=${from}&endDate=${to}&supplier=${supplier}`
       );
       if (Array.isArray(response.data)) {
         setData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } else {
         console.error("Unexpected response data format:", response.data);
         setData([]);

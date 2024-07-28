@@ -46,12 +46,11 @@ import SaleReturnReport from "./pages/reports/SaleReturnReport";
 import StockAdjustmentReport from "./pages/reports/StockAdjustmentReport";
 import StockReport from "./pages/reports/StockReport";
 
+import CashSummary from "./pages/CashSummary";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
 import Protected from "./components/Protected";
-import CashSummary from "./pages/CashSummary";
-import "./App.css";
-import "./styles/globals.scss";
+import EmpProtected from "./components/EmpProtected.jsx";
 
 import EmployeeEdit from "./pages/dashboard/EmployeeEdit";
 import CompanyEdit from "./pages/dashboard/CompanyEdit";
@@ -71,10 +70,12 @@ import Stock from './pages2/Stock.jsx'
 import Reprint from './pages2/Reprint.jsx'
 import Change from './pages2/Change.jsx'
 import EmpLogin from './pages2/EmpLogin.jsx'
-import EmpProtected from "./components/EmpProtected.jsx";
 
-export const server = "https://billing-api-1.onrender.com/api/v1";
-// export const server = "http://localhost:4000/api/v1";
+import "./App.css";
+import "./styles/globals.scss";
+
+// export const server = "https://billing-api-1.onrender.com/api/v1";
+export const server = "http://localhost:4000/api/v1";
 
 const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(
@@ -84,8 +85,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [token2, setToken2] = useState(localStorage.getItem("token2"));
-  
-  console.log(token2);
+  // console.log(token2);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");

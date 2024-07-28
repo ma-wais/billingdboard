@@ -65,7 +65,7 @@ const StockReport = () => {
       );
 
       setData(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error("Error fetching items:", error);
     }
@@ -88,10 +88,8 @@ const StockReport = () => {
           onChange={(e) => {
             if (e) {
               setCompany(e.value);
-              console.log(e.value);
             } else {
               setCompany("");
-              console.log("Cleared");
             }
           }}
         />
@@ -106,10 +104,8 @@ const StockReport = () => {
           onChange={(e) => {
             if (e) {
               setAccount(e.value);
-              console.log(e.value);
             } else {
               setAccount("");
-              console.log("Cleared");
             }
           }}
         />
@@ -124,10 +120,8 @@ const StockReport = () => {
           onChange={(e) => {
             if (e) {
               setValue(e.value);
-              console.log(e.value);
             } else {
               setValue("");
-              console.log("Cleared");
             }
           }}
         />
@@ -142,10 +136,8 @@ const StockReport = () => {
           onChange={(e) => {
             if (e) {
               setStockType(e.value);
-              console.log(e.value);
             } else {
               setStockType("");
-              console.log("Cleared");
             }
           }}
         />

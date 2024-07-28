@@ -37,7 +37,6 @@ const ExpiryReport = () => {
         },
       });
       setPurchaseData(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching purchase data:", error);
     }

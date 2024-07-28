@@ -42,6 +42,10 @@ const SaleReport = () => {
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
+    if (!formData.fromDate || !formData.toDate) {
+      alert('Please select both from and to dates');
+      return;
+    }
     try {
       const queryParams = new URLSearchParams({
         from: formData.fromDate,
@@ -50,7 +54,7 @@ const SaleReport = () => {
       }).toString();
 
       const response = await axios.get(`${server}/purchase/sales?${queryParams}`);
-      console.log('API Response:', response.data);  // For debugging
+      // console.log('API Response:', response.data);  // For debugging
       if (response.data && Array.isArray(response.data.sales)) {
         setData(response.data.sales);
       } else {

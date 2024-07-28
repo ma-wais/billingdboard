@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Select from "react-select";
+// import Select from "react-select";
 import { server } from '../../App';
 
 const SaleReport = () => {
@@ -49,6 +49,10 @@ const SaleReport = () => {
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
+    if (!formData.fromDate || !formData.toDate) {
+      alert('Please select both from and to dates');
+      return;
+    }
     try {
       const queryParams = new URLSearchParams({
         from: formData.fromDate,

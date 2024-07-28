@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useTable, useFilters, usePagination } from 'react-table';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
-import { server } from '../../App';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useTable, useFilters, usePagination } from "react-table";
+import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import { server } from "../../App";
 
 const EditableCell = ({
   value: initialValue,
@@ -24,15 +24,24 @@ const EditableCell = ({
     setValue(initialValue);
   }, [initialValue]);
 
-  return <input value={value} onChange={onChange} onBlur={onBlur} className="form-control" />;
+  return (
+    <input
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur}
+      className="form-control"
+    />
+  );
 };
 
-const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
+const ColumnFilter = ({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) => {
   const count = preFilteredRows.length;
 
   return (
     <input
-      value={filterValue || ''}
+      value={filterValue || ""}
       onChange={(e) => setFilter(e.target.value || undefined)}
       placeholder={`Search ${count} records...`}
       className="form-control"
@@ -61,7 +70,7 @@ const ItemTable = () => {
   }, []);
 
   const updateMyData = useCallback((rowIndex, columnId, value) => {
-    setData(old =>
+    setData((old) =>
       old.map((row, index) => {
         if (index === rowIndex) {
           return {
@@ -74,51 +83,54 @@ const ItemTable = () => {
     );
   }, []);
 
-  const saveChanges = useCallback(async (rowIndex) => {
-    const item = data[rowIndex];
-    const originalItem = originalData[rowIndex];
-    const updates = {};
+  const saveChanges = useCallback(
+    async (rowIndex) => {
+      const item = data[rowIndex];
+      const originalItem = originalData[rowIndex];
+      const updates = {};
 
-    Object.keys(item).forEach((key) => {
-      if (item[key] !== originalItem[key]) {
-        updates[key] = item[key];
-      }
-    });
+      Object.keys(item).forEach((key) => {
+        if (item[key] !== originalItem[key]) {
+          updates[key] = item[key];
+        }
+      });
 
-    if (Object.keys(updates).length > 0) {
-      try {
-        await axios.put(`${server}/items/${item._id}`, updates);
-        setOriginalData(data);
-        alert('Item updated successfully');
-      } catch (error) {
-        console.error('Error updating item:', error);
-        alert('Error updating item');
+      if (Object.keys(updates).length > 0) {
+        try {
+          await axios.put(`${server}/items/${item._id}`, updates);
+          setOriginalData(data);
+          alert("Item updated successfully");
+        } catch (error) {
+          console.error("Error updating item:", error);
+          alert("Error updating item");
+        }
+      } else {
+        alert("No changes to save");
       }
-    } else {
-      alert('No changes to save');
-    }
-  }, [data, originalData]);
+    },
+    [data, originalData]
+  );
 
   const columns = useMemo(
     () => [
       {
-        Header: 'Name',
-        accessor: 'itemName',
+        Header: "Name",
+        accessor: "itemName",
         Filter: ColumnFilter,
       },
       {
-        Header: 'Company',
-        accessor: 'companyName',
+        Header: "Company",
+        accessor: "companyName",
         Filter: ColumnFilter,
       },
       {
-        Header: 'Stock',
-        accessor: 'stock',
+        Header: "Stock",
+        accessor: "stock",
         Filter: ColumnFilter,
       },
       {
-        Header: 'Unit',
-        accessor: 'unit',
+        Header: "Unit",
+        accessor: "unit",
         Filter: ColumnFilter,
       },
       // {
@@ -127,25 +139,28 @@ const ItemTable = () => {
       //   Filter: ColumnFilter,
       // },
       {
-        Header: 'Rack',
-        accessor: 'itemRackNumber',
+        Header: "Rack",
+        accessor: "itemRackNumber",
         Filter: ColumnFilter,
       },
       {
-        Header: 'Qty in pack',
-        accessor: 'quantityInPack',
+        Header: "Qty in pack",
+        accessor: "quantityInPack",
         Filter: ColumnFilter,
       },
       {
-        Header: 'Retail Price',
-        accessor: 'retailPrice',
+        Header: "Retail Price",
+        accessor: "retailPrice",
         Filter: ColumnFilter,
       },
       {
-        Header: 'Action',
-        accessor: 'action',
+        Header: "Action",
+        accessor: "action",
         Cell: ({ row }) => (
-          <button className="btn btn-primary" onClick={() => saveChanges(row.index)}>
+          <button
+            className="btn btn-primary"
+            onClick={() => saveChanges(row.index)}
+          >
             Save
           </button>
         ),
@@ -155,9 +170,12 @@ const ItemTable = () => {
     [saveChanges]
   );
 
-  const defaultColumn = useMemo(() => ({
-    Cell: EditableCell,
-  }), []);
+  const defaultColumn = useMemo(
+    () => ({
+      Cell: EditableCell,
+    }),
+    []
+  );
 
   const {
     getTableProps,
@@ -184,31 +202,38 @@ const ItemTable = () => {
   );
 
   return (
-    <div className='box'>
-      <div className='heading'>
+    <div className="box">
+      <div className="heading">
         <p>Update Items</p>
       </div>
       <div className="table-responsive">
-        <table {...getTableProps()} className="table table-striped table-bordered">
+        <table
+          {...getTableProps()}
+          className="table table-striped table-bordered"
+        >
           <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                    <div style={{width: '80px'}}>{column.canFilter ? column.render('Filter') : null}</div>
+            {headerGroups.map((headerGroup, index) => (
+              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps()} key={column.id}>
+                    {column.render("Header")}
+                    <div style={{ width: "80px" }}>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map(row => {
+            {page.map((row, index) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                <tr {...row.getRowProps()} key={index}>
+                  {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()} key={cell.column.id}>
+                      {cell.render("Cell")}
+                    </td>
                   ))}
                 </tr>
               );
@@ -218,16 +243,16 @@ const ItemTable = () => {
       </div>
       <div className="pagination">
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
+          {"<"}
+        </button>{" "}
         <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
+          {">"}
+        </button>{" "}
         <span>
-          Page{' '}
+          Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          </strong>{" "}
         </span>
       </div>
     </div>

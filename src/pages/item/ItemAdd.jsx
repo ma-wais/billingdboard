@@ -33,10 +33,6 @@ const ItemAdd = () => {
   });
 
   useEffect(() => {
-    console.log(supplierList);
-  }, [supplierList]);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const [unitsRes, itemTypesRes, companiesRes, suppliersRes, formulasRes] =
@@ -364,9 +360,9 @@ const ItemAdd = () => {
           value={suppliers.find((sup) => sup.value === currentSupplier)}
         />
         <textarea
+        style={{ width: '30%', height: '40px' }}
           name="supplierRemarks"
           value={currentRemarks}
-          rows={1}
           onChange={handleRemarksChange}
           placeholder="Supplier Remarks"
         />
