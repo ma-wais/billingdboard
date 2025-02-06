@@ -114,34 +114,39 @@ const CompanyEdit = () => {
           />
         </div>
         <div className="row-inputs">
-          <textarea
-            style={{ width: "40%" }}
-            type="text"
-            name="address"
-            placeholder="Address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-          <Select
-            className="basic-single"
-            placeholder="City"
-            options={cities}
-            value={formData.city}
-            onChange={(value) => setFormData({ ...formData, city: value })}
-          />
-        </div>
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="">Select Status</option>
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-        <textarea
-          type="text"
-          name="remarks"
-          placeholder="Remarks"
-          value={formData.remarks}
-          onChange={handleChange}
-        />
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <Select
+                className="basic-single"
+                classNamePrefix="custom-select"
+                placeholder="City"
+                unstyled
+                options={cities}
+                value={formData.city}
+                onChange={(value) => setFormData({ ...formData, city: value })}
+              />
+            </div>
+            <textarea
+              rows={1}
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+            <textarea
+              type="text"
+              name="remarks"
+              placeholder="Remarks"
+              value={formData.remarks}
+              onChange={handleChange}
+            />
         <div className="submit">
           <button type="submit" disabled={loading}>
             {loading ? "Saving..." : "Save"}
@@ -150,6 +155,44 @@ const CompanyEdit = () => {
       </form>
     </div>
   );
+};
+
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#f8f9fa", // Light gray background
+    borderColor: state.isFocused ? "#007bff" : "#ced4da", // Blue border on focus
+    boxShadow: state.isFocused ? "0 0 5px rgba(0, 123, 255, 0.5)" : "none",
+    "&:hover": {
+      borderColor: "#007bff",
+    },
+  }),
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: "#ffffff",
+    border: "1px solid #ced4da",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#007bff"
+      : state.isFocused
+      ? "#e9ecef"
+      : "white",
+    color: state.isSelected ? "white" : "black",
+    padding: 10,
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#007bff",
+      color: "white",
+    },
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "#495057",
+    fontWeight: "bold",
+  }),
 };
 
 export default CompanyEdit;

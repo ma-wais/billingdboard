@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import Header2 from "./Header2";
+import Header2 from "./SalesHeader";
 
 const EmpProtected = ({ children, classnam }) => {
     if (!localStorage.getItem("token2")) {

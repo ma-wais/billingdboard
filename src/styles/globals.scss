@@ -1,175 +1,228 @@
 .cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 3px;
+  margin-top: 10px;
+
+  .card {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    gap: 3px;
-    margin: 20px 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 15px 20px;
+    width: 22%;
+    min-width: 160px;
+    margin-bottom: 15px;
+    color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
 
-    .card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border-radius: 7px;
-        padding: 10px 20px 0 20px;
-        width: 22%;
-        min-width: 150px;
-        margin-bottom: 10px;
-        color: rgb(245, 243, 243);
+  .card:hover {
+    transform: translateY(-5px);
+  }
 
-      p:first-of-type{
-        font-weight: 400;
-        font-size: 1.2rem;
-      }
-      p:last-of-type{
-        font-weight: 500;
-        font-size: 1.4rem;
-      }
-    }
+  .card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 50%;
+  }
+
+  .card-content {
+    text-align: right;
+  }
+
+  .card-heading {
+    font-weight: 400;
+    font-size: 1.2rem;
+  }
+
+  .card-value {
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
 }
 
 .box {
-    border: 1px solid rgb(173, 173, 173);
-    margin: 20px;
+  border: 1px solid rgb(173, 173, 173);
+  width: 95%;
+  margin: 20px;
+  background-color: #fff;
 }
 
 .heading {
-    background-color: rgb(243, 243, 243);
-    border-bottom: 1px solid rgb(173, 173, 173);
-    padding: 0 10px;
+  background-color: rgb(107, 107, 107);
+  color: #ffffff;
+  border-bottom: 1px solid rgb(173, 173, 173);
+  padding: 0 10px;
 
-    p {
-        height: 10px;
-    }
+  p {
+    height: 10px;
+  }
 }
 
-.heading2{
-    border-bottom: 1px solid rgb(173, 173, 173);
-    padding: 10px;
-    background-color: rgb(149, 209, 149);
+.heading2 {
+  border-bottom: 1px solid rgb(173, 173, 173);
+  padding: 10px;
+  background-color: rgb(87, 90, 87);
+  color: #ffffff;
 
-    p{
-        height: 10px;
-        font-weight: 600;
-    }
+  p {
+    height: 10px;
+    font-weight: 600;
+  }
 }
 .inputs {
-    padding: 20px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .pagination {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 0 10px 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0 10px 10px;
 
-    .goto {
-        display: inline-block;
-        margin-left: 20px;
-    }
+  .goto {
+    display: inline-block;
+    margin-left: 20px;
+  }
 
-    input,
-    select {
-        padding: 5px;
-        margin-left: 2px;
-    }
+  input,
+  select {
+    padding: 5px;
+    margin-left: 2px;
+  }
 
-    button {
-        padding: 5px 10px;
-        border: none;
-        background-color: rgb(236, 236, 236);
-        color: rgb(0, 0, 0);
-    }
-    span{
-        margin: 8px 5px 0 5px;
-    }
+  button {
+    padding: 5px 10px;
+    border: none;
+    background-color: rgb(236, 236, 236);
+    color: rgb(0, 0, 0);
+  }
+  span {
+    margin: 8px 5px 0 5px;
+  }
 }
 
 button:disabled {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .submit {
-    border-top: 1px solid rgb(173, 173, 173);
-    padding: 10px;
-    display: flex;
-    justify-content: flex-end;
+  border-top: 1px solid rgb(173, 173, 173);
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
 
-    button {
-        padding: 5px 10px;
-        border: none;
-        background-color: rgb(39, 129, 231);
-        color: white;
-    }
+  button {
+    padding: 5px 10px;
+    border: none;
+    background-color: rgb(77, 77, 77);
+    color: white;
+  }
 }
 
 .row-inputs {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
 
-    input {
-        width: 50%;
-        max-width: 235px;
-        
-        &[type=checkbox]{
-            width: 16px;
-            height: 16px;
-            margin: 0 5px;
-        }
+  input {
+    width: 50%;
+    max-width: 235px;
+
+    &[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0 5px;
     }
+  }
 }
 
 .more-inputs {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    background: #cde0c4;
-    padding: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #d6d5d5;
+  padding: 10px;
 
-    input {
-        padding: 4px 2px;
-        font-size: 13px;
-    }
+  input {
+    padding: 4px 2px;
+    font-size: 13px;
+  }
 }
 
 .w50 {
-    width: 80px;
+  width: 80px;
 }
 
 .basic-single {
-    max-width: 505px !important;
-    min-width: 220px;
+  width: 40%;
+  max-width: 235px;
+  min-width: 180px;
 
-    >div {
-        border-radius: 0px !important;
+  > div {
+    border-radius: 5px;
+    margin: 0%;
+    padding: 0 10px;
+    background-color: #f2f2f3;
+  }
+}
+
+.custom-select__menu {
+  background-color: transparent;
+  border-radius: 0;
+  border: none !important;
+  padding: 0% !important;
+
+  > div {
+    background-color: #f2f2f3 !important;
+
+    > div {
+      padding: 10px;
+      &:hover {
+        background-color: #535353 !important;
+        color: rgb(218, 216, 216) !important;
+      }
     }
+  }
+}
+
+.custom-select__option--is-selected {
+  background-color: #535353 !important;
+  color: rgb(218, 216, 216) !important;
 }
 
 .buttons {
-    padding: 10px 0 0 10px;
-    background-color: #eaebf1;
+  padding: 10px 0 0 10px;
+  background-color: #c0c0c0;
 
-    button {
-        padding: 5px 10px;
-        margin-left: 5px;
-        color: black;
-    }
+  button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    color: black;
+  }
 }
 
-.form{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 300px;
-    margin: 50px auto ;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 50px auto;
 }
 
-.inputs th{
-    font-weight: 500;
-    letter-spacing: -1px;
+.inputs th {
+  font-weight: 500;
+  letter-spacing: -1px;
 }

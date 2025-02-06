@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
-import Header, { SideBar } from "./components/Header";
+import { SideBar } from "./components/AdminHeader.jsx";
 
 import City from "./pages/dashboard/City";
 import Company from "./pages/dashboard/Company";
@@ -47,10 +47,6 @@ import StockAdjustmentReport from "./pages/reports/StockAdjustmentReport";
 import StockReport from "./pages/reports/StockReport";
 
 import CashSummary from "./pages/CashSummary";
-import Login from "./pages/user/Login";
-import Register from "./pages/user/Register";
-import Protected from "./components/Protected";
-import EmpProtected from "./components/EmpProtected.jsx";
 
 import EmployeeEdit from "./pages/dashboard/EmployeeEdit";
 import CompanyEdit from "./pages/dashboard/CompanyEdit";
@@ -71,6 +67,11 @@ import Reprint from './pages2/Reprint.jsx'
 import Change from './pages2/Change.jsx'
 import EmpLogin from './pages2/EmpLogin.jsx'
 
+import Login from "./pages/user/Login";
+import Register from "./pages/user/Register";
+import Protected from "./components/Protected";
+import EmpProtected from "./components/EmpProtected.jsx";
+
 import "./App.css";
 import "./styles/globals.scss";
 
@@ -78,60 +79,18 @@ export const server = "https://billing-api-1.onrender.com/api/v1";
 // export const server = "http://localhost:4000/api/v1";
 
 const App = () => {
-  const [sidebarVisible, setSidebarVisible] = useState(
-    window.innerWidth > 1000
-  );
   const [user, setUser] = useState();
-  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [token2, setToken2] = useState(localStorage.getItem("token2"));
-  // console.log(token2);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, []);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`${server}/users/user`, {
-          withCredentials: true
-        });
-        setUser(res.data);
-        // console.log(res.data);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
-    };
-    if (token) {
-      getUser();
-    } 
-    else{
-      console.log("no token")
-    }
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  const toggleSidebar = () => {
-    setSidebarVisible(!sidebarVisible);
-  };
 
   return (
     <BrowserRouter>
       <div className="app-container">
-        <Header token={token} setToken={setToken} setUser={setUser} toggleSidebar={toggleSidebar} />
+        {/* <Header token={token} setToken={setToken} setUser={setUser} toggleSidebar={toggleSidebar} /> */}
         <div
-          className={`main-container ${
-            sidebarVisible ? "sidebar-visible" : "sidebar-hidden"
-          }`}
+          className={`main-container`}
         >
-          <SideBar className="sideBar" setUser={setUser} sidebarVisible={sidebarVisible} />
+          <SideBar className="sideBar"/>
           <div className="content">
             <Routes>
               <Route element={<Protected />} >
@@ -191,6 +150,10 @@ const App = () => {
                 <Route path="/cash-summary" element={<CashSummary />} />
               </Route>
 
+              <Route path="/login" element={<Login setToken={setToken} token={token} setUser={setUser} />} />
+              <Route path='/sales/login' element={<EmpLogin setToken2={setToken2} token={token2}/>} />
+              <Route path="/register"element={<Register />} />
+
               <Route element={<EmpProtected classnam="body" />} >
                 <Route path='/sales' element={<Home />} />
                 <Route path='/sales/list' element={<List />} />
@@ -200,10 +163,7 @@ const App = () => {
                 <Route path='/sales/reprint' element={<Reprint />} />
                 <Route path='/sales/change' element={<Change id={token2}/>} />
               </Route>
-
-              <Route path="/login" element={<Login setToken={setToken} token={token} setUser={setUser} />} />
-              <Route path='/sales/login' element={<EmpLogin setToken2={setToken2} token={token2}/>} />
-              <Route path="/register"element={<Register />} />
+              
             </Routes>
           </div>
         </div>

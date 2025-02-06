@@ -32,31 +32,6 @@ const Shop = () => {
     localStorage.setItem('phoneNumber', formData.phoneNumber);
     
     alert('Shop created successfully!');
-    // setIsLoading(true);
-    // const data = new FormData();
-    // data.append('shopName', formData.shopName);
-    // data.append('owner', formData.owner);
-    // data.append('address', formData.address);
-    // data.append('phoneNumber', formData.phoneNumber);
-    // data.append('image', formData.image);
-    // try {
-    //   const res = await axios.post(`${server}/shops`, data, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   });
-      // setFormData({
-      //   shopName: '',
-      //   owner: '',
-      //   address: '',
-      //   phoneNumber: '',
-      //   image: null,
-      // });
-      //   setIsLoading(false);
-    // } catch (error) {
-    //   console.error('Error saving shop:', error);
-    //   setIsLoading(false);
-    // } 
   };
 
   return (

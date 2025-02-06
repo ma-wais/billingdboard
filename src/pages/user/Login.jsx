@@ -24,7 +24,7 @@ const Login = ({setToken, setUser, token }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      await axios.post(
         `${server}/users/login`,
         {
           emailOrUsername: formData.email,
@@ -32,14 +32,10 @@ const Login = ({setToken, setUser, token }) => {
         },
         { withCredentials: true }
       );
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-      setToken(token);
-      setUser(response.data.user);
-
+  
       navigate("/dashboard");
     } catch (error) {
-      console.error("Registration failed", error);
+      console.error("Login failed", error);
     }
   };
 

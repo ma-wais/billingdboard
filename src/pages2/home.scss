@@ -5,15 +5,15 @@
   justify-content: center;
   flex-wrap: wrap;
 
-  > .basic-single{
+  > .basic-single {
     width: 20%;
     max-width: 250px;
     transform: translateY(5px);
   }
 
-  >div{
+  > div {
     max-width: 130px;
-    label{
+    label {
       margin-top: 10px;
     }
   }
@@ -68,13 +68,13 @@ button {
   padding: 10px;
   margin: 5px;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: #3e3f41;
   color: white;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #0f0f0f;
 }
 
 .info {
@@ -110,6 +110,6 @@ button:hover {
   }
 }
 
-input:read-only{
+input:read-only {
   background-color: #e9e9e9;
 }

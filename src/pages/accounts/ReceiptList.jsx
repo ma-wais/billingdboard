@@ -192,11 +192,11 @@ const ReceiptList = () => {
             value={formData.to}
             onChange={handleChange}
           />
-        </div>
-        <button className="btn btn-primary" onClick={fetchCashVouchers}>
+        <button className="submit" style={{ width: "60px",marginBottom: "8px" }} onClick={fetchCashVouchers}>
           {" "}
           Search
         </button>
+        </div>
       </div>
       <div className="table-responsive">
         <table

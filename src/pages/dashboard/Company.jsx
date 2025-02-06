@@ -5,7 +5,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
+import {
+  AiOutlineSortAscending,
+  AiOutlineSortDescending,
+} from "react-icons/ai";
 
 const Company = () => {
   const [show, setShow] = useState("menu");
@@ -125,7 +128,7 @@ const Company = () => {
       initialState: { pageIndex: 0 },
     },
     useSortBy,
-    usePagination,
+    usePagination
   );
 
   const handleChange = (e) => {
@@ -220,30 +223,32 @@ const Company = () => {
               />
             </div>
             <div className="row-inputs">
-              <textarea
-                style={{ width: "40%" }}
-                type="text"
-                name="address"
-                placeholder="Address"
-                value={formData.address}
+              <select
+                name="status"
+                value={formData.status}
                 onChange={handleChange}
-              />
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
               <Select
                 className="basic-single"
+                classNamePrefix="custom-select"
                 placeholder="City"
+                unstyled
                 options={cities}
                 value={formData.city}
                 onChange={(value) => setFormData({ ...formData, city: value })}
               />
             </div>
-            <select
-              name="status"
-              value={formData.status}
+            <textarea
+              rows={1}
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
               onChange={handleChange}
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+            />
             <textarea
               type="text"
               name="remarks"
@@ -268,19 +273,27 @@ const Company = () => {
               <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                      <span>{column.render('Header')}</span>
-                      <span>
-                        {column.isSorted
-                          ? column.isSortedDesc
-                            ? <AiOutlineSortAscending />
-                            : <AiOutlineSortDescending />
-                          : ''}
-                      </span>
-                    </th>
-                  ))}
-                </tr>
+                    {headerGroup.headers.map((column) => (
+                      <th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                      >
+                        <span>{column.render("Header")}</span>
+                        <span>
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <AiOutlineSortAscending />
+                            ) : (
+                              <AiOutlineSortDescending />
+                            )
+                          ) : (
+                            ""
+                          )}
+                        </span>
+                      </th>
+                    ))}
+                  </tr>
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
@@ -289,10 +302,12 @@ const Company = () => {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}
-                        style={{ maxWidth: `${cell.column.width}px` }}
-
-                        >{cell.render("Cell")} </td>
+                        <td
+                          {...cell.getCellProps()}
+                          style={{ maxWidth: `${cell.column.width}px` }}
+                        >
+                          {cell.render("Cell")}{" "}
+                        </td>
                       ))}
                     </tr>
                   );
