@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import axios from "axios";
 import { useTable, usePagination } from "react-table";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +30,7 @@ const Employee = () => {
     const fetchData = async () => {
       const result = await axios.get(`${server}/employees`);
       setEmployees(result.data);
+      console.log("Data fetched:", result.data);
     };
     fetchData();
   }, []);
@@ -50,11 +50,23 @@ const Employee = () => {
     const { name, value, files } = e.target;
     if (files) {
       setFormData({ ...formData, image: files[0] });
+    } else if (name === "dateOfBirth") {
+      const formattedDate = value.split("T")[0];
+      setFormData({ ...formData, [name]: formattedDate });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${server}/employees/${id}`);
+      const result = await axios.get(`${server}/employees`);
+      setEmployees(result.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
@@ -90,14 +102,22 @@ const Employee = () => {
       {
         Header: "Action",
         accessor: "action",
-        Cell: ({ row }) => (
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate(`/employee/${row.original._id}`)}
-          >
-            Edit
-          </button>
-        ),
+        Cell: ({ row }) => {
+          return (
+            <>
+            <button className="btn btn-primary"
+              onClick={() => {
+                navigate(`/employee/${row.original._id}`);
+              }}
+            >
+              Edit
+            </button>
+            <button className="btn btn-primary" onClick={() => handleDelete(row.original._id)}>
+              Delete
+            </button>
+          </>
+          )
+        },
       },
     ],
     [navigate]
@@ -204,17 +224,17 @@ const Employee = () => {
             </div>
             <div className="row-inputs">
               <textarea
-                style={{ width: "40%", height: "33px" }}
+                rows="1"
                 type="text"
                 placeholder="Address"
                 name="address"
+                cols={40}
                 onChange={handleChange}
               />
               <Select
-                name="city"
-                isSearchable={true}
-                // isClearable= {true}
+                unstyled
                 className="basic-single"
+                classNamePrefix="custom-select"
                 options={cities}
                 onChange={(e) => {
                   setFormData({ ...formData, city: e.value });

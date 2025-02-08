@@ -160,8 +160,9 @@ const ColumnFilter = ({
     <input
       value={filterValue || ""}
       onChange={(e) => setFilter(e.target.value || undefined)}
-      placeholder={`${id}`}
-      className="form-control"
+      placeholder='Search'
+      className="editableInput border" 
+      style={{width: '80px'}}
     />
   );
 };

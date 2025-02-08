@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useTable, usePagination, useSortBy } from "react-table";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
@@ -60,12 +59,14 @@ const Company = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Company Code",
+        Header: "Code",
         accessor: "code",
+        width: 100,
       },
       {
-        Header: "Company Name",
+        Header: "C.Name",
         accessor: "companyName",
+        width: 100,
       },
       {
         Header: "Short.Name",
@@ -75,6 +76,7 @@ const Company = () => {
       {
         Header: "Phone",
         accessor: "phoneNumber",
+        width: 100,
       },
       {
         Header: "Email",
@@ -93,14 +95,19 @@ const Company = () => {
       {
         Header: "Action",
         accessor: "action",
-        width: 80,
+        width: 20,
         Cell: ({ row }) => (
+          <>
           <button
             className="btn btn-primary"
             onClick={() => navigate(`/company/${row.original._id}`)}
           >
             Edit
           </button>
+            <button className="btn btn-primary" onClick={() => handleDelete(row.original._id)} style={{marginLeft:"5px"}}>
+              Delete
+            </button>
+          </>
         ),
       },
     ],
@@ -136,6 +143,15 @@ const Company = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${server}/companies/${id}`);
+      setCompanies(companies.filter((company) => company._id !== id));
+    } catch (error) {
+      console.error("Error deleting company:", error);
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -242,13 +258,12 @@ const Company = () => {
               />
             </div>
             <textarea
-              rows={1}
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={formData.address}
-              onChange={handleChange}
-            />
+                rows="1"
+                type="text"
+                placeholder="Address"
+                name="address"
+                onChange={handleChange}
+              />
             <textarea
               type="text"
               name="remarks"
@@ -279,7 +294,7 @@ const Company = () => {
                           column.getSortByToggleProps()
                         )}
                       >
-                        <span>{column.render("Header")}</span>
+                        <span >{column.render("Header")}</span>
                         <span>
                           {column.isSorted ? (
                             column.isSortedDesc ? (
@@ -304,7 +319,7 @@ const Company = () => {
                       {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
-                          style={{ maxWidth: `${cell.column.width}px` }}
+                          // style={{ maxWidth: `${cell.column.width}px` }}
                         >
                           {cell.render("Cell")}{" "}
                         </td>

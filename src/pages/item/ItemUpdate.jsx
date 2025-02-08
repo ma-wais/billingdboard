@@ -14,22 +14,14 @@ const EditableCell = ({
 
   const onChange = (e) => {
     setValue(e.target.value);
-  };
-
-  const onBlur = () => {
     updateMyData(index, id, value);
   };
-
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
 
   return (
     <input
       value={value}
       onChange={onChange}
-      onBlur={onBlur}
-      className="form-control"
+      className="editableInput"
     />
   );
 };
@@ -43,11 +35,12 @@ const ColumnFilter = ({
     <input
       value={filterValue || ""}
       onChange={(e) => setFilter(e.target.value || undefined)}
-      placeholder={`Search ${count} records...`}
-      className="form-control"
+      placeholder={'Search'}
+      className="editableInput border"
     />
   );
 };
+
 const ItemTable = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
@@ -158,7 +151,7 @@ const ItemTable = () => {
         accessor: "action",
         Cell: ({ row }) => (
           <button
-            className="btn btn-primary"
+            className="btn btn-primary" style={{margin:"0px"}}
             onClick={() => saveChanges(row.index)}
           >
             Save
@@ -217,7 +210,7 @@ const ItemTable = () => {
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps()} key={column.id}>
                     {column.render("Header")}
-                    <div style={{ width: "80px" }}>
+                    <div >
                       {column.canFilter ? column.render("Filter") : null}
                     </div>
                   </th>

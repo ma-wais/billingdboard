@@ -14,17 +14,10 @@ const EditableCell = ({
 
   const onChange = (e) => {
     setValue(e.target.value);
-  };
-
-  const onBlur = () => {
     updateMyData(index, id, value);
   };
 
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  return <input value={value} onChange={onChange} onBlur={onBlur} className="form-control" />;
+  return <input value={value} onChange={onChange} className="editableInput" />;
 };
 
 const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
@@ -34,8 +27,8 @@ const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } 
     <input
       value={filterValue || ''}
       onChange={(e) => setFilter(e.target.value || undefined)}
-      placeholder={`Search ${count} records...`}
-      className="form-control"
+      placeholder={'Search'}
+      className="editableInput border"
     />
   );
 };

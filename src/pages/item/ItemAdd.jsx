@@ -10,8 +10,8 @@ const ItemAdd = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [formulas, setFormulas] = useState([]);
   const [supplierList, setSupplierList] = useState([]);
-  const [currentSupplier, setCurrentSupplier] = useState('');
-  const [currentRemarks, setCurrentRemarks] = useState('');
+  const [currentSupplier, setCurrentSupplier] = useState("");
+  const [currentRemarks, setCurrentRemarks] = useState("");
   const [formData, setFormData] = useState({
     itemCode: "",
     itemBarCode: "",
@@ -35,14 +35,19 @@ const ItemAdd = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [unitsRes, itemTypesRes, companiesRes, suppliersRes, formulasRes] =
-          await Promise.all([
-            axios.get(`${server}/units`),
-            axios.get(`${server}/item-types`),
-            axios.get(`${server}/companies`),
-            axios.get(`${server}/accounts`),
-            axios.get(`${server}/formula`),
-          ]);
+        const [
+          unitsRes,
+          itemTypesRes,
+          companiesRes,
+          suppliersRes,
+          formulasRes,
+        ] = await Promise.all([
+          axios.get(`${server}/units`),
+          axios.get(`${server}/item-types`),
+          axios.get(`${server}/companies`),
+          axios.get(`${server}/accounts`),
+          axios.get(`${server}/formula`),
+        ]);
 
         setUnits(
           unitsRes.data.map((unit) => ({
@@ -93,16 +98,19 @@ const ItemAdd = () => {
   const handleSupplierList = (e) => {
     e.preventDefault();
     if (currentSupplier && currentRemarks) {
-      setSupplierList([...supplierList, { name: currentSupplier, remarks: currentRemarks }]);
-      setCurrentSupplier('');
-      setCurrentRemarks('');
+      setSupplierList([
+        ...supplierList,
+        { name: currentSupplier, remarks: currentRemarks },
+      ]);
+      setCurrentSupplier("");
+      setCurrentRemarks("");
     } else {
-      alert('Please select a supplier and enter remarks.');
+      alert("Please select a supplier and enter remarks.");
     }
   };
 
   const handleSupplierChange = (selectedOption) => {
-    setCurrentSupplier(selectedOption ? selectedOption.value : '');
+    setCurrentSupplier(selectedOption ? selectedOption.value : "");
   };
 
   const handleRemarksChange = (e) => {
@@ -118,22 +126,22 @@ const ItemAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formDataToSend = new FormData();
-  
+
     Object.keys(formData).forEach((key) => {
       if (key !== "image") {
         formDataToSend.append(key, formData[key]);
       }
     });
-  
+
     // Ensure supplierList is correctly serialized
     formDataToSend.append("supplierList", JSON.stringify(supplierList));
-  
+
     if (formData.image) {
       formDataToSend.append("image", formData.image);
     }
-  
+
     try {
       const response = await axios.post(`${server}/items`, formDataToSend, {
         headers: {
@@ -203,13 +211,11 @@ const ItemAdd = () => {
               onChange={handleInputChange}
               placeholder="Item Name"
             />
-            <label htmlFor="itemType">Item Type </label>
             <Select
+              unstyled
               className="basic-single"
-              isLoading={false}
+              classNamePrefix="custom-select"
               isClearable={true}
-              isSearchable={true}
-              name="itemType"
               options={itemTypes}
               placeholder="Item Type"
               onChange={(option) =>
@@ -218,26 +224,24 @@ const ItemAdd = () => {
             />
           </div>
           <div className="row-inputs">
-            <label htmlFor="companyName">Company Name</label>
             <Select
+              unstyled
+              classNamePrefix="custom-select"
               className="basic-single"
               isLoading={false}
               isClearable={true}
-              isSearchable={true}
-              name="companyName"
               options={companies}
               placeholder="Company Name"
               onChange={(option) =>
                 handleSelectChange(option, { name: "companyName" })
               }
             />
-            <label htmlFor="unit">Unit</label>
             <Select
+              unstyled
+              classNamePrefix="custom-select"
               className="basic-single"
               isLoading={false}
               isClearable={true}
-              isSearchable={true}
-              name="unit"
               options={units}
               placeholder="Unit"
               onChange={(option) =>
@@ -278,7 +282,6 @@ const ItemAdd = () => {
             />
           </div>
           <div className="row-inputs">
-            <label htmlFor="status">Active Status: </label>
             <select
               name="status"
               value={formData.status}
@@ -296,7 +299,7 @@ const ItemAdd = () => {
             />
           </div>
           <div className="row-inputs" style={{ maxWidth: "525px" }}>
-            <label htmlFor="narcotics"> Narcotic </label>
+            <label htmlFor="narcotics"> Narcotic : </label>
             <input
               type="checkbox"
               name="narcotics"
@@ -311,64 +314,67 @@ const ItemAdd = () => {
               placeholder="Cost Per PC"
             />
           </div>
-          <Select
-            className="basic-single"
-            isLoading={false}
-            isClearable={true}
-            isSearchable={true}
-            name="itemFormula"
-            options={formulas}
-            placeholder="Item Formula"
-            onChange={(option) =>
-              handleSelectChange(option, { name: "itemFormula" })
-            }
-          />
+          <div className="row-inputs">
+            <Select
+              unstyled
+              classNamePrefix="custom-select"
+              className="basic-single"
+              isClearable={true}
+              options={formulas}
+              placeholder="Item Formula"
+              onChange={(option) =>
+                handleSelectChange(option, { name: "itemFormula" })
+              }
+            />
+            <input
+              type="file"
+              accept="image/*"
+              id="image"
+              name="image"
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  image: e.target.files[0] || null,
+                }))
+              }
+            />{" "}
+          </div>
           <textarea
             name="remarks"
             value={formData.remarks}
             onChange={handleInputChange}
             placeholder="Remarks"
           />
-          <input
-            type="file"
-            accept="image/*"
-            id="image"
-            name="image"
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                image: e.target.files[0] || null,
-              }))
-            }
-          />{" "}
         </div>
 
         <div className="heading2">
           <p>Add Item Suppliers</p>
         </div>
 
-        <div className="inputs" style={{ flexDirection: 'row' }}>
-        <Select
-          className="basic-single"
-          isLoading={false}
-          isClearable={true}
-          isSearchable={true}
-          name="supplierName"
-          options={suppliers}
-          placeholder="Supplier Name"
-          onChange={handleSupplierChange}
-          value={suppliers.find((sup) => sup.value === currentSupplier)}
-        />
-        <textarea
-        style={{ width: '30%', height: '40px' }}
-          name="supplierRemarks"
-          value={currentRemarks}
-          onChange={handleRemarksChange}
-          placeholder="Supplier Remarks"
-        />
-        <button onClick={handleSupplierList} style={{ marginLeft: 'auto' }}>
-          Add to table
-        </button>
+        <div className="inputs">
+          <Select
+            unstyled
+            classNamePrefix="custom-select"
+            className="basic-single"
+            isClearable={true}
+            options={suppliers}
+            placeholder="Supplier Name"
+            onChange={handleSupplierChange}
+            value={suppliers.find((sup) => sup.value === currentSupplier)}
+          />
+          <div className="row-inputs">
+            <textarea
+            style={{ width: "100%" }}
+              rows={1}
+              name="supplierRemarks"
+              value={currentRemarks}
+              onChange={handleRemarksChange}
+              placeholder="Supplier Remarks"
+            />
+            <button onClick={handleSupplierList} style={{ marginLeft: "auto" }}>
+              Add to table
+            </button>
+          </div>
         </div>
         <div className="inputs more">
           <table>
@@ -380,14 +386,12 @@ const ItemAdd = () => {
               </tr>
             </thead>
             <tbody>
-            {supplierList.map((supplier, index) => (
+              {supplierList.map((supplier, index) => (
                 <tr key={index}>
                   <td>{supplier.name}</td>
                   <td>{supplier.remarks}</td>
                   <td>
-                    <button
-                      onClick={() => handleDeleteSupplier(index)}
-                    >
+                    <button onClick={() => handleDeleteSupplier(index)}>
                       Delete
                     </button>
                   </td>
