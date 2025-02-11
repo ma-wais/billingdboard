@@ -18,12 +18,12 @@ const ItemMapSupplier = () => {
           axios.get(`${server}/items`),
         ]);
         const accountsRes = fetchAccounts.data.map((item) => ({
-          value: item.accountName,
+          value: item._id,
           label: item.accountName,
           ...item,
         }));
         const items = fetchItems.data.map((item) => ({
-          value: item.itemName,
+          value: item._id,
           label: item.itemName,
           ...item,
         }));
@@ -39,9 +39,9 @@ const ItemMapSupplier = () => {
   const handleSubmit = async () => {
     try {
       await axios.post(`${server}/item-map-suppliers`, {
-        supplierName: supplier,
+        supplier: account,
         item: selectedOption,
-        quantity: quantity,
+        quantity,
       });
 
       setQuantity("");
@@ -58,9 +58,9 @@ const ItemMapSupplier = () => {
         <div className="row-inputs">
           <Select
             className="basic-single"
+            unstyled
+            classNamePrefix='custom-select'
             isClearable={true}
-            isSearchable={true}
-            name="account"
             options={accounts}
             placeholder="Account"
             onChange={(e) => {
@@ -74,9 +74,9 @@ const ItemMapSupplier = () => {
         <div className="row-inputs">
           <Select
             className="basic-single"
+            unstyled
+            classNamePrefix='custom-select'
             isClearable={true}
-            isSearchable={true}
-            name="item"
             options={items}
             placeholder="Item"
             onChange={(e) => {
@@ -90,9 +90,9 @@ const ItemMapSupplier = () => {
             placeholder="Quantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            style={{ padding: "8px", width: "100px" }}
+            style={{ width: "100px" }}
           />
-          <div className="submit" style={{ borderTop: "none" }}>
+          <div className="submit" onClick={handleSubmit} style={{ borderTop: "none" }}>
             <button>Add To Table</button>
           </div>
         </div>

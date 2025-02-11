@@ -6,6 +6,7 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
+  const navigate = useNavigate();
   const [show, setShow] = useState("menu");
   const [employees, setEmployees] = useState([]);
   const [cities, setCities] = useState([]);
@@ -24,26 +25,23 @@ const Employee = () => {
     image: null,
   });
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get(`${server}/employees`);
-      setEmployees(result.data);
-      console.log("Data fetched:", result.data);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    axios.get(`${server}/cities`).then((response) => {
-      const items = response.data.map((item) => ({
+      const [result, cities] = await Promise.all([
+        axios.get(`${server}/employees`),
+        axios.get(`${server}/cities`),
+      ])
+      
+      const items = cities.data.map((item) => ({
         value: item.name,
         label: item.name,
         ...item,
-      }));
+      }))
+
+      setEmployees(result.data);
       setCities(items);
-    });
+    };
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -194,9 +192,8 @@ const Employee = () => {
               />
             </div>
             <div className="row-inputs">
-              <label htmlFor="gender"> Gender: </label>
               <select name="gender" id="gender" onChange={handleChange}>
-                <option value="">Select</option>
+                <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>

@@ -165,7 +165,7 @@ const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } 
       value={filterValue || ""}
       onChange={(e) => setFilter(e.target.value || undefined)}
       placeholder={`${id}`}
-      className="form-control"
+      className="editableInput border"
     />
   );
 };

@@ -38,7 +38,6 @@ const CompanyEdit = () => {
         }));
 
         setFormData(companiesResponse.data);
-        console.log(formData);
 
         setCities(formattedCities);
         setLoading(false);

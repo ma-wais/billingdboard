@@ -43,69 +43,33 @@ const PurchaseAdd = () => {
   const [remarks, setRemarks] = useState("");
 
   useEffect(() => {
-    const fetchAccounts = async () => {
+    const fetchData = async () => {
       try {
-        const accountsResult = await axios.get(`${server}/accounts`);
-        const items = accountsResult.data.map((item) => ({
+        const [accountsResult, itemsResult] = await Promise.all([
+          axios.get(`${server}/accounts`),
+          axios.get(`${server}/items`),
+        ]);
+
+        const accounts = accountsResult.data.map((item) => ({
           value: item.accountName,
           label: item.accountName,
         }));
-        setAccounts(items);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-      }
-    };
-    fetchAccounts();
-  }, []);
 
-  useEffect(() => {
-    axios
-      .get(`${server}/items`)
-      .then((response) => {
-        const items = response.data.map((item) => ({
+        const items = itemsResult.data.map((item) => ({
           value: item._id,
           label: item.itemName,
           ...item,
         }));
-        setOptions(items);
-      })
-      .catch((error) => {
-        console.error("Error fetching items:", error);
-      });
-  }, []);
 
-  const handleSelectChange = (selectedOption) => {
-    if (selectedOption) {
-      setCurrentPurchase((prevPurchase) => ({
-        ...prevPurchase,
-        item: selectedOption.label,
-        quantityInPack: selectedOption.quantityInPack || "",
-        retail: selectedOption.retailPrice || "",
-        pricePercentage: 100,
-      }));
-    } else {
-      setCurrentPurchase({
-        item: "",
-        quantity: 0,
-        bonusQuantity: 0,
-        rate: 0,
-        total: 0,
-        quantityInPack: 0,
-        retail: 0,
-        pricePercentage: 100,
-        discountPercentage: 0,
-        discountAmount: 0,
-        priceAfterDiscount: 0,
-        taxPercentage: 0,
-        taxAmount: 0,
-        taxAmount2: 0,
-        netAmount: 0,
-        batchNumber: "",
-        expiryDate: "",
-        remarks: "",
-      });
-    }
-  };
+        setAccounts(accounts);
+        setOptions(items);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -260,8 +224,8 @@ const PurchaseAdd = () => {
       .catch((error) => {
         console.error("Error adding purchase:", error);
       });
-      setPurchases([]);
-      alert("Purchase added successfully");
+    setPurchases([]);
+    alert("Purchase added successfully");
   };
 
   return (
@@ -274,25 +238,16 @@ const PurchaseAdd = () => {
           <div className="row-inputs">
             <Select
               className="basic-single"
-              isLoading={false}
-              isClearable={true}
-              isSearchable={true}
-              name="account"
+              classNamePrefix="custom-select"
+              unstyled
               options={accounts}
               placeholder="Account"
               onChange={(e) => {
-                if (e) {
-                  setAccount(e.value);
-                  console.log(e.value);
-                } else {
-                  setAccount("");
-                  console.log("Cleared");
-                }
+                setAccount(e.value);
               }}
             />
             <label htmlFor="dateOfPurchase">Date of Purchase:</label>
             <input
-              style={{ width: "195px" }}
               type="date"
               name="dateOfPurchase"
               id="dateOfPurchase"
@@ -302,27 +257,38 @@ const PurchaseAdd = () => {
             />
           </div>
           <div className="row-inputs">
-            <input type="text" name="billNumber" placeholder="Bill #" onChange={(e) => setBillNumber(e.target.value)} />
-            <label htmlFor="paymentMode">Payment Mode:</label>
-            <select name="paymentMode" id="paymentMode" onChange={(e) => setPaymentMode(e.target.value)}>
-              <option value=""></option>
+            <input
+              type="text"
+              name="billNumber"
+              placeholder="Bill #"
+              onChange={(e) => setBillNumber(e.target.value)}
+            />
+            <select
+              name="paymentMode"
+              onChange={(e) => setPaymentMode(e.target.value)}
+            >
               <option value="Cash">Cash</option>
               <option value="Credit">Credit</option>
             </select>
           </div>
-          <textarea name="remarks" placeholder="Remarks" onChange={(e) => setRemarks(e.target.value)} />
+          <textarea
+            name="remarks"
+            placeholder="Remarks"
+            onChange={(e) => setRemarks(e.target.value)}
+          />
         </div>
         <div className="inputs more">
           <div className="more-inputs">
             <Select
               className="basic-single"
-              isLoading={false}
+              classNamePrefix="custom-select"
+              unstyled
               isClearable={true}
-              isSearchable={true}
-              name="item"
               options={options}
               placeholder="Item"
-              onChange={handleSelectChange}
+              onChange={(e) =>
+                setCurrentPurchase({ ...currentPurchase, item: e.value })
+              }
             />
             <label htmlFor="quantity"> Quantity:</label>
             <input
@@ -358,15 +324,17 @@ const PurchaseAdd = () => {
               value={currentPurchase.total}
               onChange={handleInputChange}
             />
-            <label htmlFor="quantityInPack"> QtyInPack:</label>
-            <input
-              className="w50"
-              type="number"
-              name="quantityInPack"
-              placeholder="QtyInPack"
-              value={currentPurchase.quantityInPack}
-              readOnly
-            />
+            <div>
+              <label htmlFor="quantityInPack"> QtyInPack:</label>
+              <input
+                className="w50"
+                type="number"
+                name="quantityInPack"
+                placeholder="QtyInPack"
+                value={currentPurchase.quantityInPack}
+                readOnly
+              />
+            </div>
             <label htmlFor="retail"> Retail:</label>
             <input
               className="w50"
@@ -382,7 +350,6 @@ const PurchaseAdd = () => {
               type="number"
               name="pricePercentage"
               placeholder="Price %"
-              defaultValue={100}
               value={currentPurchase.pricePercentage}
               readOnly
             />
@@ -471,10 +438,7 @@ const PurchaseAdd = () => {
               type="button"
               onClick={addToTable}
               style={{
-                background: "#739e73",
-                color: "white",
                 marginLeft: "auto",
-                marginRight: "10px",
               }}
             >
               Add To Table
@@ -500,7 +464,7 @@ const PurchaseAdd = () => {
                 <th>Retail</th>
                 <th>Batch</th>
                 <th>Expiry</th>
-                <td style={{ width: "3%" }}>Action</td>
+                <td className="w50">Action</td>
               </tr>
             </thead>
             <tbody>
