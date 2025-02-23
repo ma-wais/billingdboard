@@ -122,7 +122,7 @@ const PurchaseList = () => {
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th style={{ fontSize: "12px" }} {...column.getHeaderProps()}>
-                    <div style={{ width: "80px", marginBottom: "8px" }}>
+                    <div style={{marginBottom: "8px" }}>
                       {column.canFilter ? column.render("Filter") : null}
                     </div>
                     <div>{column.render("Header")}</div>
@@ -165,7 +165,7 @@ const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } 
       value={filterValue || ""}
       onChange={(e) => setFilter(e.target.value || undefined)}
       placeholder={`${id}`}
-      className="form-control"
+      className="editableInput border"
     />
   );
 };

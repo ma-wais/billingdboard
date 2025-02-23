@@ -153,13 +153,28 @@ button:disabled {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
   background: #d6d5d5;
   padding: 10px;
 
+  > div {
+    display: flex;
+    align-items: center;
+    flex-basis: 19%;
+  }
   input {
-    padding: 4px 2px;
+    padding: 0px 4px !important;
+    height: 30px;
     font-size: 13px;
+  }
+
+  label{
+    margin-right: 5px;
+  }
+
+  .basic-single > div{
+    width: 150px;
+    height: 40px;
   }
 }
 
@@ -232,4 +247,21 @@ button:disabled {
 .inputs th {
   font-weight: 500;
   letter-spacing: -1px;
+}
+
+@media screen and (max-width: 1000px) {
+  .more-inputs {
+    > div {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .more-inputs {
+    > div {
+      flex-basis: 30%;
+    }
+  }
 }

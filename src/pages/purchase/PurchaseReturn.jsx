@@ -5,8 +5,15 @@ import { server } from "../../App";
 import { CgClose } from "react-icons/cg";
 
 const PurchaseAdd = () => {
+  const [accounts, setAccounts] = useState([]);
   const [options, setOptions] = useState([]);
+  const [account, setAccount] = useState(0);
+
   const [purchases, setPurchases] = useState([]);
+  const [dateOfPurchase, setDateOfPurchase] = useState(new Date());
+  const [billNumber, setBillNumber] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [currentPurchase, setCurrentPurchase] = useState({
     item: "",
     quantity: 0,
@@ -34,75 +41,32 @@ const PurchaseAdd = () => {
     advanceTaxAmount: 0,
     netAmount: 0,
   });
-  const [accounts, setAccounts] = useState([]);
-  const [account, setAccount] = useState(0);
-  const [dateOfPurchase, setDateOfPurchase] = useState(new Date());
-  const [billNumber, setBillNumber] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
-  const [remarks, setRemarks] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
-        const accountsResult = await axios.get(`${server}/accounts`);
-        const items = accountsResult.data.map((item) => ({
-          value: item.accountName,
-          label: item.accountName,
-        }));
-        setAccounts(items);
+        const [accountsResult, itemsResult] = await Promise.all([
+          axios.get(`${server}/accounts`),
+          axios.get(`${server}/items`),
+        ]);
+
+        setAccounts(
+          accountsResult.data.map((item) => ({
+            value: item.accountName,
+            label: item.accountName,
+          }))
+        );
+        setOptions(
+          itemsResult.data.map((item) => ({
+            value: item._id,
+            label: item.itemName,
+          }))
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    };
-    fetchData();
+    })();
   }, []);
-  useEffect(() => {
-    axios
-      .get(`${server}/items`)
-      .then((response) => {
-        const items = response.data.map((item) => ({
-          value: item._id,
-          label: item.itemName,
-          ...item,
-        }));
-        setOptions(items);
-      })
-      .catch((error) => {
-        console.error("Error fetching items:", error);
-      });
-  }, []);
-
-  const handleSelectChange = (selectedOption) => {
-    if (selectedOption) {
-      setCurrentPurchase((prevPurchase) => ({
-        ...prevPurchase,
-        item: selectedOption.label,
-        quantityInPack: selectedOption.quantityInPack || "",
-        retail: selectedOption.retailPrice || "",
-        pricePercentage: 100,
-      }));
-    } else {
-      setCurrentPurchase({
-        item: "",
-        quantity: 0,
-        bonusQuantity: 0,
-        rate: 0,
-        total: 0,
-        quantityInPack: 0,
-        retail: 0,
-        pricePercentage: 100,
-        discountPercentage: 0,
-        discountAmount: 0,
-        priceAfterDiscount: 0,
-        taxPercentage: 0,
-        taxAmount: 0,
-        netAmount: 0,
-        batchNumber: "",
-        expiryDate: "",
-        remarks: "",
-      });
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -126,12 +90,12 @@ const PurchaseAdd = () => {
         total = (quantity * rate).toFixed(2);
         updatedPurchase.total = total;
         if (retail > 0) {
-          updatedPurchase.pricePercentage = ((rate / retail) * 100).toFixed(2);
+          updatedPurchase.pricePercentage = ((retail - rate) / rate * 100).toFixed(2);
         }
         break;
       case "retail":
         if (rate > 0) {
-          updatedPurchase.pricePercentage = ((rate / retail) * 100).toFixed(2);
+          updatedPurchase.pricePercentage = ((retail - rate) / rate * 100).toFixed(2);
         }
         break;
       case "discountPercentage":
@@ -203,7 +167,7 @@ const PurchaseAdd = () => {
     setPurchases(newPurchases);
     calculateSummary(newPurchases);
   };
-  
+
   const calculateSummary = (purchases) => {
     const totalItems = purchases.length;
     const billAmount = purchases.reduce(
@@ -243,13 +207,11 @@ const PurchaseAdd = () => {
       ...summary,
     };
 
-    axios
-      .post(`${server}/purchase/return`, payload)
-      .catch((error) => {
-        console.error("Error adding purchase:", error);
-      });
-      setPurchases([]);
-      alert("Purchase added successfully");
+    axios.post(`${server}/purchase/return`, payload).catch((error) => {
+      console.error("Error adding purchase:", error);
+    });
+    setPurchases([]);
+    alert("Purchase added successfully");
   };
 
   return (
@@ -262,186 +224,238 @@ const PurchaseAdd = () => {
           <div className="row-inputs">
             <Select
               className="basic-single"
-              isLoading={false}
+              classNamePrefix="custom-select"
+              unstyled
               isClearable={true}
-              isSearchable={true}
-              name="account"
               options={accounts}
               placeholder="Account"
               onChange={(e) => {
-                if (e) {
-                  setAccount(e.value);
-                } else {
-                  setAccount("");
-                  console.log("Cleared");
-                }
+                setAccount(e ? e.value : "");
               }}
             />
-            <label htmlFor="dateOfPurchase">Date of Purchase:</label>
-            <input
-              style={{ width: "195px" }}
-              type="date"
-              name="dateOfPurchase"
-              id="dateOfPurchase"
-              onChange={(e) => {
-                setDateOfPurchase(e.target.value);
-              }}
-            />
+            <div>
+              <label htmlFor="dateOfPurchase">Date of Purchase:</label>
+              <input
+                style={{ width: "195px" }}
+                type="date"
+                name="dateOfPurchase"
+                id="dateOfPurchase"
+                onChange={(e) => {
+                  setDateOfPurchase(e.target.value);
+                }}
+              />
+            </div>
           </div>
           <div className="row-inputs">
-            <input type="text" name="billNumber" placeholder="Bill #" onChange={(e) => setBillNumber(e.target.value)} />
+            <input
+              type="text"
+              name="billNumber"
+              placeholder="Bill #"
+              onChange={(e) => setBillNumber(e.target.value)}
+            />
             <label htmlFor="paymentMode">Payment Mode:</label>
-            <select name="paymentMode" id="paymentMode" onChange={(e) => setPaymentMode(e.target.value)}>
+            <select
+              name="paymentMode"
+              id="paymentMode"
+              onChange={(e) => setPaymentMode(e.target.value)}
+            >
               <option value=""></option>
               <option value="Cash">Cash</option>
               <option value="Credit">Credit</option>
             </select>
           </div>
-          <textarea name="remarks" placeholder="Remarks" onChange={(e) => setRemarks(e.target.value)} />
+          <textarea
+            name="remarks"
+            placeholder="Remarks"
+            onChange={(e) => setRemarks(e.target.value)}
+          />
         </div>
         <div className="inputs more">
           <div className="more-inputs">
             <Select
               className="basic-single"
-              isLoading={false}
-              isClearable={true}
-              isSearchable={true}
-              name="item"
+              classNamePrefix="custom-select"
+              unstyled
               options={options}
               placeholder="Item"
-              onChange={handleSelectChange}
+              onChange={(e) => {
+                setCurrentPurchase((prev) => ({
+                  ...prev,
+                  item: e ? e.value : "",
+                }));
+              }}
             />
-            <label htmlFor="quantity"> Quantity:</label>
-            <input
-              className="w50"
-              type="number"
-              name="quantity"
-              placeholder="Quantity"
-              value={currentPurchase.quantity}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="bonusQuantity"> Bonus Qty:</label>
-            <input
-              className="w50"
-              type="number"
-              name="bonusQuantity"
-              placeholder="Bonus Qty"
-              onChange={handleInputChange}
-            />
-            <label htmlFor="rate"> Rate:</label>
-            <input
-              type="number"
-              name="rate"
-              placeholder="Rate (Purchase Price)"
-              value={currentPurchase.rate}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="total"> Total</label>
-            <input
-              className="w50"
-              type="number"
-              name="total"
-              placeholder="Total"
-              value={currentPurchase.total}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="quantityInPack"> QtyInPack:</label>
-            <input
-              className="w50"
-              type="number"
-              name="quantityInPack"
-              placeholder="QtyInPack"
-              value={currentPurchase.quantityInPack}
-              readOnly
-            />
-            <label htmlFor="retail"> Retail:</label>
-            <input
-              className="w50"
-              type="number"
-              name="retail"
-              placeholder="Retail"
-              value={currentPurchase.retail}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="pricePercentage"> Price %:</label>
-            <input
-              className="w50"
-              type="number"
-              name="pricePercentage"
-              placeholder="Price %"
-              defaultValue={100}
-              value={currentPurchase.pricePercentage}
-              readOnly
-            />
-            <label htmlFor="discountPercentage"> Discount %:</label>
-            <input
-              type="number"
-              name="discountPercentage"
-              placeholder="Discount %"
-              value={currentPurchase.discountPercentage}
-              onChange={handleInputChange}
-              readOnly
-            />
-            <label htmlFor="discountAmount"> Discount Amount:</label>
-            <input
-              type="number"
-              name="discountAmount"
-              placeholder="Discount Amount"
-              value={currentPurchase.discountAmount}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="priceAfterDiscount"> Price After Discount:</label>
-            <input
-              type="number"
-              name="priceAfterDiscount"
-              placeholder="Price after Discount"
-              value={currentPurchase.priceAfterDiscount}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="taxPercentage"> Tax %:</label>
-            <input
-              className="w50"
-              type="number"
-              name="taxPercentage"
-              placeholder="Tax %"
-              value={currentPurchase.taxPercentage}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="taxAmount"> Tax Amount:</label>
-            <input
-              className="w50"
-              type="number"
-              name="taxAmount"
-              placeholder="Tax Amount"
-              value={currentPurchase.taxAmount}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="netAmount"> Net Amount:</label>
-            <input
-              type="number"
-              name="netAmount"
-              placeholder="Net Amount"
-              value={currentPurchase.netAmount}
-              readOnly
-            />
-            <input
-              type="number"
-              name="batchNumber"
-              placeholder="Batch #"
-              onChange={handleInputChange}
-            />
-            <div className="row-inputs" style={{ width: "200px" }}>
+
+            <div>
+              <label htmlFor="quantity"> Quantity:</label>
+              <input
+                className="w50"
+                type="number"
+                name="quantity"
+                placeholder="Quantity"
+                value={currentPurchase.quantity}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="bonusQuantity"> Bonus Qty:</label>
+              <input
+                className="w50"
+                type="number"
+                name="bonusQuantity"
+                placeholder="Bonus Qty"
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="rate"> Rate:</label>
+              <input
+                className="w50"
+                type="number"
+                name="rate"
+                placeholder="Rate (Purchase Price)"
+                value={currentPurchase.rate}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="total"> Total</label>
+              <input
+                className="w50"
+                type="number"
+                name="total"
+                placeholder="Total"
+                value={currentPurchase.total}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="quantityInPack"> QtyInPack:</label>
+              <input
+                className="w50"
+                type="number"
+                name="quantityInPack"
+                placeholder="QtyInPack"
+                value={currentPurchase.quantityInPack}
+                readOnly
+              />
+            </div>
+            <div>
+              <label htmlFor="retail"> Retail:</label>
+              <input
+                className="w50"
+                type="number"
+                name="retail"
+                placeholder="Retail"
+                value={currentPurchase.retail}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="pricePercentage"> Price %:</label>
+              <input
+                className="w50"
+                type="number"
+                name="pricePercentage"
+                placeholder="Price %"
+                defaultValue={100}
+                value={currentPurchase.pricePercentage}
+                readOnly
+              />
+            </div>
+            <div>
+              <label htmlFor="discountPercentage"> Discount %:</label>
+              <input
+                className="w50"
+                type="number"
+                name="discountPercentage"
+                placeholder="Discount %"
+                value={currentPurchase.discountPercentage}
+                onChange={handleInputChange}
+                readOnly
+              />
+            </div>
+            <div>
+              <label htmlFor="discountAmount"> Discount Amount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="discountAmount"
+                placeholder="Discount Amount"
+                value={currentPurchase.discountAmount}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="priceAfterDiscount"> Price After Discount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="priceAfterDiscount"
+                placeholder="Price after Discount"
+                value={currentPurchase.priceAfterDiscount}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="taxPercentage"> Tax %:</label>
+              <input
+                className="w50"
+                type="number"
+                name="taxPercentage"
+                placeholder="Tax %"
+                value={currentPurchase.taxPercentage}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="taxAmount"> Tax Amount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="taxAmount"
+                placeholder="Tax Amount"
+                value={currentPurchase.taxAmount}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="netAmount"> Net Amount:</label>
+              <input
+                type="number"
+                name="netAmount"
+                placeholder="Net Amount"
+                value={currentPurchase.netAmount}
+                readOnly
+              />
+            </div>
+            <div>
               <label htmlFor="expiry">Expiry Date:</label>
               <input
+                style={{ width: "100px" }}
                 type="date"
                 name="expiryDate"
                 id="expiry"
                 onChange={handleInputChange}
               />
             </div>
+            <div>
+              <label htmlFor="batchNumber">Batch </label>
+              <input
+                type="number"
+                name="batchNumber"
+                placeholder="Batch #"
+                onChange={handleInputChange}
+              />
+            </div>
             <textarea
               name="remarks"
-              style={{ width: "60%", height: "30px" }}
+              rows="1"
+              style={{
+                display: "block",
+                transform: "translateY(10px)",
+                width: "100%",
+              }}
               placeholder="Remarks"
               onChange={handleInputChange}
             />

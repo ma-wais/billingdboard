@@ -18,7 +18,6 @@ const OriginalFormula = () => {
     axios
       .get(`${server}/formula/${id}`)
       .then((response) => {
-        console.log(response.data);
         setFormData(response.data);
       })
       .catch((error) => {

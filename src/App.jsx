@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import axios from "axios";
-
 import { SideBar } from "./components/AdminHeader.jsx";
 
 import City from "./pages/dashboard/City";
@@ -46,8 +44,6 @@ import SaleReturnReport from "./pages/reports/SaleReturnReport";
 import StockAdjustmentReport from "./pages/reports/StockAdjustmentReport";
 import StockReport from "./pages/reports/StockReport";
 
-import CashSummary from "./pages/CashSummary";
-
 import EmployeeEdit from "./pages/dashboard/EmployeeEdit";
 import CompanyEdit from "./pages/dashboard/CompanyEdit";
 import CityEdit from "./pages/dashboard/CityEdit";
@@ -67,6 +63,7 @@ import Reprint from './pages2/Reprint.jsx'
 import Change from './pages2/Change.jsx'
 import EmpLogin from './pages2/EmpLogin.jsx'
 
+import CashSummary from "./pages/CashSummary";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
 import Protected from "./components/Protected";

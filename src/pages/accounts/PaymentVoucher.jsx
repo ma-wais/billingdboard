@@ -26,7 +26,6 @@ const PaymentVoucher = () => {
           balance: item.balance
         }));
         setAccounts(items);
-        console.log("Accounts fetched:", items);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -47,7 +46,6 @@ const PaymentVoucher = () => {
     setAccountBalance(
       selectedOption.balance
     )
-    console.log("Account selected:", selectedOption);
   };
 
   const handleSubmit = async (e) => {

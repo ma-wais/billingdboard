@@ -56,7 +56,7 @@ const List = () => {
         },
       });
       setData(response.data);
-      console.log(response.data);
+      (response.data);
     } catch (error) {
       console.error("Error fetching cash vouchers:", error);
     }

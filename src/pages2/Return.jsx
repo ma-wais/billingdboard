@@ -97,7 +97,6 @@ const Home = () => {
       };
 
       const response = await axios.post(`${server}/purchase/sale/return`, saleData);
-      console.log("Sale saved:", response.data);
 
       setItemList([]);
       setTotalAmount(0);

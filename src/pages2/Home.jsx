@@ -23,24 +23,22 @@ const Home = () => {
   const [user, setUser] = useState("Abdullah");
 
   useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get(`${server}/items`);
+        const items = response.data.map((item) => ({
+          value: item._id,
+          label: item.itemName,
+          ...item,
+        }));
+        setOptions(items);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+
     fetchItems();
-    console.log(itemList);
-
   }, [itemList]);
-
-  const fetchItems = async () => {
-    try {
-      const response = await axios.get(`${server}/items`);
-      const items = response.data.map((item) => ({
-        value: item._id,
-        label: item.itemName,
-        ...item,
-      }));
-      setOptions(items);
-    } catch (error) {
-      console.error("Error fetching items:", error);
-    }
-  };
 
   const calculateNetPrice = () => {
     const discount = (totalAmount * discountPercent) / 100;
@@ -53,7 +51,8 @@ const Home = () => {
   };
 
   const addItemToList = () => {
-    if (!selectedItem || quantity <= 0) return alert("Please select an item and enter a quantity");
+    if (!selectedItem || quantity <= 0)
+      return alert("Please select an item and enter a quantity");
 
     const salePrice = selectedItem.retailPrice;
     const originalTotal = salePrice * quantity;
@@ -106,7 +105,6 @@ const Home = () => {
       };
 
       const response = await axios.post(`${server}/purchase/sales`, saleData);
-      console.log("Sale saved:", response.data);
 
       setItemList([]);
       setTotalAmount(0);
@@ -123,53 +121,53 @@ const Home = () => {
 
   return (
     <div className="home">
-        <form className="item-form" onSubmit={(e) => e.preventDefault()}>
-          <Select
-            className="basic-single"
-            value={selectedItem}
-            onChange={setSelectedItem}
-            options={options}
-            placeholder="Item"
-          />
+      <form className="item-form" onSubmit={(e) => e.preventDefault()}>
+        <Select
+          className="basic-single"
+          value={selectedItem}
+          onChange={setSelectedItem}
+          options={options}
+          placeholder="Item"
+        />
+        <input
+          type="number"
+          placeholder="S.Price"
+          value={selectedItem?.retailPrice || ""}
+        />
+        <div className="row-inputs" style={{ width: "120px" }}>
+          <label htmlFor="qty">Qty</label>
           <input
             type="number"
-            placeholder="S.Price"
-            value={selectedItem?.retailPrice || ""}
+            min={0}
+            id="qty"
+            placeholder="Qty"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
           />
-          <div className="row-inputs" style={{width: "120px"}}>
-            <label htmlFor="qty">Qty</label>
-            <input
-              type="number"
-              min={0}
-              id="qty"
-              placeholder="Qty"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
-          </div>
-          <div className="row-inputs">
-            <label htmlFor="disc">Disc.%</label>
-            <input
-              type="number"
-              placeholder="Disc."
-              id="disc"
-              onChange={(e) => setDiscountPercent(e.target.value)}
-            />
-          </div>
+        </div>
+        <div className="row-inputs">
+          <label htmlFor="disc">Disc.%</label>
           <input
             type="number"
-            placeholder="Stock"
-            value={selectedItem?.stock || ""}
-            readOnly
+            placeholder="Disc."
+            id="disc"
+            onChange={(e) => setDiscountPercent(e.target.value)}
           />
-          <input
-            type="number"
-            placeholder="Qty.Pack"
-            value={selectedItem?.quantityInPack || ""}
-            readOnly
-          />
-          <button onClick={addItemToList}>Add to table</button>
-        </form>
+        </div>
+        <input
+          type="number"
+          placeholder="Stock"
+          value={selectedItem?.stock || ""}
+          readOnly
+        />
+        <input
+          type="number"
+          placeholder="Qty.Pack"
+          value={selectedItem?.quantityInPack || ""}
+          readOnly
+        />
+        <button onClick={addItemToList}>Add to table</button>
+      </form>
       <div className="list-container">
         <div className="list">
           <table>
@@ -200,7 +198,8 @@ const Home = () => {
                   <td>{item.value - (item.discount * item.value) / 100}</td>
                   <td>{item.pricePercentage}%</td>
                   <td style={{ textAlign: "center", cursor: "pointer" }}>
-                    <CgClose color="red"
+                    <CgClose
+                      color="red"
                       onClick={() => {
                         setItemList(itemList.filter((i) => i !== item));
                         setTotalAmount(totalAmount - item.value);

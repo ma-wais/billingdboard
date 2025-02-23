@@ -32,7 +32,6 @@ const EmpLogin = ({ setToken2, token }) => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
       const token = response.data.employee._id;
       localStorage.setItem("token2", token);
       setToken2(token);

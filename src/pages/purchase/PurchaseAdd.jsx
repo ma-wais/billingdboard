@@ -94,12 +94,18 @@ const PurchaseAdd = () => {
         total = (quantity * rate).toFixed(2);
         updatedPurchase.total = total;
         if (retail > 0) {
-          updatedPurchase.pricePercentage = ((rate / retail) * 100).toFixed(2);
+          updatedPurchase.pricePercentage = (
+            ((retail - rate) / rate) *
+            100
+          ).toFixed(2);
         }
         break;
       case "retail":
         if (rate > 0) {
-          updatedPurchase.pricePercentage = ((rate / retail) * 100).toFixed(2);
+          updatedPurchase.pricePercentage = (
+            ((retail - rate) / rate) *
+            100
+          ).toFixed(2);
         }
         break;
       case "discountPercentage":
@@ -246,7 +252,7 @@ const PurchaseAdd = () => {
                 setAccount(e.value);
               }}
             />
-            <label htmlFor="dateOfPurchase">Date of Purchase:</label>
+            <label htmlFor="dateOfPurchase">Date:</label>
             <input
               type="date"
               name="dateOfPurchase"
@@ -290,42 +296,51 @@ const PurchaseAdd = () => {
                 setCurrentPurchase({ ...currentPurchase, item: e.value })
               }
             />
-            <label htmlFor="quantity"> Quantity:</label>
-            <input
-              className="w50"
-              type="number"
-              name="quantity"
-              placeholder="Quantity"
-              value={currentPurchase.quantity}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="bonusQuantity"> Bonus Qty:</label>
-            <input
-              className="w50"
-              type="number"
-              name="bonusQuantity"
-              placeholder="Bonus Qty"
-              onChange={handleInputChange}
-            />
-            <label htmlFor="rate"> Rate:</label>
-            <input
-              type="number"
-              name="rate"
-              placeholder="Rate (Purchase Price)"
-              value={currentPurchase.rate}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="total"> Total</label>
-            <input
-              className="w50"
-              type="number"
-              name="total"
-              placeholder="Total"
-              value={currentPurchase.total}
-              onChange={handleInputChange}
-            />
             <div>
-              <label htmlFor="quantityInPack"> QtyInPack:</label>
+              <label htmlFor="quantity"> Quantity:</label>
+              <input
+                className="w50"
+                type="number"
+                name="quantity"
+                placeholder="Quantity"
+                value={currentPurchase.quantity}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="bonusQuantity"> Bonus Qty:</label>
+              <input
+                className="w50"
+                type="number"
+                name="bonusQuantity"
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="rate"> Rate:</label>
+              <input
+                className="w50"
+                type="number"
+                name="rate"
+                placeholder="Rate (Purchase Price)"
+                value={currentPurchase.rate}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="total"> Total</label>
+              <input
+                className="w50"
+                type="number"
+                name="total"
+                placeholder="Total"
+                value={currentPurchase.total}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="quantityInPack"> Qty/Pack:</label>
               <input
                 className="w50"
                 type="number"
@@ -335,93 +350,116 @@ const PurchaseAdd = () => {
                 readOnly
               />
             </div>
-            <label htmlFor="retail"> Retail:</label>
-            <input
-              className="w50"
-              type="number"
-              name="retail"
-              placeholder="Retail"
-              value={currentPurchase.retail}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="pricePercentage"> Price %:</label>
-            <input
-              className="w50"
-              type="number"
-              name="pricePercentage"
-              placeholder="Price %"
-              value={currentPurchase.pricePercentage}
-              readOnly
-            />
-            <label htmlFor="discountPercentage"> Discount %:</label>
-            <input
-              type="number"
-              name="discountPercentage"
-              placeholder="Discount %"
-              value={currentPurchase.discountPercentage}
-              onChange={handleInputChange}
-              readOnly
-            />
-            <label htmlFor="discountAmount"> Discount Amount:</label>
-            <input
-              type="number"
-              name="discountAmount"
-              placeholder="Discount Amount"
-              value={currentPurchase.discountAmount}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="priceAfterDiscount"> Price After Discount:</label>
-            <input
-              type="number"
-              name="priceAfterDiscount"
-              placeholder="Price after Discount"
-              value={currentPurchase.priceAfterDiscount}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="taxPercentage"> Tax %:</label>
-            <input
-              className="w50"
-              type="number"
-              name="taxPercentage"
-              placeholder="Tax %"
-              value={currentPurchase.taxPercentage}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="taxAmount"> Tax Amount:</label>
-            <input
-              className="w50"
-              type="number"
-              name="taxAmount"
-              placeholder="Tax Amount"
-              value={currentPurchase.taxAmount}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="taxAmount2"> Tax Amount2:</label>
-            <input
-              className="w50"
-              type="number"
-              name="taxAmount2"
-              placeholder="Tax Amount2"
-              value={currentPurchase.taxAmount2}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="netAmount"> Net Amount:</label>
-            <input
-              type="number"
-              name="netAmount"
-              placeholder="Net Amount"
-              value={currentPurchase.netAmount}
-              readOnly
-            />
+            <div>
+              <label htmlFor="retail"> Retail:</label>
+              <input
+                className="w50"
+                type="number"
+                name="retail"
+                placeholder="Retail"
+                value={currentPurchase.retail}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="pricePercentage"> Price %:</label>
+              <input
+                className="w50"
+                type="number"
+                name="pricePercentage"
+                placeholder="Price %"
+                value={currentPurchase.pricePercentage}
+                readOnly
+              />
+            </div>
+            <div>
+              <label htmlFor="discountPercentage"> Discount %:</label>
+              <input
+                className="w50"
+                type="number"
+                name="discountPercentage"
+                placeholder="Discount %"
+                value={currentPurchase.discountPercentage}
+                onChange={handleInputChange}
+                readOnly
+              />
+            </div>
+            <div>
+              <label htmlFor="discountAmount"> Disc Amount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="discountAmount"
+                placeholder="Discount Amount"
+                value={currentPurchase.discountAmount}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="priceAfterDiscount"> Price After Discount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="priceAfterDiscount"
+                placeholder="Price after Discount"
+                value={currentPurchase.priceAfterDiscount}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="taxPercentage"> Tax %:</label>
+              <input
+                className="w50"
+                type="number"
+                name="taxPercentage"
+                placeholder="Tax %"
+                value={currentPurchase.taxPercentage}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="taxAmount"> Tax Amount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="taxAmount"
+                placeholder="Tax Amount"
+                value={currentPurchase.taxAmount}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="taxAmount2"> Tax Amount2:</label>
+              <input
+                className="w50"
+                type="number"
+                name="taxAmount2"
+                placeholder="Tax Amount2"
+                value={currentPurchase.taxAmount2}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="netAmount"> Net Amount:</label>
+              <input
+                className="w50"
+                type="number"
+                name="netAmount"
+                placeholder="Net Amount"
+                value={currentPurchase.netAmount}
+                readOnly
+              />
+            </div>
             <input
               type="number"
               name="batchNumber"
               placeholder="Batch #"
               onChange={handleInputChange}
             />
-            <div className="row-inputs" style={{ width: "200px" }}>
+            <div className="row-inputs">
               <label htmlFor="expiry">Expiry Date:</label>
               <input
+                style={{ width: "90%" }}
                 type="date"
                 name="expiryDate"
                 id="expiry"
@@ -430,7 +468,7 @@ const PurchaseAdd = () => {
             </div>
             <textarea
               name="remarks"
-              style={{ width: "60%", height: "30px" }}
+              rows={1}
               placeholder="Remarks"
               onChange={handleInputChange}
             />

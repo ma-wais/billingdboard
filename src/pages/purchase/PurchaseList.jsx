@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useFilters, usePagination } from "react-table";
-import axios from 'axios';
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { server } from "../../App";
 
@@ -13,7 +13,7 @@ const PurchaseList = () => {
         const response = await axios.get(`${server}/purchase`);
         setData(response.data);
       } catch (error) {
-        console.error('Error fetching purchase data:', error);
+        console.error("Error fetching purchase data:", error);
       }
     };
 
@@ -116,13 +116,16 @@ const PurchaseList = () => {
         </button>
       </div> */}
       <div className="table-responsive">
-        <table {...getTableProps()} className="table table-striped table-bordered">
+        <table
+          {...getTableProps()}
+          className="table table-striped table-bordered"
+        >
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th style={{ fontSize: "12px" }} {...column.getHeaderProps()}>
-                    <div style={{ width: "80px", marginBottom: "8px" }}>
+                  <th {...column.getHeaderProps()}>
+                    <div style={{ marginBottom: "8px" }}>
                       {column.canFilter ? column.render("Filter") : null}
                     </div>
                     <div>{column.render("Header")}</div>
@@ -157,7 +160,9 @@ const PurchaseList = () => {
   );
 };
 
-const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
+const ColumnFilter = ({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) => {
   const count = preFilteredRows.length;
 
   return (

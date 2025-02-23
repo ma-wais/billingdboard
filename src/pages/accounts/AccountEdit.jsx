@@ -39,7 +39,6 @@ const EditAccount = () => {
         setCities(items);
         setAccounts(accountResult.data);
         setFormData(accountResult.data);
-        console.log("Data fetched:", accountResult.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -50,7 +49,6 @@ const EditAccount = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   };
 
   const handleSubmit = async (e) => {

@@ -39,7 +39,6 @@ const Account = () => {
         }));
         setCities(items);
         setAccounts(accountsResult.data);
-        // console.log("Data fetched:", accountsResult.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

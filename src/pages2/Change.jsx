@@ -39,7 +39,6 @@ const Change = ({ id }) => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
       navigate("/sales");
     } catch (error) {
       console.error("Employee code change failed", error);

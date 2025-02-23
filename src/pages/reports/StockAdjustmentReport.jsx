@@ -12,7 +12,6 @@ const StockAdjustmentReport = () => {
       const response = await axios.get(
         `${server}/items/stock?from=${from}&to=${to}`
       );
-      console.log(response.data);
       setData(response.data);
     } catch (error) {
       console.error("Error fetching stock adjustments:", error);

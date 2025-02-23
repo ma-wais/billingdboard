@@ -4,41 +4,31 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { server } from '../../App';
 
-const EditableCell = ({
-  value: initialValue,
-  row: { index },
-  column: { id },
-  updateMyData,
-}) => {
+const EditableCell = ({ value: initialValue, row: { index }, column: { id }, updateMyData }) => {
   const [value, setValue] = useState(initialValue);
-
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
-
-  const onBlur = () => {
-    updateMyData(index, id, value);
-  };
 
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
-  return <input value={value} onChange={onChange} onBlur={onBlur} className="form-control" />;
+  const onChange = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    updateMyData(index, id, newValue);
+  };
+
+  return <input value={value} onChange={onChange} className="editableInput" />;
 };
 
-const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows, id } }) => {
-  const count = preFilteredRows.length;
+const ColumnFilter = ({ column: { filterValue, setFilter, preFilteredRows } }) => (
+  <input
+    value={filterValue || ''}
+    onChange={(e) => setFilter(e.target.value || undefined)}
+    placeholder="Search"
+    className="editableInput border"
+  />
+);
 
-  return (
-    <input
-      value={filterValue || ''}
-      onChange={(e) => setFilter(e.target.value || undefined)}
-      placeholder={`Search ${count} records...`}
-      className="form-control"
-    />
-  );
-};
 const ItemTable = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
@@ -52,8 +42,6 @@ const ItemTable = () => {
         setOriginalData(itemsArray);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setData([]);
-        setOriginalData([]);
       }
     };
 
@@ -61,29 +49,20 @@ const ItemTable = () => {
   }, []);
 
   const updateMyData = useCallback((rowIndex, columnId, value) => {
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return row;
-      })
+    setData((old) =>
+      old.map((row, index) =>
+        index === rowIndex ? { ...row, [columnId]: value } : row
+      )
     );
   }, []);
 
   const saveChanges = useCallback(async (rowIndex) => {
     const item = data[rowIndex];
     const originalItem = originalData[rowIndex];
-    const updates = {};
-
-    Object.keys(item).forEach((key) => {
-      if (item[key] !== originalItem[key]) {
-        updates[key] = item[key];
-      }
-    });
+    const updates = Object.keys(item).reduce((acc, key) => {
+      if (item[key] !== originalItem[key]) acc[key] = item[key];
+      return acc;
+    }, {});
 
     if (Object.keys(updates).length > 0) {
       try {
@@ -99,39 +78,23 @@ const ItemTable = () => {
     }
   }, [data, originalData]);
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Item Name",
-        accessor: "itemName",
-        Filter: ColumnFilter,
-      },
-      {
-        Header: "Current Stock",
-        accessor: "stock",
-        Filter: ColumnFilter,
-      },
-      {
-        Header: "Physical Stock Qty",
-        accessor: "physicalStock",
-        Filter: ColumnFilter,
-      },
-      {
-        Header: 'Action',
-        accessor: 'action',
-        Cell: ({ row }) => (
-          <button className="btn btn-primary" onClick={() => saveChanges(row.index)}>
-            Save
-          </button>
-        ),
-        disableFilters: true,
-      },
-    ],
-    []
-  );
-  const defaultColumn = useMemo(() => ({
-    Cell: EditableCell,
-  }), []);
+  const columns = useMemo(() => [
+    { Header: "Item Name", accessor: "itemName", Filter: ColumnFilter },
+    { Header: "Current Stock", accessor: "stock", Filter: ColumnFilter },
+    { Header: "Physical Stock Qty", accessor: "physicalStock", Filter: ColumnFilter },
+    {
+      Header: 'Action',
+      accessor: 'action',
+      Cell: ({ row }) => (
+        <button className="btn btn-primary" onClick={() => saveChanges(row.index)}>
+          Save
+        </button>
+      ),
+      disableFilters: true,
+    },
+  ], [saveChanges]);
+
+  const defaultColumn = useMemo(() => ({ Cell: EditableCell }), []);
 
   const {
     getTableProps,
@@ -146,13 +109,7 @@ const ItemTable = () => {
     previousPage,
     state: { pageIndex },
   } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-      updateMyData,
-      initialState: { pageIndex: 0 },
-    },
+    { columns, data, defaultColumn, updateMyData, initialState: { pageIndex: 0 } },
     useFilters,
     usePagination
   );
@@ -167,7 +124,7 @@ const ItemTable = () => {
                 {headerGroup.headers.map(column => (
                   <th {...column.getHeaderProps()}>
                     {column.render('Header')}
-                    <div style={{width: '80px'}}>{column.canFilter ? column.render('Filter') : null}</div>
+                    <div>{column.canFilter ? column.render('Filter') : null}</div>
                   </th>
                 ))}
               </tr>
@@ -187,24 +144,19 @@ const ItemTable = () => {
           </tbody>
         </table>
       </div>
-      <div className="pagination">
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+      <div className="pagination d-flex justify-content-center align-items-center">
+        <button onClick={previousPage} disabled={!canPreviousPage} className="btn btn-secondary mx-1">
           {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
+        </button>
         <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          Page <strong>{pageIndex + 1} of {pageOptions.length}</strong>
         </span>
+        <button onClick={nextPage} disabled={!canNextPage} className="btn btn-secondary mx-1">
+          {'>'}
+        </button>
       </div>
     </>
   );
 };
-
-
 
 export default ItemTable;

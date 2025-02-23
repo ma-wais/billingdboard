@@ -20,7 +20,7 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("Passwords do not match");
+      alert("Passwords do not match");
     } else {
       try {
         const response = await axios.post(`${server}/users/register`, {

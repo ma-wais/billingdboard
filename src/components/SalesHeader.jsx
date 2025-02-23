@@ -8,7 +8,7 @@ const Header = () => {
 
   const logoutHandler = () => {
     axios.post(`${server}/employees/logout`, {}, { withCredentials: true })
-      .then((response) => {
+      .then(() => {
         localStorage.removeItem("token2")
         window.location.reload()
       })

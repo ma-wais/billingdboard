@@ -130,10 +130,9 @@ const PurchaseAdd2 = () => {
           <div className="row-inputs">
             <Select
               className="basic-single"
-              isLoading={false}
+              classNamePrefix="custom-select"
+              unstyled
               isClearable={true}
-              isSearchable={true}
-              name="account"
               options={accounts}
               placeholder="Account"
               onChange={(e) => {
@@ -191,9 +190,9 @@ const PurchaseAdd2 = () => {
           <div className="more-inputs">
             <Select
               className="basic-single"
+              classNamePrefix="custom-select"
+              unstyled
               isClearable={true}
-              isSearchable={true}
-              name="item"
               options={options}
               onChange={(selectedOption) =>
                 handleInputChange(
