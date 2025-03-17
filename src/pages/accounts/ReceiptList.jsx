@@ -158,14 +158,15 @@ const ReceiptList = () => {
   );
 
   return (
-    <>
+    <div className="box">
       <div className="inputs">
         <div className="row-inputs">
           <Select
             className="basic-single"
             name="account"
             placeholder="Account"
-            isSearchable={true}
+            classNamePrefix="custom-select"
+            unstyled
             isClearable={true}
             options={accounts}
             onChange={handleAccountChange}
@@ -191,10 +192,14 @@ const ReceiptList = () => {
             value={formData.to}
             onChange={handleChange}
           />
-        <button className="submit" style={{ width: "60px",marginBottom: "8px" }} onClick={fetchCashVouchers}>
-          {" "}
-          Search
-        </button>
+          <button
+            className="submit"
+            style={{ width: "60px", marginBottom: "8px" }}
+            onClick={fetchCashVouchers}
+          >
+            {" "}
+            Search
+          </button>
         </div>
       </div>
       <div className="table-responsive">
@@ -271,7 +276,7 @@ const ReceiptList = () => {
           ))}
         </select>
       </div>
-    </>
+    </div>
   );
 };
 

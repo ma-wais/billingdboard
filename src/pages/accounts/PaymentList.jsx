@@ -56,7 +56,7 @@ const List = () => {
         },
       });
       setData(response.data);
-      (response.data);
+      response.data;
     } catch (error) {
       console.error("Error fetching cash vouchers:", error);
     }
@@ -102,7 +102,12 @@ const List = () => {
             >
               Edit
             </button>{" "}
-            <button className="btn btn-primary" onClick={() => handleDelete(row.original._id)}>Delete</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleDelete(row.original._id)}
+            >
+              Delete
+            </button>
           </div>
         ),
 
@@ -160,7 +165,8 @@ const List = () => {
             className="basic-single"
             name="account"
             placeholder="Account"
-            isSearchable={true}
+            classNamePrefix="custom-select"
+            unstyled
             isClearable={true}
             options={accounts}
             onChange={handleAccountChange}
@@ -186,10 +192,14 @@ const List = () => {
             value={formData.to}
             onChange={handleChange}
           />
-        <button className="submit" style={{ width: "60px",marginBottom: "8px" }} onClick={fetchCashVouchers}>
-          {" "}
-          Search
-        </button>
+          <button
+            className="submit"
+            style={{ width: "60px", marginBottom: "8px" }}
+            onClick={fetchCashVouchers}
+          >
+            {" "}
+            Search
+          </button>
         </div>
       </div>
       <div className="table-responsive">

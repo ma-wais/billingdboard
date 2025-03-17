@@ -23,7 +23,7 @@ const PaymentVoucher = () => {
         const items = accountsResult.data.map((item) => ({
           value: item._id,
           label: item.accountName,
-          balance: item.balance
+          balance: item.balance,
         }));
         setAccounts(items);
       } catch (error) {
@@ -43,9 +43,7 @@ const PaymentVoucher = () => {
       ...formData,
       account: selectedOption.value,
     });
-    setAccountBalance(
-      selectedOption.balance
-    )
+    setAccountBalance(selectedOption.balance);
   };
 
   const handleSubmit = async (e) => {
@@ -97,8 +95,8 @@ const PaymentVoucher = () => {
           <label htmlFor="account">Account</label>
           <Select
             className="basic-single"
-            isSearchable={true}
-            // isClearable={true}
+            classNamePrefix="custom-select"
+            unstyled
             options={accounts}
             name="account"
             placeholder="Account"

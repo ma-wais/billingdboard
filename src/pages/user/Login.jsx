@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { server } from "../../App";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({setToken, setUser, token }) => {
+const Login = ({ isAuthenticated, setIsAuthenticated }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -11,12 +11,22 @@ const Login = ({setToken, setUser, token }) => {
   });
 
   useEffect(() => {
-    if (token) {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get(`${server}/users/check-auth`, {
+          withCredentials: true,
+        });
+
+        setIsAuthenticated(response.data.isAuthenticated);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuth();
+    if (isAuthenticated) {
       navigate("/dashboard");
     }
-  }, [token, navigate]);
-  
-  const { email, password } = formData;
+  }, [isAuthenticated, navigate]);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,7 +42,7 @@ const Login = ({setToken, setUser, token }) => {
         },
         { withCredentials: true }
       );
-  
+      setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed", error);
@@ -45,14 +55,14 @@ const Login = ({setToken, setUser, token }) => {
         type="name"
         name="email"
         placeholder="Email or Username"
-        value={email}
+        value={formData.email}
         onChange={onChange}
       />
       <input
         type={"password"}
         name="password"
         placeholder="Password"
-        value={password}
+        value={formData.password}
         onChange={onChange}
         required
       />

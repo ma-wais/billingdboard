@@ -62,9 +62,9 @@ const ItemReport = () => {
       <div className="inputs">
         <Select
           className="basic-single"
-          isLoading={false}
+          classNamePrefix="custom-select"
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="company"
           options={companies}
           placeholder="Company"
@@ -72,9 +72,9 @@ const ItemReport = () => {
         />
         <Select
           className="basic-single"
-          isLoading={false}
           isClearable={true}
-          isSearchable={true}
+          classNamePrefix="custom-select"
+          unstyled
           name="unit"
           options={itemUnit}
           placeholder="Unit"
@@ -113,7 +113,7 @@ const ItemReport = () => {
                 <td>{item.companyName}</td>
                 <td>{item.quantityInPack}</td>
                 <td>{item.retailPrice}</td>
-                <td>{(item.retailPrice / item.quantityInPack).toFixed(2)}</td> 
+                <td>{(item.retailPrice / item.quantityInPack).toFixed(2)}</td>
                 <td>{item.costPerPc}</td>
                 <td>{item.margin}</td>
                 <td>{((item.margin / item.costPerPc) * 100).toFixed(2)}%</td>

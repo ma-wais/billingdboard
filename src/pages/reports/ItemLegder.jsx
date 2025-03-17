@@ -51,9 +51,9 @@ const ItemLedger = () => {
       <div className="inputs">
         <Select
           className="basic-single"
-          isLoading={false}
+          classNamePrefix='custom-select'
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="item"
           options={items}
           placeholder="Item"

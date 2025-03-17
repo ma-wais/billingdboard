@@ -18,7 +18,7 @@ const StockReport = () => {
   const [data, setData] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [account, setAccount] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,8 +58,10 @@ const StockReport = () => {
     try {
       const encodedItemName = encodeURIComponent(value);
       const encodedCompanyName = encodeURIComponent(company);
-      const encodedStockType = encodeURIComponent(stockType === "all" ? "" : stockType);
-      
+      const encodedStockType = encodeURIComponent(
+        stockType === "all" ? "" : stockType
+      );
+
       const response = await axios.get(
         `${server}/items?itemName=${encodedItemName}&companyName=${encodedCompanyName}&stockType=${encodedStockType}`
       );
@@ -79,9 +81,9 @@ const StockReport = () => {
       <div className="inputs">
         <Select
           className="basic-single"
-          isLoading={false}
+          classNamePrefix="custom-select"
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="company"
           options={companies}
           placeholder="Company"
@@ -95,9 +97,9 @@ const StockReport = () => {
         />
         <Select
           className="basic-single"
-          isLoading={false}
+          classNamePrefix="custom-select"
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="account"
           options={accounts}
           placeholder="Account"
@@ -111,9 +113,9 @@ const StockReport = () => {
         />
         <Select
           className="basic-single"
-          isLoading={false}
+          classNamePrefix='custom-select'
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="item"
           options={items}
           placeholder="Item"
@@ -127,9 +129,9 @@ const StockReport = () => {
         />
         <Select
           className="basic-single"
-          isLoading={false}
+          classNamePrefix='custom-select'
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="stockType"
           options={stockTypes}
           placeholder="Stock Type"
@@ -147,39 +149,42 @@ const StockReport = () => {
           Search
         </button>
       </div>
-        <table className="table">
-          <thead>
-            <tr>
-              {/* <th>Sr.</th> */}
-              <th>Item Name</th>
-              <th>Stock Qty</th>
-              <th>Stock Pack/Qty</th>
-              <th>Cost Price</th>
-              <th>Cost Value</th>
-              <th>Sale Price</th>
-              <th>Sale Value</th>
-              <th>Profit Margin</th>
-              <th>PM%</th>
+      <table className="table">
+        <thead>
+          <tr>
+            {/* <th>Sr.</th> */}
+            <th>Item Name</th>
+            <th>Stock Qty</th>
+            <th>Stock Pack/Qty</th>
+            <th>Cost Price</th>
+            <th>Cost Value</th>
+            <th>Sale Price</th>
+            <th>Sale Value</th>
+            <th>Profit Margin</th>
+            <th>PM%</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={item._id}>
+              {/* <td>{index + 1}</td> */}
+              <td>{item.itemName}</td>
+              <td>{item.stock}</td>
+              <td>{item.quantityInPack}</td>
+              <td>{item.costPerPc}</td>
+              <td>{item.stock * item.costPerPc}</td>
+              <td>{item.retailPrice}</td>
+              <td>{item.stock * item.retailPrice}</td>
+              <td>{item.margin}</td>
+              <td>
+                {((item.retailPrice - item.costPerPc) / item.retailPrice) * 100}
+                %
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={item._id}>
-                {/* <td>{index + 1}</td> */}
-                <td>{item.itemName}</td>
-                <td>{item.stock}</td>
-                <td>{item.quantityInPack}</td>
-                <td>{item.costPerPc}</td>
-                <td>{item.stock * item.costPerPc}</td>
-                <td>{item.retailPrice}</td>
-                <td>{item.stock * item.retailPrice}</td>
-                <td>{item.margin}</td>
-                <td>{((item.retailPrice - item.costPerPc) / item.retailPrice) * 100}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

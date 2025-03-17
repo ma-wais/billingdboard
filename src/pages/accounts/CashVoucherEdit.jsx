@@ -23,14 +23,16 @@ const CashVoucherEdit = () => {
       try {
         const [accountsResult, voucherResult] = await Promise.all([
           axios.get(`${server}/accounts`),
-          axios.get(`${server}/accounts/cashvoucher/${id}`)
+          axios.get(`${server}/accounts/cashvoucher/${id}`),
         ]);
 
-        setAccounts(accountsResult.data.map(item => ({
-          value: item._id,
-          label: item.accountName,
-          balance: item.balance
-        })));
+        setAccounts(
+          accountsResult.data.map((item) => ({
+            value: item._id,
+            label: item.accountName,
+            balance: item.balance,
+          }))
+        );
 
         setFormData({
           date: voucherResult.data.date,
@@ -49,11 +51,11 @@ const CashVoucherEdit = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAccountChange = (selectedOption) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       account: selectedOption.value,
     }));
@@ -85,26 +87,53 @@ const CashVoucherEdit = () => {
       <form className="inputs" onSubmit={handleSubmit}>
         <div className="row-inputs">
           <label htmlFor="date">Date</label>
-          <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="row-inputs">
           <label htmlFor="account">Account</label>
           <Select
+            className="basic-single"
+            classNamePrefix="custom-select"
+            unstyled
             options={accounts}
             name="account"
             placeholder="Account"
             onChange={handleAccountChange}
-            required
           />
-          <input type="number" readOnly style={{ padding: "7px" }} value={accountBalance} />
+          <input
+            type="number"
+            readOnly
+            style={{ padding: "7px" }}
+            value={accountBalance}
+          />
         </div>
         <div className="row-inputs">
           <label htmlFor="amount">Amount</label>
-          <input type="number" name="amount" placeholder="Amount" value={formData.amount} onChange={handleChange} required />
+          <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            value={formData.amount}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="row-inputs">
           <label htmlFor="description">Description</label>
-          <input type="text" name="description" placeholder="Description" value={formData.description} onChange={handleChange} required />
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="submit">
           <button type="submit" disabled={isLoading}>

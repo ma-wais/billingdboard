@@ -42,7 +42,12 @@ const CashReport = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.account === "" || formData.account === null || formData.from === "" || formData.to === "") {
+    if (
+      formData.account === "" ||
+      formData.account === null ||
+      formData.from === "" ||
+      formData.to === ""
+    ) {
       alert("Please select all options");
       return;
     }
@@ -94,7 +99,8 @@ const CashReport = () => {
           <label htmlFor="account">Account</label>
           <Select
             className="basic-single"
-            isSearchable={true}
+            classNamePrefix="custom-select"
+            unstyled
             isClearable={true}
             options={accounts}
             name="account"
@@ -104,7 +110,12 @@ const CashReport = () => {
         </div>
         <div className="row-inputs">
           <label htmlFor="type">Type</label>
-          <select name="type" id="type" value={formData.type} onChange={handleChange}>
+          <select
+            name="type"
+            id="type"
+            value={formData.type}
+            onChange={handleChange}
+          >
             <option value="all">All</option>
             <option value="cash">Cash Payment</option>
             <option value="credit">Cash Receipt</option>
@@ -140,8 +151,15 @@ const CashReport = () => {
               </tr>
             ))}
             <tr>
-              <td colSpan="5" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</td>
-              <td style={{ fontWeight: 'bold' }}>{reportData.total.toFixed(2)}</td>
+              <td
+                colSpan="5"
+                style={{ textAlign: "right", fontWeight: "bold" }}
+              >
+                Total
+              </td>
+              <td style={{ fontWeight: "bold" }}>
+                {reportData.total.toFixed(2)}
+              </td>
             </tr>
           </tbody>
         </table>

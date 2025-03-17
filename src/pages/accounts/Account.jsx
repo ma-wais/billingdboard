@@ -30,7 +30,7 @@ const Account = () => {
       try {
         const [citiesResult, accountsResult] = await Promise.all([
           axios.get(`${server}/cities`),
-          axios.get(`${server}/accounts`)
+          axios.get(`${server}/accounts`),
         ]);
         const items = citiesResult.data.map((item) => ({
           value: item.name,
@@ -103,11 +103,18 @@ const Account = () => {
         accessor: "city.name",
         Filter: ColumnFilter,
       },
-      { 
+      {
         Header: "Action",
         accessor: "action",
-        Cell: ({ row }) => <button className="btn btn-primary" onClick={() => navigate(`/account/${row.original._id}`)}>Edit</button>,
-      }
+        Cell: ({ row }) => (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/account/${row.original._id}`)}
+          >
+            Edit
+          </button>
+        ),
+      },
     ],
     []
   );
@@ -209,9 +216,9 @@ const Account = () => {
             </div>
             <div className="row-inputs">
               <label htmlFor="status">Status</label>
-              <select 
-                name="status" 
-                id="status" 
+              <select
+                name="status"
+                id="status"
                 onChange={handleChange}
                 value={formData.status}
               >
@@ -221,13 +228,22 @@ const Account = () => {
               </select>
               <Select
                 className="basic-single"
-                isSearchable={true}
+                classNamePrefix="custom-select"
+                unstyled
                 isClearable={true}
-                options={cities.map(city => ({ value: city._id, label: city.name }))}
+                options={cities.map((city) => ({
+                  value: city._id,
+                  label: city.name,
+                }))}
                 name="city"
                 placeholder="City"
-                onChange={(selectedOption) => setFormData({...formData, city: selectedOption ? selectedOption.value : ""})}
-                value={cities.find(city => city._id === formData.city)}
+                onChange={(selectedOption) =>
+                  setFormData({
+                    ...formData,
+                    city: selectedOption ? selectedOption.value : "",
+                  })
+                }
+                value={cities.find((city) => city._id === formData.city)}
               />
             </div>
             <textarea
@@ -280,7 +296,9 @@ const Account = () => {
                     {headerGroup.headers.map((column) => (
                       <th {...column.getHeaderProps()}>
                         {column.render("Header")}
-                        <div>{column.canFilter ? column.render("Filter") : null}</div>
+                        <div>
+                          {column.canFilter ? column.render("Filter") : null}
+                        </div>
                       </th>
                     ))}
                   </tr>

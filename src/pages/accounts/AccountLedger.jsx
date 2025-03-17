@@ -31,7 +31,10 @@ const AccountLedger = () => {
 
   const handleChange = (selectedOption, actionMeta) => {
     if (actionMeta.name === "account") {
-      setFormData({ ...formData, account: selectedOption ? selectedOption.value : "" });
+      setFormData({
+        ...formData,
+        account: selectedOption ? selectedOption.value : "",
+      });
     } else {
       const { name, value } = selectedOption.target;
       setFormData({ ...formData, [name]: value });
@@ -72,7 +75,8 @@ const AccountLedger = () => {
           <label htmlFor="account">Account</label>
           <Select
             className="basic-single"
-            isSearchable={true}
+            classNamePrefix="custom-select"
+            unstyled
             isClearable={true}
             options={accounts}
             name="account"
@@ -110,7 +114,9 @@ const AccountLedger = () => {
       {ledgerData && (
         <div className="ledger-table">
           <h3>{ledgerData.accountTitle} - Ledger</h3>
-          <p>From: {ledgerData.dateFrom} To: {ledgerData.dateTo}</p>
+          <p>
+            From: {ledgerData.dateFrom} To: {ledgerData.dateTo}
+          </p>
           <table className="table">
             <thead>
               <tr>
@@ -141,8 +147,16 @@ const AccountLedger = () => {
               ))}
               <tr>
                 <td colSpan="4">Period Total</td>
-                <td>{ledgerData.transactions.reduce((sum, t) => sum + t.debit, 0).toFixed(2)}</td>
-                <td>{ledgerData.transactions.reduce((sum, t) => sum + t.credit, 0).toFixed(2)}</td>
+                <td>
+                  {ledgerData.transactions
+                    .reduce((sum, t) => sum + t.debit, 0)
+                    .toFixed(2)}
+                </td>
+                <td>
+                  {ledgerData.transactions
+                    .reduce((sum, t) => sum + t.credit, 0)
+                    .toFixed(2)}
+                </td>
                 <td></td>
               </tr>
               <tr>

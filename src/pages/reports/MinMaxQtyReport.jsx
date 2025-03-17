@@ -70,8 +70,9 @@ const MinMaxQtyReport = () => {
         </div>
         <Select
           className="basic-single"
+          classNamePrefix="custom-select"
+          unstyled
           isClearable={true}
-          isSearchable={true}
           name="item"
           options={items}
           placeholder="Item"

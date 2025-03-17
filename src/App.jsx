@@ -54,14 +54,14 @@ import CashVoucherEdit from "./pages/accounts/CashVoucherEdit";
 import ReceiptVoucherEdit from "./pages/accounts/RecieptVoucherEdit";
 // import ItemTypeUpdate from "./pages/item/ItemTypeUpdate";
 
-import Home from './pages2/Home.jsx'
-import List from './pages2/List.jsx'
-import Return from './pages2/Return.jsx'
-import ReturnList from './pages2/ReturnList.jsx'
-import Stock from './pages2/Stock.jsx'
-import Reprint from './pages2/Reprint.jsx'
-import Change from './pages2/Change.jsx'
-import EmpLogin from './pages2/EmpLogin.jsx'
+import Home from "./pages2/Home.jsx";
+import List from "./pages2/List.jsx";
+import Return from "./pages2/Return.jsx";
+import ReturnList from "./pages2/ReturnList.jsx";
+import Stock from "./pages2/Stock.jsx";
+import Reprint from "./pages2/Reprint.jsx";
+import Change from "./pages2/Change.jsx";
+import EmpLogin from "./pages2/EmpLogin.jsx";
 
 import CashSummary from "./pages/CashSummary";
 import Login from "./pages/user/Login";
@@ -77,20 +77,24 @@ export const server = "https://billing-api-1.onrender.com/api/v1";
 
 const App = () => {
   const [user, setUser] = useState();
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token2, setToken2] = useState(localStorage.getItem("token2"));
 
   return (
     <BrowserRouter>
       <div className="app-container">
-        {/* <Header token={token} setToken={setToken} setUser={setUser} toggleSidebar={toggleSidebar} /> */}
-        <div
-          className={`main-container`}
-        >
-          <SideBar className="sideBar"/>
+        <div className={`main-container`}>
+          <SideBar className="sideBar" />
           <div className="content">
             <Routes>
-              <Route element={<Protected />} >
+              <Route
+                element={
+                  <Protected
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  />
+                }
+              >
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/shop" element={<Shop />} />
@@ -107,9 +111,15 @@ const App = () => {
                 <Route path="/unit/:id" element={<UnitUpdate />} />
                 <Route path="/item" element={<ItemAdd />} />
                 <Route path="/item-update" element={<ItemUpdate />} />
-                <Route path="/item-formula-update" element={<FormulaUpdate />} />
+                <Route
+                  path="/item-formula-update"
+                  element={<FormulaUpdate />}
+                />
                 <Route path="/item-list" element={<ItemList />} />
-                <Route path="/item-map-supplier" element={<ItemMapSupplier />} />
+                <Route
+                  path="/item-map-supplier"
+                  element={<ItemMapSupplier />}
+                />
                 <Route path="/update-max-qty" element={<UpdateQty />} />
                 <Route path="/formula" element={<Formula />} />
                 <Route path="/formula/:id" element={<OriginalFormula />} />
@@ -119,18 +129,27 @@ const App = () => {
                 <Route path="/purchase-list" element={<PurchaseList />} />
                 <Route path="/stock-adjustment" element={<StockAdjustment />} />
                 <Route path="/purchase-return" element={<PurchaseReturn />} />
-                <Route path="/purchase-return-list" element={<PurchaseReturnList />} />
+                <Route
+                  path="/purchase-return-list"
+                  element={<PurchaseReturnList />}
+                />
 
                 <Route path="/item-ledger" element={<ItemLedger />} />
                 <Route path="/item-report" element={<ItemReport />} />
                 <Route path="/purchase-report" element={<PurchaseReport />} />
                 <Route path="/stock-report" element={<StockReport />} />
-                <Route path="/stock-adjustment-report" element={<StockAdjustmentReport />} />
+                <Route
+                  path="/stock-adjustment-report"
+                  element={<StockAdjustmentReport />}
+                />
                 <Route path="/expiry-report" element={<ExpiryReport />} />
                 <Route path="/minmax-report" element={<MinMaxQtyReport />} />
                 <Route path="/profit-report" element={<ProfitReport />} />
                 <Route path="/sale-report" element={<SaleReport />} />
-                <Route path="/sale-return-report" element={<SaleReturnReport />} />
+                <Route
+                  path="/sale-return-report"
+                  element={<SaleReturnReport />}
+                />
 
                 <Route path="/add-account" element={<Account />} />
                 <Route path="/account/:id" element={<EditAccount />} />
@@ -138,7 +157,10 @@ const App = () => {
                 <Route path="/voucher/:id" element={<CashVoucherEdit />} />
                 <Route path="/voucher-list" element={<PaymentList />} />
                 <Route path="/receipt-voucher" element={<ReceiptVoucher />} />
-                <Route path="/receipt-voucher/:id" element={<ReceiptVoucherEdit />} />
+                <Route
+                  path="/receipt-voucher/:id"
+                  element={<ReceiptVoucherEdit />}
+                />
                 <Route path="/receipt-voucher-list" element={<ReceiptList />} />
                 <Route path="/account-balances" element={<Balances />} />
                 <Route path="/account-ledger" element={<AccountLedger />} />
@@ -147,20 +169,30 @@ const App = () => {
                 <Route path="/cash-summary" element={<CashSummary />} />
               </Route>
 
-              <Route path="/login" element={<Login setToken={setToken} token={token} setUser={setUser} />} />
-              <Route path='/sales/login' element={<EmpLogin setToken2={setToken2} token={token2}/>} />
-              <Route path="/register"element={<Register />} />
+              <Route
+                path="/login"
+                element={
+                  <Login
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  />
+                }
+              />
+              <Route
+                path="/sales/login"
+                element={<EmpLogin setToken2={setToken2} token={token2} />}
+              />
+              <Route path="/register" element={<Register />} />
 
-              <Route element={<EmpProtected classnam="body" />} >
-                <Route path='/sales' element={<Home />} />
-                <Route path='/sales/list' element={<List />} />
-                <Route path='/sales/return' element={<Return />} />
-                <Route path='/sales/returnlist' element={<ReturnList />} />
-                <Route path='/sales/stock' element={<Stock />} />
-                <Route path='/sales/reprint' element={<Reprint />} />
-                <Route path='/sales/change' element={<Change id={token2}/>} />
+              <Route element={<EmpProtected classnam="body" />}>
+                <Route path="/sales" element={<Home />} />
+                <Route path="/sales/list" element={<List />} />
+                <Route path="/sales/return" element={<Return />} />
+                <Route path="/sales/returnlist" element={<ReturnList />} />
+                <Route path="/sales/stock" element={<Stock />} />
+                <Route path="/sales/reprint" element={<Reprint />} />
+                <Route path="/sales/change" element={<Change id={token2} />} />
               </Route>
-              
             </Routes>
           </div>
         </div>

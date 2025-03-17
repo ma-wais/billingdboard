@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { server } from "../App";
 
-const Protected = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const Protected = ({setIsAuthenticated, isAuthenticated, children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +14,7 @@ const Protected = ({ children }) => {
         });
 
         setIsAuthenticated(response.data.isAuthenticated);
+        console.log(isAuthenticated);
       } catch (error) {
         setIsAuthenticated(false);
       } finally {
