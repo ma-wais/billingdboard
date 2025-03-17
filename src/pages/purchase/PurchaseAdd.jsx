@@ -25,7 +25,7 @@ const PurchaseAdd = () => {
     netAmount: 0,
     batchNumber: "",
     expiryDate: "",
-    remarks: "",
+    remarks: "none",
   });
   const [summary, setSummary] = useState({
     totalItems: 0,
@@ -41,7 +41,7 @@ const PurchaseAdd = () => {
   const [billNumber, setBillNumber] = useState("");
   const [paymentMode, setPaymentMode] = useState("");
   const [remarks, setRemarks] = useState("");
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -171,7 +171,7 @@ const PurchaseAdd = () => {
       netAmount: "",
       batchNumber: "",
       expiryDate: "",
-      remarks: "",
+      remarks: "none",
     });
   };
 
@@ -231,6 +231,25 @@ const PurchaseAdd = () => {
         console.error("Error adding purchase:", error);
       });
     setPurchases([]);
+    setCurrentPurchase({
+      item: "",
+      quantity: "",
+      bonusQuantity: "",
+      rate: "",
+      total: "",
+      quantityInPack: "",
+      retail: "",
+      pricePercentage: "",
+      discountPercentage: "",
+      discountAmount: "",
+      priceAfterDiscount: "",
+      taxPercentage: "",
+      taxAmount: "",
+      netAmount: "",
+      batchNumber: "",
+      expiryDate: "",
+      remarks: "none",
+    })
     alert("Purchase added successfully");
   };
 
@@ -293,7 +312,7 @@ const PurchaseAdd = () => {
               options={options}
               placeholder="Item"
               onChange={(e) =>
-                setCurrentPurchase({ ...currentPurchase, item: e.value })
+                setCurrentPurchase({ ...currentPurchase, item: e.label })
               }
             />
             <div>
@@ -470,6 +489,7 @@ const PurchaseAdd = () => {
               name="remarks"
               rows={1}
               placeholder="Remarks"
+              value={currentPurchase.remarks}
               onChange={handleInputChange}
             />
             <button

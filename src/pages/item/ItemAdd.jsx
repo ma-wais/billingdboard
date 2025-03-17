@@ -347,7 +347,7 @@ const ItemAdd = () => {
           />
         </div>
 
-        <div className="heading2">
+        <div className="heading">
           <p>Add Item Suppliers</p>
         </div>
 
@@ -364,7 +364,7 @@ const ItemAdd = () => {
           />
           <div className="row-inputs">
             <textarea
-            style={{ width: "100%" }}
+              style={{ width: "100%" }}
               rows={1}
               name="supplierRemarks"
               value={currentRemarks}

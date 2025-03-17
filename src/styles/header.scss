@@ -3,7 +3,7 @@
   color: #cac8c8;
   position: sticky;
   height: 97dvh;
-  padding: 4px 8px 10px 8px;
+  padding: 10px 8px 10px 8px;
   border-radius: 10px;
   margin-left: 5px;
   width: 65px;
@@ -125,7 +125,7 @@
 
     svg {
       font-size: 1.3rem;
-      transform: translateY(-2px);
+      transform: translateY(-4px);
       transition: font-size 300ms ease;
     }
   }

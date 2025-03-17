@@ -83,7 +83,7 @@ const Company = () => {
         accessor: "email",
       },
       {
-        Header: "City",
+        Header: "City/Address",
         accessor: "address",
         width: 100,
       },
@@ -98,13 +98,17 @@ const Company = () => {
         width: 20,
         Cell: ({ row }) => (
           <>
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate(`/company/${row.original._id}`)}
-          >
-            Edit
-          </button>
-            <button className="btn btn-primary" onClick={() => handleDelete(row.original._id)} style={{marginLeft:"5px"}}>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate(`/company/${row.original._id}`)}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleDelete(row.original._id)}
+              style={{ marginLeft: "5px" }}
+            >
               Delete
             </button>
           </>
@@ -151,7 +155,7 @@ const Company = () => {
       console.error("Error deleting company:", error);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -175,21 +179,13 @@ const Company = () => {
       </div>
       <div className="buttons">
         <button
-          style={{
-            borderLeft: show === "menu" ? `5px solid blue` : "none",
-            background: show === "menu" ? "#fffbf8" : "none",
-            fontWeight: show === "menu" ? "600" : "normal",
-          }}
+          className={show === "menu" && "focused"}
           onClick={() => setShow("menu")}
         >
           Add New
         </button>
         <button
-          style={{
-            borderLeft: show === "list" ? `5px solid blue` : "none",
-            background: show === "list" ? "#fffbf8" : "none",
-            fontWeight: show === "list" ? "600" : "normal",
-          }}
+          className={show === "list" && "focused"}
           onClick={() => setShow("list")}
         >
           List
@@ -258,12 +254,12 @@ const Company = () => {
               />
             </div>
             <textarea
-                rows="1"
-                type="text"
-                placeholder="Address"
-                name="address"
-                onChange={handleChange}
-              />
+              rows="1"
+              type="text"
+              placeholder="Address"
+              name="address"
+              onChange={handleChange}
+            />
             <textarea
               type="text"
               name="remarks"
@@ -294,7 +290,7 @@ const Company = () => {
                           column.getSortByToggleProps()
                         )}
                       >
-                        <span >{column.render("Header")}</span>
+                        <span>{column.render("Header")}</span>
                         <span>
                           {column.isSorted ? (
                             column.isSortedDesc ? (

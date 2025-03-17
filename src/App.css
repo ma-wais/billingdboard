@@ -1,25 +1,25 @@
-:root{
+:root {
   font-size: 14px;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body{
+body {
   padding: 0%;
   margin: 10px 0 0 0;
-  background-color: #d6d5da;
+  background-color: #e4e3e7;
 }
 
-input{
-    padding: 5px 10px;   
-    max-width: 300px;
-    border: none;
-    background-color: #f2f2f3;
-    outline: none;
-    height: 38px;
-    border-radius: 5px;
+input {
+  padding: 5px 10px;
+  max-width: 300px;
+  border: none;
+  background-color: #f2f2f3;
+  outline: none;
+  height: 38px;
+  border-radius: 5px;
 }
-select{
-  width: 45%;
+select {
+  width: 50%;
   max-width: 235px;
   min-width: 100px;
   padding: 8px;
@@ -29,24 +29,29 @@ select{
   border: none;
   outline: none;
 }
-textarea{
-  max-width: 500px;
+textarea {
+  max-width: 480px;
   padding: 10px;
   font-size: 1rem;
   background-color: #f2f2f3;
   outline: none;
   border: none;
 }
-.flex{
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.h-auto{
+.h-auto {
   height: auto !important;
   transition: all 0.5s;
 }
-.p5{
+.p5 {
   padding: 0 8px;
 }
 .app-container {
@@ -54,7 +59,7 @@ textarea{
   flex-direction: column;
 }
 
-.table-responsive{
+.table-responsive {
   margin: 20px;
 }
 .burger-btn {
@@ -79,16 +84,16 @@ textarea{
 }
 
 @media screen and (max-width: 800px) {
-  .card{
+  .card {
     width: 45% !important;
   }
-  .sideBar{
+  .sideBar {
     top: 10px;
     overflow-y: scroll;
     min-height: 97dvh;
     z-index: 10;
   }
-  .sideBar::-webkit-scrollbar{
+  .sideBar::-webkit-scrollbar {
     display: none;
   }
 }

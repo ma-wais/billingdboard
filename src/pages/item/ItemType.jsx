@@ -119,21 +119,13 @@ const ItemType = () => {
       </div>
       <div className="buttons">
         <button
-          style={{
-            borderLeft: show === "menu" ? `5px solid blue` : "none",
-            background: show === "menu" ? "#fffbf8" : "none",
-            fontWeight: show === "menu" ? "600" : "normal",
-          }}
+          className={show === "menu" && "focused"}
           onClick={() => setShow("menu")}
         >
           Add New
         </button>
         <button
-          style={{
-            borderLeft: show === "list" ? `5px solid blue` : "none",
-            background: show === "list" ? "#fffbf8" : "none",
-            fontWeight: show === "list" ? "600" : "normal",
-          }}
+          className={show === "list" && "focused"}
           onClick={() => setShow("list")}
         >
           List

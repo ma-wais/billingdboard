@@ -30,13 +30,13 @@ const Employee = () => {
       const [result, cities] = await Promise.all([
         axios.get(`${server}/employees`),
         axios.get(`${server}/cities`),
-      ])
-      
+      ]);
+
       const items = cities.data.map((item) => ({
         value: item.name,
         label: item.name,
         ...item,
-      }))
+      }));
 
       setEmployees(result.data);
       setCities(items);
@@ -64,7 +64,7 @@ const Employee = () => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
@@ -103,18 +103,22 @@ const Employee = () => {
         Cell: ({ row }) => {
           return (
             <>
-            <button className="btn btn-primary"
-              onClick={() => {
-                navigate(`/employee/${row.original._id}`);
-              }}
-            >
-              Edit
-            </button>
-            <button className="btn btn-primary" onClick={() => handleDelete(row.original._id)}>
-              Delete
-            </button>
-          </>
-          )
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  navigate(`/employee/${row.original._id}`);
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleDelete(row.original._id)}
+              >
+                Delete
+              </button>
+            </>
+          );
         },
       },
     ],
@@ -147,21 +151,13 @@ const Employee = () => {
       </div>
       <div className="buttons">
         <button
-          style={{
-            borderLeft: show === "menu" ? `5px solid blue` : "none",
-            background: show === "menu" ? "#fffbf8" : "none",
-            fontWeight: show === "menu" ? "600" : "normal",
-          }}
+          className={show === "menu" && "focused"}
           onClick={() => setShow("menu")}
         >
           Add New
         </button>
         <button
-          style={{
-            borderLeft: show === "list" ? `5px solid blue` : "none",
-            background: show === "list" ? "#fffbf8" : "none",
-            fontWeight: show === "list" ? "600" : "normal",
-          }}
+          className={show === "list" && "focused"}
           onClick={() => setShow("list")}
         >
           List
@@ -193,15 +189,16 @@ const Employee = () => {
             </div>
             <div className="row-inputs">
               <select name="gender" id="gender" onChange={handleChange}>
-                <option value="">Select Gender</option>
+                <option value="">Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
-              <label htmlFor="dob"> Date of Birth: </label>
+              <label htmlFor="dob"> Date/Birth: </label>
               <input
                 style={{ width: "195px" }}
                 type="date"
                 name="dateOfBirth"
+                placeholder="Date of Birth"
                 id="dob"
                 onChange={handleChange}
               />
